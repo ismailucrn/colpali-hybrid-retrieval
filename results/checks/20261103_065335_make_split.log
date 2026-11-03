@@ -1,0 +1,23 @@
+# make_split | 2026-11-03T06:53:35Z | commit b062440 (+ uncommitted src/query_types.py, scripts/make_split.py) | Mac M5, Python 3.11 venv
+$ python scripts/make_split.py --seed 0 --dev-fraction 0.5
+{
+ "counts": {
+  "dev": {
+   "exact": 93,
+   "visual": 18,
+   "general": 115
+  },
+  "test": {
+   "exact": 93,
+   "general": 115,
+   "visual": 17
+  }
+ },
+ "n_dev": 226,
+ "n_test": 225,
+ "duplicated_by_split": {
+  "dev": 9,
+  "test": 13
+ }
+}
+tag totals: {'exact': 186, 'general': 230, 'visual': 35}

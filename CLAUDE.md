@@ -87,7 +87,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
   - **Reproduction (B vs published):** the **full** query set of the task, as in the paper. No tuning happens here.
   - **Fusion comparisons (A–E):** queries split into **dev** (choose `k`, weights) and **test** (touched once, at the end). Split is stratified by query type, seed fixed and recorded, split file committed.
   - The test split is small → confidence intervals will be wide; say so rather than over-claim.
-- **Query-type tagging (before any system is run):** tags (exact-match/numeric, visual/chart, general) are assigned from written rules in `docs/query_tagging.md`, using only the query (and its gold page if needed), never system outputs. The tag file is committed before results exist.
+- **Query-type tagging (frozen 3 Nov, before any fusion run):** automatic rule-based tags (visual > exact > general) from the query text only — `src/query_types.py`, `docs/query_tagging.md`, `results/splits/docvqa_query_tags.csv`. Never re-tag after seeing results.
 - Uncertainty: per-query bootstrap confidence intervals and a paired test between systems.
 - Failure analysis: per query type, where each system wins/loses, with concrete examples — favorable *and* unfavorable.
 - Any `k` sensitivity curve shown on test is post-hoc and labeled as such; selection uses dev only.
@@ -195,7 +195,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 3. ~~Smoke test~~ — passed on Colab L4 (3 November, 7/8 top-1, peak 16.2 GB); `requirements.txt` pinned. Open item: investigate the high peak memory before full indexing (see `docs/experiment_log.md`).
 4. ~~Choose the ViDoRe task~~ — DocVQA (3 November).
 5. ~~Checkpoint~~ — v1.3. `scripts/run_colpali.py` + `configs/colpali_v1.3_docvqa.yaml` + `notebooks/colpali_docvqa_colab.ipynb` written (3 November), dry-run with a fake model on CPU. Ran on Colab L4 (3 November): nDCG@5 0.5752; outputs committed.
-6. Then: dev/test split + query tagging (frozen before any fusion run), BM25 (A), BGE-M3 (D), RRF (C).
+6. ~~Dev/test split + query tagging~~ — frozen 3 November (`results/splits/`, `docs/query_tagging.md`): dev 226 / test 225; visual 35, exact 186, general 230.
+7. Next: BM25 (A) on the `_tesseract` text, BGE-M3 (D), RRF (C); choose `k` on dev only.
 
 ### Implementation notes
 

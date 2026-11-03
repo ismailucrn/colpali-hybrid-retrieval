@@ -75,3 +75,11 @@ Chronological record of every run and decision. One entry per run or decision; n
   - Our number is above the paper's v1.0 value (54.4), consistent with v1.3 being a later, stronger checkpoint (model cards: 54.4 → 58.5).
 - **Resources (measured):** indexing 111.7 s for 500 pages (0.22 s/page, batch 4); single-query latency median 51.3 ms (encode 44.9 + MaxSim vs 500 pages 6.4), p95 53.3 ms; index 126 MB (515,500 × 128 bf16 vectors); peak GPU memory 16.19 GB allocated (same as the smoke test, so it does not grow with corpus size — consistent with the LM-head-logits hypothesis, still untested).
 - Verification: `scores.npz` re-evaluated locally on CPU with `scripts/evaluate_scores.py` → identical metrics.
+
+### 2026-11-03 — Query tags and dev/test split frozen
+- Type: decision + run (registry row 11)
+- Notes:
+  - Tags are rule-based on query text only (`src/query_types.py`, rules in `docs/query_tagging.md`): visual 35, exact 186, general 230.
+  - Stratified 50/50 split, seed 0: dev 226, test 225. Committed before any run of A, C, D, E.
+  - Changed plan vs the draft: tags are fully automatic instead of manual, for reproducibility and to rule out outcome-dependent tagging.
+  - *Limitation:* only ~17 visual queries per split.

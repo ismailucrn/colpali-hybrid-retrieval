@@ -1,0 +1,452 @@
+query,tag,rule,duplicated,split
+What is the dividend payout in 2012?,exact,digit,0,test
+What is the name of the person in the CC field ?,exact,acronym 'CC',0,test
+What is the personnel costs in the 4th year?,exact,digit,0,dev
+What is the table number?,general,no rule,1,test
+What is the Log-in No. ?,exact,capitalised 'Log-in',0,test
+Which meeting is expected to have the highest ' attendance ' ?,exact,quoted span,0,dev
+What is plotted along the x axis ?,visual,visual term 'plotted',1,dev
+What is the 10th 'title' in Contents ?,exact,digit,0,dev
+What is No. 2-26 of subheading H ?,exact,digit,0,test
+What is the second subheading?,general,no rule,0,dev
+Which is the railways company?,general,no rule,0,test
+Under Private service how many patients were discharged in Neurology?,exact,capitalised 'Private',0,dev
+What is the brand name of the ITC personal care product advertised here?,exact,acronym 'ITC',0,dev
+How many adult deaths were in 1978 as per 2nd quarter report ?,exact,digit,0,test
+What Tobacco brand of GPI is shown in the picture?,visual,visual term 'picture',0,test
+What is the % Promoted Volume in EDLP stores?,exact,acronym 'EDLP',0,dev
+Which year was the meeting held?,general,no rule,0,test
+What is the full form of AHA?,exact,acronym 'AHA',0,test
+Which year's Budget was this?,exact,capitalised 'Budget',0,test
+What is the order no. ?,general,no rule,0,dev
+What is the fullform of AAN?,exact,acronym 'AAN',0,test
+Which hospital is mentioned in Appendix V ?,exact,capitalised 'Appendix',0,test
+When is the memorandum dated?,general,no rule,0,dev
+Which year's report was this?,general,no rule,0,dev
+"What is the date and time mentioned at the top of the page, outside of the Tabular representation?",exact,capitalised 'Tabular',0,test
+What is the day and date of Meeting?,exact,capitalised 'Meeting',0,dev
+What is the name of the medical association?,general,no rule,0,dev
+What is the deadline date?,general,no rule,0,dev
+What is the title of the document ?,general,no rule,1,test
+What is the number of live births for Alabama?,exact,capitalised 'Alabama',0,test
+What is the ‘title’ of the plot?,visual,visual term 'plot',0,dev
+What is the negotiated budget for Rutgers Med. Sch. given in the document?,exact,capitalised 'Rutgers',0,dev
+What is SCGP?,exact,acronym 'SCGP',0,dev
+What is written in red ink at the top?,general,no rule,0,dev
+Experiences of the which branch of the clan will you be most interested in?,general,no rule,0,test
+What are the letters in the monogram logo at the top right of the document?,visual,visual term 'monogram',0,test
+"What is the number in parentheses [ ], between the two Tables?",exact,capitalised 'Tables',0,test
+What is the income tax for 2003?,exact,digit,0,test
+Which work area is this related?,general,no rule,0,dev
+Who is the third person in CC,exact,acronym 'CC',0,dev
+Who is this question addressed to?,general,no rule,0,dev
+"How much menthol does KOOL ""C"" have?",exact,acronym 'KOOL',0,test
+Where is this Philip Morris office located at?,exact,capitalised 'Philip',0,dev
+Whose contact is given at the end?,general,no rule,0,dev
+Who is the Medical Monitor or designee?,exact,capitalised 'Medical',0,test
+What is vitamin A requirement for age group 8-10 years ?,exact,digit,0,dev
+Who signed this?,general,no rule,0,dev
+What is the purchase order number?,general,no rule,0,dev
+To whom is the letter is addressed?,general,no rule,0,test
+What is the average age of camel smoker?,general,no rule,0,test
+To whom the letter is addressed?,general,no rule,0,dev
+What is the heading?,general,no rule,1,dev
+What is the Manuscript number specified in the 'Title' ?,exact,quoted span,0,dev
+When was the meeting held?,general,no rule,0,test
+What is osteoporosis corelated to?,general,no rule,0,dev
+What is the value given for girls of 13-15 yrs for 3 months?,exact,digit,0,test
+what is written at the middle of round seal?,general,no rule,0,dev
+For when is startup of the wiegand evaporator system at park 500 is scheduled?,exact,digit,0,test
+what is the slope of set #1?,exact,digit,0,dev
+What is the name of the company on top of the document ?,general,no rule,0,test
+At what rate is Methoprene currently added to B&W's tobaccos?,exact,acronym 'B&W',0,test
+What is the heading of the document?,general,no rule,1,test
+What is the Page Number?,exact,capitalised 'Page',0,test
+What is cut tobacco no in this page?,general,no rule,0,dev
+what is the title of this page ?,general,no rule,0,test
+What is the abbreviation of Hormone Intelligent Notification Transmission?,exact,capitalised 'Hormone',0,dev
+what is the subject of this letter?,general,no rule,0,test
+What has to be provided to SULT/SLT development?,exact,acronym 'SULT',0,test
+which floor details are mentioned in the document?,general,no rule,0,test
+What is the name of the bank?,general,no rule,0,test
+What is the name of the company on the letter head ?,general,no rule,0,test
+What % of vests is available for conversion after 3 year?,exact,digit,0,test
+Which is the first year on x-axis?,visual,visual term 'x-axis',0,test
+What is the name of the airline?,general,no rule,0,test
+What is the amount of check?,general,no rule,0,test
+What is the figure number?,visual,visual term 'figure',1,dev
+What is the page number?,general,no rule,1,test
+what is the index of shared of the 21-25 segment,exact,digit,0,test
+Which director is the president of the 'colonial sugars company'?,exact,quoted span,0,dev
+What is the name of the client?,general,no rule,0,test
+What is the name of the foundation?,general,no rule,0,test
+What is the date of submission?,general,no rule,0,dev
+What is the RDA for Calories for Sedentary woman(1948 report)?,exact,digit,0,test
+What is the budget offered for 3 Posters( including production)?,exact,digit,0,test
+What Budget Estimate is given in this document?,exact,capitalised 'Budget',0,dev
+Who is the sender of the Fax?,exact,capitalised 'Fax',0,test
+What is the report on?,general,no rule,0,dev
+What is the Budget Estimate for CME Reviewer Provider Fee?,exact,acronym 'CME',0,test
+What is the Fax no of Karen Mittleman?,exact,capitalised 'Fax',0,dev
+Which company's fax message is this?,general,no rule,0,test
+What is the net operating revenue for the year 2010?,exact,digit,0,dev
+What is the Priority of Article P2(3)?,exact,digit,0,dev
+What type of report is this?,general,no rule,0,dev
+When is the next meeting held?,general,no rule,0,test
+What is the Dept.No?,exact,capitalised 'Dept.No',0,test
+Which proposed section would require food processors promulgated by FDA?,exact,acronym 'FDA',0,test
+What is the progress Report number?,exact,capitalised 'Report',1,test
+Who are the medical journals for?,general,no rule,0,dev
+What is the Strategic Publication Development Budget?,exact,capitalised 'Strategic',0,test
+what is re written in place of 34.8gallons,exact,digit,0,dev
+What type of letter is this?,general,no rule,1,test
+What is the phone number given at the top left end of the page?,general,no rule,0,test
+How many countries has approved Totelle(R) dossier?,exact,capitalised 'Totelle',0,dev
+Which cigarette brand beats Marlboro lights?,exact,capitalised 'Marlboro',0,test
+Who is the client?,general,no rule,0,dev
+Which university ‘letterhead’ is given?,exact,quoted span,1,test
+What is written at the bottom right end of the ‘page’?,exact,quoted span,0,dev
+What is the phone number given?,general,no rule,0,test
+What is the amount shown for the recipient ‘Nutrition Fdn.NY’?,exact,acronym 'NY',0,dev
+What is the Budget estimate for recruit editorial board/monthly newsletter development?,exact,capitalised 'Budget',0,dev
+what is the name of the university ?,general,no rule,0,dev
+What is the client name mentioned in this document?,general,no rule,0,dev
+Who is the Chairman of special Committee members?,exact,capitalised 'Chairman',0,test
+"When dealing with patients, what would appear to be a safer and more appropriate solution?",general,no rule,0,dev
+Who is the Professor of History of Religions?,exact,capitalised 'Professor',0,test
+What is the name of addressee in this letter?,general,no rule,0,dev
+When was this meeting happened?,general,no rule,0,test
+What is the text printed on the bottom right corner of the page?,general,no rule,1,dev
+Who is the sender of this letter?,general,no rule,0,test
+Which company is mentioned in this document?,general,no rule,0,dev
+Who sent this form?,general,no rule,0,dev
+What is the subject line of this email?,general,no rule,0,dev
+"When is the Knee Panel Meeting held in Chicago, IL?",exact,acronym 'IL',0,dev
+What is the priority of the Article WMC(2)?,exact,digit,0,dev
+What is the name of the book store?,general,no rule,0,dev
+What is the Day 2 event for the time 9:00-10:30 am?,exact,digit,0,dev
+By what statistical 'method' is the the data collected ?,exact,quoted span,0,dev
+What is the name of the company?,general,no rule,1,dev
+What is the ‘heading’?,exact,quoted span,1,dev
+What does this document relate to ?,general,no rule,0,dev
+What is the letter in the single initial monogram based on header?,visual,visual term 'monogram',0,dev
+What is the Requisition No. given in the document?,exact,capitalised 'Requisition',0,test
+Who is the ‘Senior Product Manager ‘of Wyeth-Ayerst Pharmaceuticals?,exact,quoted span,0,test
+What is the team leader's name?,general,no rule,0,dev
+What is the name of the company mentioned at the top of the page?,general,no rule,0,test
+Which number is repeated several times on the page?,general,no rule,0,dev
+What is indicated as second or third line treatment of type 2 diabetes mellitus?,exact,digit,0,dev
+What is the name of the Client given in the report?,exact,capitalised 'Client',0,test
+What is the VO. NO.?,exact,acronym 'VO',0,test
+When did the term of this agreement commence?,general,no rule,0,dev
+Which fiscal year's currency use is shown in the pie chart?,visual,visual term 'pie',0,dev
+What is the title of table 3?,exact,digit,0,test
+where did this program happen?,general,no rule,0,dev
+What is the underlined text on the top right corner of the page?,general,no rule,0,dev
+What is the full form of I.P. ?,exact,capitalised 'I.P.',0,test
+Who is the staff representative as per the agenda?,general,no rule,0,test
+What is the page no mentioned in this document?,general,no rule,1,test
+What is the CME Expense?,exact,acronym 'CME',0,dev
+When was the Nutrition Committee held?,exact,capitalised 'Nutrition',0,test
+Which company’s annual report is shown?,general,no rule,0,dev
+What is point number 1?,exact,digit,0,dev
+"W ho from ""Garvw Travel in Boston"" has telephoned ?",exact,quoted span,0,dev
+What is the page no mentioned in this newspaper?,general,no rule,0,test
+what is the carcinoma(transitional cell )  of group 1 ?,exact,digit,0,test
+What is the date at the top right corner of the page?,general,no rule,0,dev
+who is the lead responsibility for evaluating data from study OCT020,exact,digit,0,test
+What is the ext.?,general,no rule,0,dev
+Which company bill is given?,general,no rule,0,dev
+Which is precurser (d) of Tuberculosis ?,exact,capitalised 'Tuberculosis',0,test
+What is the Direct account name?,exact,capitalised 'Direct',0,test
+Who is the secretary?,general,no rule,0,test
+What is the ‘EXPIRATION DATE’ of the Manufacturer coupon?,exact,acronym 'EXPIRATION',0,test
+What is written at the top of the page in bold capital letters?,visual,visual term 'bold',0,test
+What is the heading of the first Article?,exact,capitalised 'Article',0,dev
+What is the component that needs to included?,general,no rule,0,dev
+what is the trend of patient growth?,general,no rule,0,dev
+What is the heading printed in red?,general,no rule,0,dev
+What is the latency period associated with cancer?,general,no rule,0,dev
+What is the name of the person who has signed the letter?,general,no rule,0,dev
+What is the page no.?,general,no rule,0,dev
+What is the discount for Safeway employees on race tickets?,exact,capitalised 'Safeway',0,test
+What is the date mentioned at the top of the page?,general,no rule,0,test
+what is the project number ?,general,no rule,0,test
+Who is the client in the document?,general,no rule,0,dev
+Who is the Dealer?,exact,capitalised 'Dealer',0,test
+What is the date of the document mentioned at the top?,general,no rule,0,test
+What is the name of the laboratory?,general,no rule,0,test
+Who is the president of NATIONAL ACADEMY OF SCIENCES-NATIONAL RESEARCH COUNCIL?,exact,acronym 'NATIONAL',0,dev
+When to return the complete account information form?,general,no rule,0,test
+What date is given on the top of the document?,general,no rule,0,dev
+Who are the photographers?,general,no rule,0,dev
+Who is the winner of the 1978 Christopher Book award?,exact,digit,0,test
+what is the minimum value of sodium in mg/100kcal?,exact,digit,0,test
+What is the day and date of the program?,general,no rule,0,test
+What is the Title of the document?,exact,capitalised 'Title',1,dev
+How much is the 'Meetings Budget' of RAISH in $?,exact,acronym 'RAISH',0,test
+What is the announcement on?,general,no rule,0,test
+How much funds ‘from Reserve’?,exact,quoted span,0,test
+What is the weight of the shipment?,general,no rule,0,dev
+When is the effective date mentioned in the form?,general,no rule,0,test
+What is the test name?,general,no rule,0,test
+What is the ‘one day postgraduate course’?,exact,quoted span,0,dev
+What is the amount ?,general,no rule,0,test
+What number written at the bottom right end of the page?,general,no rule,0,dev
+Which US city's name is given at the bottom?,exact,acronym 'US',0,dev
+What is the fullform of ils?,general,no rule,0,dev
+What shortens life?,general,no rule,0,test
+What is the name of the meeting?,general,no rule,0,test
+Which advertisement theme did the 'coke adds life to ..' campaign replace?,exact,quoted span,0,test
+What is on the X axis of this plot?,visual,visual term 'axis',0,dev
+protein solution mixed with what makes a stable dispersion?,general,no rule,0,dev
+What is the name of the magazine mentioned at the top left of the page?,general,no rule,0,dev
+Who is the prime minister of Japan mentioned here?,exact,capitalised 'Japan',0,dev
+R J Reynolds Tobacco Company made this offer for which markets,exact,capitalised 'J',0,dev
+what is the company's name on the letter head?,general,no rule,0,dev
+For which brand  of soft drink is the product information provided?,general,no rule,0,test
+For which school the contribution was done?,general,no rule,0,dev
+"In which country is ""The Bronze Gallery""?",exact,quoted span,0,dev
+Who was in editorial committee in 1985-1987 period?,exact,digit,0,dev
+What is the phone number to reach Dr Donald?,exact,capitalised 'Dr',0,dev
+Which institute's medical advisory board meeting is mentioned here?,general,no rule,0,test
+Who is this fax for?,general,no rule,0,test
+What is the name of the hotel?,general,no rule,0,test
+What is the cost of postage ( see the postal stamp at top left)?,visual,visual term 'stamp',0,test
+From which university does James V. Fiorca come ?,exact,capitalised 'James',0,dev
+What is on the Y axis of the plot?,visual,visual term 'axis',0,dev
+What is the name of this commercial track for Coca-Cola?,exact,capitalised 'Coca-Cola',0,dev
+Which is the 10% neutral buffered formalin used?,exact,digit,0,test
+What is the date for wind data from baltimore,general,no rule,0,dev
+At what time did Charles Muller call Dr. Darby?,exact,capitalised 'Charles',0,test
+To Whom is this letter addressed to?,exact,capitalised 'Whom',0,dev
+What is the date of the letter ?,general,no rule,0,test
+What is the title of the document?,general,no rule,0,test
+Who will bring cots and EMS equipment?,exact,acronym 'EMS',0,test
+What is the full form of FERS?,exact,acronym 'FERS',0,test
+What is the full form of EPA?,exact,acronym 'EPA',0,test
+Were CME credits offered?,exact,acronym 'CME',0,test
+What time is the lunch?,general,no rule,0,dev
+In which period is average annual number the highest?,general,no rule,0,dev
+In which year ( 1970 or 1969) net sales worldwide is larger?,exact,digit,0,dev
+which committee is mentioned in the document?,general,no rule,0,test
+Whose name is mentioned first under EPA Attendees?,exact,acronym 'EPA',0,dev
+What is the title?,general,no rule,0,test
+What is the last for profit sponsor listed here?,general,no rule,0,dev
+What is step 6 in the flow chart?,visual,visual term 'chart',0,dev
+On which page is Appendix D?,exact,capitalised 'Appendix',0,dev
+What is the time of the reception?,general,no rule,0,test
+What is the underlined text?,general,no rule,0,dev
+What is the name of chocolate brand?,general,no rule,0,test
+What is the heading of the first column of the table?,general,no rule,0,test
+What is the name of the company mentioned just below the logo?,visual,visual term 'logo',0,test
+What is the name of the company in the logo?,visual,visual term 'logo',0,dev
+What is the page number of Introduction?,exact,capitalised 'Introduction',0,dev
+What is the Doc #?,exact,capitalised 'Doc',0,dev
+What is the Total years of experience of the first employee?,exact,capitalised 'Total',0,dev
+What is the educational qualification of the Chairman?,exact,capitalised 'Chairman',0,dev
+"In which page number is ""Introduction""?",exact,quoted span,0,dev
+Which organization has suggested the definition of Best available science ?,exact,capitalised 'Best',0,test
+Whose picture is given?,visual,visual term 'picture',1,test
+By whom are the 'Observations/ concerns' raised?,exact,quoted span,0,test
+"What is the highest value for ""Intake, mg/1000 kcal "" plotted on the 'X' axis of the graph?",visual,visual term 'plotted',0,test
+Which session is mentioned here?,general,no rule,0,test
+What type of Mail is it?,exact,capitalised 'Mail',0,test
+What type of communication is it?,general,no rule,0,dev
+What is the name of the company mentioned at the top of the table?,general,no rule,0,test
+What is the title of the article?,general,no rule,0,dev
+What is the name of the filer?,general,no rule,0,dev
+What time does registration open?,general,no rule,0,dev
+what type of communication is this?,general,no rule,0,test
+Which department is mentioned in the document?,general,no rule,0,test
+What is the company's name on the letter head?,general,no rule,0,test
+What is the professional title of Dr.Albert Siegel ?,exact,capitalised 'Dr.Albert',0,test
+What is written in the top right of the document ?,general,no rule,0,dev
+Which Company's Fax transmission Cover Sheet is this ?,exact,capitalised 'Company's',0,dev
+What is the date of the memorandum?,general,no rule,0,dev
+"What is the name of the company issuing the ' royalty payment form',  mentioned at the top of the document?",exact,quoted span,0,test
+How much is the grand total of the budget of the Institution?,exact,capitalised 'Institution',0,test
+To whom the memoranda submitted?,general,no rule,0,test
+Who is Dr.Robert Tilden?,exact,capitalised 'Dr.Robert',0,dev
+Who should you contact if you have any questions? And what is the contact number?,exact,capitalised 'And',0,test
+What is the item# ?,general,no rule,0,dev
+How many points are there in the ‘conditions of Contract’?,exact,quoted span,0,dev
+What is the subject?,general,no rule,1,test
+What is the heading in sl.no ‘V’?,exact,capitalised 'V',0,dev
+Who is this letter sent to ?,general,no rule,0,dev
+"How much is included for renovation expenses of Helen Keller International,Incorporated?",exact,capitalised 'Helen',0,dev
+What type of document is this?,general,no rule,1,test
+"Through her noteworthy career, what did she work as?",general,no rule,0,dev
+How much estimated hours for salary and wages under ‘direct labor’?,exact,quoted span,0,dev
+What is the title of the sheet?,general,no rule,0,test
+What is the color of the walking stick?,visual,visual term 'color',0,test
+Which company is Martin Miller associated with?,exact,capitalised 'Martin',0,test
+Who is the secretary of chamber of commerce?,general,no rule,0,test
+What is the location code?,general,no rule,0,test
+What is the name of the country mentioned at the top of the page?,general,no rule,0,test
+What is the PO box number of Mr and Mrs. Edward Lehman?,exact,acronym 'PO',0,test
+"Under the ' Risk/Consequence Questions', what is the heading for the first type of Risk questions?",exact,quoted span,0,dev
+How much is the Mean square value of the Children variation?,exact,capitalised 'Mean',0,dev
+Who wrote the ‘letter’?,exact,quoted span,0,test
+What is the name of the person repsonsible for implementing ?,general,no rule,0,dev
+What kind of voucher is given here?,general,no rule,0,test
+What is written at the bottom right end of the ‘notice’?,exact,quoted span,0,test
+What is the amount of  'Research support for Scholars'?,exact,quoted span,0,test
+What is the project number?,general,no rule,0,dev
+What is the P.O.Box Number?,exact,capitalised 'P.O.Box',0,dev
+Which department is mentioned in this document?,general,no rule,0,dev
+What is the date on which the letter has been filed?,general,no rule,0,dev
+Who is the sender ?,general,no rule,0,dev
+What is the date of sending on the letter?,general,no rule,0,dev
+What is the 4th point in the agenda of EIG MEETING?,exact,digit,0,dev
+Whose nomination is endorsed ?,general,no rule,0,test
+What is the name written under the sponsor ‘s signature (2)?,exact,digit,0,dev
+What course Mr.Bill has to present at Eleventh Graduate Summer Session in Epidemiology held at the University of Minnesota?,exact,capitalised 'Mr.Bill',0,test
+"What amount was requested by Lange, L.G, Washington University Medical Center?",exact,capitalised 'Lange',0,dev
+Who is operating ‘Pine Bluff Arsenal’?,exact,quoted span,0,dev
+What is the title on page 2?,exact,digit,0,test
+What is written in top of the document ?,general,no rule,0,dev
+What is the title of the pie chart ?,visual,visual term 'pie',0,dev
+what is the name of the company mentioned on the bottom left of the page ?,general,no rule,0,test
+What is the ID number?,exact,acronym 'ID',0,dev
+What is the Title of the document ?,exact,capitalised 'Title',0,test
+Who is ‘ Charlotte McDaniel’?,exact,quoted span,0,dev
+How many points are there under the title ‘distribution’?,exact,quoted span,0,test
+what is the docket number?,general,no rule,0,dev
+Who is shown in the picture/photo?,visual,visual term 'picture',0,test
+What is written in bold letters?,visual,visual term 'bold',0,test
+what is the 'Effective rate %' for ' 5.15 % debentures due 2012' in the year 2011?,exact,digit,0,dev
+What is the total cost of fertilizer?,general,no rule,0,test
+What is  the title of figure 4?,visual,visual term 'figure',0,test
+What is the date of the letter mentioned by William J Darby?,exact,capitalised 'William',0,test
+What is the name of the company on the letter head?,general,no rule,0,test
+What is the date of Analysis?,exact,capitalised 'Analysis',0,test
+What is the preferred location for the meeting?,general,no rule,0,dev
+What is given in the footer?,general,no rule,0,dev
+What is the heading below SECTION 1?,exact,digit,0,test
+What is the name of the financial company mentioned at the top?,general,no rule,0,dev
+What is the study experience?,general,no rule,0,dev
+Where is ‘Spreckels’ newest processing plant’?,exact,quoted span,0,dev
+Who is from Indiana?,exact,capitalised 'Indiana',0,test
+Who is receiving the ALCOHOLIC BEVERAGE MEDICAL RESEARCH FOUNDATION ‘s Research Grant Awards for Massachusetts General Hospital?,exact,acronym 'ALCOHOLIC',0,dev
+What is the subject of Memorandum?,exact,capitalised 'Memorandum',0,dev
+From which decade onwards 'metal-on-metal' bearings was being used in the U.S.?,exact,quoted span,0,dev
+How many hours of sound sleep needed each night for good health?,general,no rule,0,test
+Which company’s memorandum is given?,general,no rule,0,test
+What is the name of the originator ?,general,no rule,0,dev
+Which meeting is this?,general,no rule,0,test
+Who claimed government's move to be a wise decision?,general,no rule,0,dev
+What is the name of the excerpt/reprint?,general,no rule,0,dev
+What memo is it?,general,no rule,0,test
+What is the goal for CB < 175?,exact,digit,0,test
+What is the tracking number of the form?,general,no rule,0,dev
+Whose picture is on the page?,visual,visual term 'picture',0,dev
+What is the date of receipt stamped?,general,no rule,0,dev
+What is the title of the research project?,general,no rule,0,test
+"Which comes under ""Clusters of Colleges"" other than ""Instructors Meeting"" ?",exact,quoted span,0,dev
+Which is the last food specified in the page ?,general,no rule,0,dev
+Who is there in the first photo?,visual,visual term 'photo',0,test
+What is the year specified in the logo?,visual,visual term 'logo',0,dev
+At what intervals does FASEB Bus Service operate?,exact,acronym 'FASEB',0,dev
+what is the first quote written at the top right of the page?,general,no rule,0,test
+Who is the assistant director of center for International studies?,exact,capitalised 'International',0,test
+what is the date mentioned in the given page ?,general,no rule,0,dev
+What is the number printed at the top right of first slip?,general,no rule,0,test
+What is the y-axis of the plot?,visual,visual term 'y-axis',0,test
+What is the first title under the heading TABLE OF CONTENTS?,exact,acronym 'TABLE',0,dev
+Which year is the percentage of raw material imported higher (current/previous)?,general,no rule,0,dev
+"What was the duration of the course ""teaching of epidomiology"" in hours?",exact,quoted span,0,test
+What is the title of the plot?,visual,visual term 'plot',0,dev
+What is the kind of water ?,general,no rule,0,dev
+What is the name of the memo ?,general,no rule,0,test
+What is the name of the factory ?,general,no rule,1,test
+Who has written the note?,general,no rule,0,test
+What is the body weight of Pig#2 at 3 days of age?,exact,digit,0,test
+What is the first heading of the table?,general,no rule,0,test
+Who is the letter from?,general,no rule,1,dev
+What is the main heading of the document given under APPENDIX V-9?,exact,digit,0,test
+What is the analysis about?,general,no rule,0,test
+"Which chicken entrees is made with good chicken broth,meat and green peppers?",general,no rule,0,test
+What is the telephone number mentioned at the beginning?,general,no rule,0,dev
+What is the date of the letter enclosed?,general,no rule,0,dev
+What is the title of the chart on the right ?,visual,visual term 'chart',0,dev
+"In Dinner #16, what is in the cup?",exact,digit,0,dev
+When is the remittance due ?,general,no rule,0,test
+To which department the address for Correspondence is written?,exact,capitalised 'Correspondence',0,dev
+What is the title of the page?,general,no rule,0,test
+What is the date of the Approval note?,exact,capitalised 'Approval',0,test
+What is subheading X ?,exact,capitalised 'X',0,test
+What is the heading of the form?,general,no rule,0,dev
+What is written at the top right end of the page?,general,no rule,0,dev
+What is the title of first plot?,visual,visual term 'plot',0,test
+What time is the ‘formal presentation’?,exact,quoted span,0,dev
+What is page number printed at the bottom of the page?,general,no rule,0,test
+What is plotted along the y axis ?,visual,visual term 'plotted',0,dev
+what is the budget bureau no.?,general,no rule,0,test
+What is the name of the doctor?,general,no rule,0,dev
+What is the charge number given in the form?,general,no rule,0,dev
+Whose photograph is shown at the top left side of the page ?,visual,visual term 'photograph',0,test
+What is the document about?,general,no rule,0,test
+What is the date of the order?,general,no rule,0,test
+How many facts are listed here?,general,no rule,0,dev
+What is the invoice no.?,general,no rule,0,test
+Who is the letter to ?,general,no rule,0,test
+What form of communication is used?,general,no rule,0,test
+Who has signed the card?,general,no rule,0,test
+what is the heading mentioned in the given page ?,general,no rule,0,dev
+Who is the note to?,general,no rule,0,test
+Which number is printed last on the first column of the table?,general,no rule,0,dev
+what is the heading of the page ?,general,no rule,0,dev
+in which state is Wisdom at ?,exact,capitalised 'Wisdom',0,dev
+What is the title in uppercase?,general,no rule,0,dev
+Whose Logo is it?,visual,visual term 'Logo',0,dev
+What is the table number mentioned at the top centre of the page?,general,no rule,0,test
+in which city is QM Food & Container Institute at ?,exact,acronym 'QM',0,dev
+"In fig 3, what is plotted along x axis?",visual,visual term 'fig',0,test
+"What is the name of the ""Mayor"" ?",exact,quoted span,0,dev
+Who is the note from?,general,no rule,1,test
+what is the designation of 'Harlan Seaworth' ?,exact,quoted span,0,dev
+What is the title given above the cartoon in right side of the page?,general,no rule,0,test
+Who did the research on Sugar and cardiovascular disease?,exact,capitalised 'Sugar',0,dev
+What is the year mentioned at the top?,general,no rule,0,test
+What is the name of the publication given?,general,no rule,0,dev
+What is serial number I of the ‘Wyeth-Ayers Laboratories’ Meeting agenda?,exact,quoted span,0,test
+Who is the owner of Edson Express ?,exact,capitalised 'Edson',0,test
+Whose picture is given in the square shaped UNITED STATES POSTAGE?,visual,visual term 'picture',0,dev
+What is the document heading?,general,no rule,1,dev
+What is the folio number of the bill?,general,no rule,0,dev
+What is the meeting on?,general,no rule,0,dev
+Which is the birth defects special treatment center in North Carolina?,exact,capitalised 'North',0,test
+What was the parking fee at St. Luis airport?,exact,capitalised 'St.',0,test
+Who is the holder of this curriculum vitae?,general,no rule,0,test
+What is title given at the top of the page?,general,no rule,0,test
+What is the phone number of PINK&BLACK CORAL FACTORY?,exact,acronym 'PINK&BLACK',0,dev
+What is the Received date stamped?,exact,capitalised 'Received',0,test
+"What type of communication is this, as mentioned on the top left corner of the page?",general,no rule,0,dev
+What type of communication is this?,general,no rule,0,dev
+What is the last line on the page?,general,no rule,0,test
+What is the name of the travel agency?,general,no rule,0,test
+What is the date of the executive committee meeting ?,general,no rule,0,test
+What is the RJR Account number ?,exact,acronym 'RJR',0,dev
+What is the number shown below the heading on top right corner?,general,no rule,0,test
+During which period were the Part III examinations held?,exact,acronym 'III',0,dev
+What is Payee's Account No?,exact,capitalised 'Payee's',0,test
+What is the date given?,general,no rule,0,test
+How many bullet points are there?,general,no rule,0,test
+Which page of the form is this,general,no rule,0,test
+Which city is mentioned in the table 30 ?,exact,digit,0,dev
+What is the name of the courrier Service?,exact,capitalised 'Service',0,dev
+What is mentioned in 'Purpose of Temporary Duty' ?,exact,quoted span,0,dev
+What statement is this?,general,no rule,0,dev
+What do the values in the y-axis depict ?,visual,visual term 'y-axis',0,dev
+What is the name printed on the top of the page?,general,no rule,0,test
+What is the name of the sugar company?,general,no rule,0,dev
+What is the date mentioned at the bottom of the page?,general,no rule,0,test
+What is the year mentioned?,general,no rule,0,dev
+What is the first name of the month mentioned at the top of the page?,general,no rule,0,test
+What is the name?,general,no rule,0,dev
+What is the day and date of dinner?,general,no rule,0,test
+What is the name of the city mentioned?,general,no rule,0,test
+Which session of 85th congress is mentioned in this document?,exact,digit,0,test
+What is the DTS date?,exact,acronym 'DTS',0,dev
+"who is the president of sugar research foundation,inc.?",general,no rule,0,test
