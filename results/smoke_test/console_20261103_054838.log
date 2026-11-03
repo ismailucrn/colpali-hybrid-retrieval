@@ -1,0 +1,40 @@
+# Console output copied from the Colab page (built-in browser) on 2026-11-03.
+# Notebook: notebooks/smoke_test_colab.ipynb @ a1c77ff | Colab Pro, NVIDIA L4 | run 2026-11-03 ~05:47–05:48 UTC
+# Download progress bars are abridged. Result file: results/smoke_test/20261103_054838_cuda.json
+
+$ git log -1
+a1c77ff1b67967528d7f565f16c4d4345ee26c24 Fix Colab notebook: remove incompatible torchao, make clone idempotent
+
+$ !pip uninstall -y -q torchao
+$ !pip install -q -r requirements.txt
+$ (HF_TOKEN cell) No HF_TOKEN secret found; continuing without it
+
+$ !python scripts/smoke_test.py --config configs/smoke_test.yaml
+device=cuda dtype=torch.bfloat16
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+8 queries, 8 unique pages
+Loading weights: 100% 605/605 [00:01<00:00, 402.65it/s]
+adapter_model.safetensors: reconstructing file: 100% 78.6M/78.6M
+Loading weights: 100% 254/254 [00:00<00:00, 3066.03it/s]
+chat_template.jinja / preprocessor_config.json / tokenizer_config.json / tokenizer.json / special_tokens_map.json: downloaded
+
+scores (rows = queries, cols = pages):
+[[17.75  7.31  8.44  7.66  7.12  8.44  8.19  7.81]
+ [13.19 16.38 13.31 12.31 13.62 13.62 13.25 13.31]
+ [ 8.5   7.59 16.38  9.25  8.38  9.    9.5  10.81]
+ [15.38 15.31 15.5  15.5  15.31 15.5  15.38 15.56]
+ [ 7.34  8.12  8.5   8.69 14.31  7.38  8.38  7.78]
+ [ 7.22  7.09  7.12  6.69  7.44 15.19  7.25  7.28]
+ [14.19 12.06 11.62 12.12 11.88 12.19 14.88 12.5 ]
+ [11.56 10.19 11.88 11.31 10.62 11.12 12.12 15.62]]
+
+top-1 sanity check: 7/8 queries rank their own page first
+timings: {"data_load_s": 8.663, "model_load_s": 15.574, "encode_pages_s": 3.933, "encode_per_page_s": 0.492, "encode_queries_s": 0.139, "encode_per_query_s": 0.017, "scoring_s": 0.017}
+peak memory: {'peak_allocated_mb': 16190.259765625, 'peak_reserved_mb': 16880.0, 'method': 'torch.cuda.max_memory_*'}
+
+wrote results/smoke_test/20261103_054838_cuda.json
+
+$ !pip freeze > results/smoke_test/pip_freeze_colab.txt
+$ !ls -la results/smoke_test
+-rw-r--r-- 1 root root  3696 Nov  3 05:48 20261103_054838_cuda.json
+-rw-r--r-- 1 root root 14168 Nov  3 05:48 pip_freeze_colab.txt

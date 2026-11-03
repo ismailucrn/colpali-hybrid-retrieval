@@ -3,7 +3,9 @@
 
 model:
   name: vidore/colpali-v1.3
-  revision: b5c6dd62125326e6f0b540c1f7b36e901cdc0a11   # resolved in the smoke test, 2026-11-03
+  revision: b5c6dd62125326e6f0b540c1f7b36e901cdc0a11   # adapter; resolved in the smoke test, 2026-11-03
+  base: vidore/colpaligemma-3b-pt-448-base             # from the adapter's adapter_config.json
+  base_revision: 30ab955d073de4a91dc5a288e8c97226647e3e5a
   device: auto
   dtype: bfloat16                                      # as in vidore-benchmark's ColPaliRetriever
 

@@ -1,0 +1,10 @@
+# MTEB 1.16.5 cross-check | 2026-11-03T06:06:14Z | commit 75d64d0 (+ uncommitted scripts/checks) | Mac M5, Python 3.11 venv
+$ python scripts/checks/check_metrics_against_mteb.py
+@1: ndcg ours=0.17295 mteb=0.17295 | mrr ours=0.17295 mteb=0.15743
+@3: ndcg ours=0.27729 mteb=0.27729 | mrr ours=0.25536 mteb=0.24538
+@5: ndcg ours=0.27729 mteb=0.27729 | mrr ours=0.25536 mteb=0.24593
+@10: ndcg ours=0.28035 mteb=0.28035 | mrr ours=0.25673 mteb=0.24736
+@20: ndcg ours=0.28429 mteb=0.28429 | mrr ours=0.25782 mteb=0.24842
+@50: ndcg ours=0.29015 mteb=0.29015 | mrr ours=0.25864 mteb=0.24913
+@100: ndcg ours=0.29867 mteb=0.29867 | mrr ours=0.25936 mteb=0.24994
+max |diff| over nDCG/Recall/P/MAP (MTEB rounds to 5 decimals): 0.0

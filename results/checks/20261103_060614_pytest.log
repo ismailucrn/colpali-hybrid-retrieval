@@ -1,0 +1,4 @@
+# pytest | 2026-11-03T06:06:14Z | commit 75d64d0 | Mac M5, Python 3.11 venv
+$ python -m pytest -q tests
+......                                                                   [100%]
+6 passed in 0.04s

@@ -108,10 +108,16 @@ def main() -> None:
     print(f"{len(task.queries)} queries, {len(task.page_ids)} pages, {len(task.duplicated_queries)} duplicated query texts")
 
     with Timer(device) as t:
+        # The checkpoint is a LoRA adapter; transformers loads its base model with the same `revision`
+        # kwarg, which does not exist in the base repo. So: fetch the adapter at its pinned revision,
+        # then load from the local snapshot and pass the *base* model's revision.
+        from huggingface_hub import snapshot_download
+
+        adapter_path = snapshot_download(mcfg["name"], revision=mcfg["revision"])
         model = ColPali.from_pretrained(
-            mcfg["name"], revision=mcfg["revision"], torch_dtype=dtype, device_map=device
+            adapter_path, revision=mcfg["base_revision"], torch_dtype=dtype, device_map=device
         ).eval()
-        processor = ColPaliProcessor.from_pretrained(mcfg["name"], revision=mcfg["revision"])
+        processor = ColPaliProcessor.from_pretrained(adapter_path)
     timings["model_load_s"] = t.seconds
     memory.sample()
 
@@ -176,6 +182,7 @@ def main() -> None:
         "resolved": {
             "dtype": str(dtype),
             "model_sha": hub_revision(mcfg["name"], mcfg["revision"], "model"),
+            "base_model_sha": hub_revision(mcfg["base"], mcfg["base_revision"], "model"),
             "dataset_sha": hub_revision(dcfg["dataset"], dcfg["revision"], "dataset"),
         },
         "task": {"n_queries": len(task.queries), "n_pages": len(task.page_ids),

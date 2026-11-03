@@ -1,0 +1,41 @@
+# Console output of a FAILED run, copied from the Colab page (built-in browser) on 2026-11-03.
+# Notebook: notebooks/colpali_docvqa_colab.ipynb @ 75d64d0 | Colab Pro, NVIDIA L4 | started 2026-11-03 06:05:29 UTC
+# Download progress bars are abridged. No result files were produced (the zip cell ran but no file reached the Mac).
+
+$ !nvidia-smi
+|   0  NVIDIA L4                      Off |   00000000:00:03.0 Off |                    0 |
+| N/A   39C    P8             12W /   72W |       0MiB /  23034MiB |      0%      Default |
+
+$ git log -1
+75d64d096226f46ea0989bac45b74b905b5aac40 Add ColPali v1.3 DocVQA reproduction script, official-protocol evaluation and tests
+
+$ !pip uninstall -y -q torchao && pip install -q -r requirements.txt
+$ !python -m pytest -q tests
+......                                                                   [100%]
+6 passed in 0.14s
+
+$ !python scripts/run_colpali.py --config configs/colpali_v1.3_docvqa.yaml
+device=cuda dtype=torch.bfloat16
+data/test-00000-of-00001.parquet: 100% 292M/292M
+Generating test split: 100% 500/500
+451 queries, 500 pages, 22 duplicated query texts
+adapter_config.json: 100% 751/751
+Traceback (most recent call last):
+  File "/content/colpali-hybrid-retrieval/scripts/run_colpali.py", line 196, in <module>
+    main()
+  File "/content/colpali-hybrid-retrieval/scripts/run_colpali.py", line 111, in main
+    model = ColPali.from_pretrained(
+        mcfg["name"], revision=mcfg["revision"], torch_dtype=dtype, device_map=device
+    ).eval()
+  File "/usr/local/lib/python3.13/dist-packages/colpali_engine/models/paligemma/colpali/modeling_colpali.py", line 38, in from_pretrained
+    return super().from_pretrained(*args, **kwargs, key_mapping=key_mapping)
+  File "/usr/local/lib/python3.13/dist-packages/transformers/modeling_utils.py", line 4251, in from_pretrained
+    checkpoint_files, sharded_metadata = _get_resolved_checkpoint_files(
+  File "/usr/local/lib/python3.13/dist-packages/transformers/modeling_utils.py", line 742, in _get_resolved_checkpoint_files
+    raise OSError(
+OSError: vidore/colpaligemma-3b-pt-448-base does not appear to have a file named pytorch_model.bin or model.safetensors.
+
+# Cause: the pinned adapter revision (b5c6dd6, a commit of vidore/colpali-v1.3) is also applied to the base
+# model repo, where that commit does not exist. Fix: snapshot_download the adapter at its revision, load from
+# the local path and pass the base model's own revision (30ab955). The download cell now refuses to run
+# unless metrics.json exists.
