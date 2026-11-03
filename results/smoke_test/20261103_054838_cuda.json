@@ -1,0 +1,216 @@
+{
+  "timestamp_utc": "2026-11-03T05:48:37+00:00",
+  "config_path": "configs/smoke_test.yaml",
+  "config": {
+    "model": {
+      "name": "vidore/colpali-v1.3",
+      "revision": null,
+      "device": "auto",
+      "dtype": "auto"
+    },
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": null,
+      "split": "test",
+      "n_samples": 8
+    },
+    "batch_size": 4,
+    "seed": 0,
+    "output_dir": "results/smoke_test"
+  },
+  "seed": 0,
+  "git_commit": "a1c77ff1b67967528d7f565f16c4d4345ee26c24",
+  "git_dirty": false,
+  "python": "3.13.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cuda",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "gpu_name": "NVIDIA L4",
+    "gpu_total_memory_mb": 22563.125,
+    "cuda_version": "13.0"
+  },
+  "command": "scripts/smoke_test.py --config configs/smoke_test.yaml",
+  "resolved": {
+    "dtype": "torch.bfloat16",
+    "model_sha": "b5c6dd62125326e6f0b540c1f7b36e901cdc0a11",
+    "dataset_sha": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6"
+  },
+  "n_queries": 8,
+  "n_pages": 8,
+  "page_embedding_shape": [
+    1031,
+    128
+  ],
+  "query_embedding_shapes": [
+    [
+      23,
+      128
+    ],
+    [
+      23,
+      128
+    ],
+    [
+      23,
+      128
+    ],
+    [
+      23,
+      128
+    ],
+    [
+      24,
+      128
+    ],
+    [
+      24,
+      128
+    ],
+    [
+      24,
+      128
+    ],
+    [
+      24,
+      128
+    ]
+  ],
+  "timings": {
+    "data_load_s": 8.662975383999992,
+    "model_load_s": 15.574221611999974,
+    "encode_pages_s": 3.9334949259998666,
+    "encode_per_page_s": 0.4916868657499833,
+    "encode_queries_s": 0.13901393300011478,
+    "encode_per_query_s": 0.017376741625014347,
+    "scoring_s": 0.017360876000111602
+  },
+  "peak_memory": {
+    "peak_allocated_mb": 16190.259765625,
+    "peak_reserved_mb": 16880.0,
+    "method": "torch.cuda.max_memory_*"
+  },
+  "top1_hits": [
+    1,
+    1,
+    1,
+    0,
+    1,
+    1,
+    1,
+    1
+  ],
+  "top1_accuracy": 0.875,
+  "queries": [
+    "What is the dividend payout in 2012?",
+    "What is the name of the person in the CC field ?",
+    "What is the personnel costs in the 4th year?",
+    "What is the table number?",
+    "What is the Log-in No. ?",
+    "Which meeting is expected to have the highest ' attendance ' ?",
+    "What is plotted along the x axis ?",
+    "What is the 10th 'title' in Contents ?"
+  ],
+  "gold_page_index": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "scores": [
+    [
+      17.75,
+      7.3125,
+      8.4375,
+      7.65625,
+      7.125,
+      8.4375,
+      8.1875,
+      7.8125
+    ],
+    [
+      13.1875,
+      16.375,
+      13.3125,
+      12.3125,
+      13.625,
+      13.625,
+      13.25,
+      13.3125
+    ],
+    [
+      8.5,
+      7.59375,
+      16.375,
+      9.25,
+      8.375,
+      9.0,
+      9.5,
+      10.8125
+    ],
+    [
+      15.375,
+      15.3125,
+      15.5,
+      15.5,
+      15.3125,
+      15.5,
+      15.375,
+      15.5625
+    ],
+    [
+      7.34375,
+      8.125,
+      8.5,
+      8.6875,
+      14.3125,
+      7.375,
+      8.375,
+      7.78125
+    ],
+    [
+      7.21875,
+      7.09375,
+      7.125,
+      6.6875,
+      7.4375,
+      15.1875,
+      7.25,
+      7.28125
+    ],
+    [
+      14.1875,
+      12.0625,
+      11.625,
+      12.125,
+      11.875,
+      12.1875,
+      14.875,
+      12.5
+    ],
+    [
+      11.5625,
+      10.1875,
+      11.875,
+      11.3125,
+      10.625,
+      11.125,
+      12.125,
+      15.625
+    ]
+  ]
+}

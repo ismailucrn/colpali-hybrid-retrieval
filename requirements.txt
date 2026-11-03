@@ -1,5 +1,17 @@
-# Provisional: lower bounds / known-good versions before the first working run.
-# Will be replaced by exact pins (pip freeze) once the smoke test passes on the GPU environment.
+# Pinned from the first working run: Colab L4, Python 3.13.16, 2026-11-03
+# (full environment: results/smoke_test/pip_freeze_colab.txt).
+#
+# torch is not pinned here: Colab ships torch 2.11.0+cu130 and we use it as-is.
+# Elsewhere install a torch build for your hardware first (tested: 2.11.0 on CUDA, 2.13.0 on macOS/MPS).
+#
+# Colab also preinstalls torchao 0.10, which peft 0.20 rejects at import time; uninstall it
+# (`pip uninstall -y torchao`) — this project does not use it.
 colpali-engine==0.3.18
-datasets>=2.19.1
-pyyaml>=6.0
+transformers==5.22.0
+peft==0.20.0
+accelerate==1.15.0
+datasets==4.8.5
+huggingface-hub==1.33.0
+numpy==2.4.6
+pillow==11.3.0
+pyyaml==6.0.3

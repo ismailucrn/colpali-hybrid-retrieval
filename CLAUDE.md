@@ -95,7 +95,8 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 
 ## Compute
 
-- **Google Colab (free T4, 16 GB) first** for ColPali; laptop for BM25, analysis and writing. Kaggle as backup. T4 has no native bf16 → the script falls back to fp16 (record as a deviation).
+- **Google Colab Pro, L4 GPU (22.5 GB, native bf16)** for ColPali; laptop for BM25, analysis and writing. Kaggle as backup. On a T4 the script falls back to fp16 (would be a deviation) and may run out of memory (smoke-test peak was 16.2 GB).
+- Claude can drive Colab through the app's built-in browser (user signs in to Google; Claude never enters passwords). The Colab notebook prints outputs instead of downloading them, so they can be read from the page and committed.
 - User's laptop: Apple M5, 16 GB unified memory, macOS. ColPali via MPS is plausible but **untested** — do not assume it works.
 - Compute ColPali embeddings **once** and save them to disk (e.g. Google Drive) so sessions/disconnects don't force recomputation.
 - The PaliGemma-based checkpoint may require accepting a license on Hugging Face and an HF token. **Never commit tokens**; use environment variables / Colab secrets.
@@ -118,7 +119,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 ## Current status (as of 3 November 2026)
 
 - GitHub repo connected; skeleton (folders, README, MIT LICENSE, docs templates) pushed on 3 November. The assignment PDF is kept local only (gitignored).
-- No smoke test, no task chosen, nothing measured yet.
+- Smoke test passed on Colab L4 (3 November). No ViDoRe task chosen yet; no evaluation numbers yet.
 - About 2 weeks left → plan compressed: ablation E reduced to RRF `k` sensitivity; control D is kept (main source of rigor).
 
 ## Timeline (compressed, from 3 November)
@@ -173,5 +174,5 @@ docs/         experiment_log.md, deviations.md, literature_matrix.md, ai_usage.m
 
 1. ~~Repo skeleton, README, LICENSE, docs templates~~ — done 3 November.
 2. ~~GPU environment~~ — Colab first (3 November).
-3. `scripts/smoke_test.py` + `notebooks/smoke_test_colab.ipynb` written (3 November); data loading, processor and scoring tested on CPU/MPS without the model. **Next: user runs the notebook on Colab T4**, sends back the JSON + `pip_freeze_colab.txt`; we commit them and pin `requirements.txt`.
+3. ~~Smoke test~~ — passed on Colab L4 (3 November, 7/8 top-1, peak 16.2 GB); `requirements.txt` pinned. Open item: investigate the high peak memory before full indexing (see `docs/experiment_log.md`).
 4. Choose the ViDoRe task (mixed text-heavy and visual pages, manageable size, ideally with page text) together with the user.
