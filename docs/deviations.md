@@ -13,4 +13,6 @@ Every difference between our setup and the ColPali paper (arXiv 2407.01449), and
 
 ## Which comparisons still hold
 
-*To be written after the reproduction run.*
+- **B vs published (v1.3 model card):** same checkpoint, dataset, query deduplication, qrels and metric implementation (MTEB-equivalent); differs in library versions, hardware and possibly bf16 kernels. Measured 0.5752 vs 0.5845 (−0.93 pt). Comparable, with the caveat that the model card's own environment is undocumented.
+- **B vs paper (v1.0, 54.4):** different checkpoint — not a reproduction of the paper's number; context only.
+- **All fusion comparisons (A–E):** run by us under identical conditions, so they do not depend on matching the published environment.

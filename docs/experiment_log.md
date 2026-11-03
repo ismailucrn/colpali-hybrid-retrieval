@@ -60,3 +60,18 @@ Chronological record of every run and decision. One entry per run or decision; n
   - **Measured data stats:** 500 rows, 500 unique pages, 451 unique queries, 0 null queries; 22 query texts appear on several different pages (e.g. "What is the page number?" ×12). `_tesseract` text has the same row order; 4 pages have empty text; median 134 words/page.
   - **Official protocol** read from `vidore-benchmark` (commit `de1d88c`, `ViDoReEvaluatorQA`): queries deduplicated; one relevant page per query, taken from the query's last occurrence; metrics via MTEB `RetrievalEvaluator`. We will reproduce this exactly for the published-vs-measured comparison.
   - Open: reproduction checkpoint (v1.3 vs v1.0).
+
+### 2026-11-03 — System B reproduction: ColPali v1.3 on DocVQA (full set)
+- Type: run (registry rows 7–10)
+- Commit: `0a716fa`; config `configs/colpali_v1.3_docvqa.yaml`; notebook `notebooks/colpali_docvqa_colab.ipynb`
+- Environment: Colab Pro, NVIDIA L4, bf16, Python 3.13.16, torch 2.11.0+cu130, transformers 5.22.0, colpali-engine 0.3.18
+- Checkpoint: `vidore/colpali-v1.3` @ `b5c6dd6` on base `vidore/colpaligemma-3b-pt-448-base` @ `30ab955`
+- Dataset: `vidore/docvqa_test_subsampled` @ `49bf8f1` — 451 queries, 500 pages; official protocol
+- Output: `results/colpali_v1.3_docvqa/` (`scores.npz`, `metrics.json`, `per_query.csv`, console logs)
+- **Result (measured):** nDCG@5 **0.5752**; Recall@5 0.6497; Recall@10 0.6896; nDCG@10 0.5882; MRR@10 0.5559. Post-hoc, without the 22 duplicated query texts (429 queries): nDCG@5 0.6011.
+- **Published:** model card v1.3 nDCG@5 0.5845; paper Table 2 (v1.0) 54.4.
+- **Gap:** −0.93 nDCG@5 points vs the model card — inside the proposed ±2-point tolerance (tolerance not yet confirmed by the user).
+  - *Interpretation / hypotheses (untested):* same checkpoint and protocol, but different library versions (transformers 5.22 vs whatever produced the model card), hardware and bf16 kernels; bf16 scores have many ties, so tiny numeric changes can reorder near-tied pages. The model card number is self-reported and its exact environment is unknown. A check, if time allows: rerun with older transformers/colpali-engine versions.
+  - Our number is above the paper's v1.0 value (54.4), consistent with v1.3 being a later, stronger checkpoint (model cards: 54.4 → 58.5).
+- **Resources (measured):** indexing 111.7 s for 500 pages (0.22 s/page, batch 4); single-query latency median 51.3 ms (encode 44.9 + MaxSim vs 500 pages 6.4), p95 53.3 ms; index 126 MB (515,500 × 128 bf16 vectors); peak GPU memory 16.19 GB allocated (same as the smoke test, so it does not grow with corpus size — consistent with the LM-head-logits hypothesis, still untested).
+- Verification: `scores.npz` re-evaluated locally on CPU with `scripts/evaluate_scores.py` → identical metrics.

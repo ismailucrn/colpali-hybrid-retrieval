@@ -1,0 +1,27 @@
+# Local re-evaluation of Colab scores.npz | 2026-11-03T06:48:39Z | commit b470e86 (+ uncommitted scripts/evaluate_scores.py) | Mac M5, Python 3.11 venv
+# sha256 scores.npz: 8dbb4d9f6fdcc2f71db621862602c5a6df6f56aac3ea11b7013b87a97d8bbd2a
+$ python scripts/evaluate_scores.py --scores results/colpali_v1.3_docvqa/scores.npz
+{
+ "ndcg_at_1": 0.490022,
+ "recall_at_1": 0.490022,
+ "mrr_at_1": 0.490022,
+ "ndcg_at_3": 0.555035,
+ "recall_at_3": 0.600887,
+ "mrr_at_3": 0.539172,
+ "ndcg_at_5": 0.575169,
+ "recall_at_5": 0.649667,
+ "mrr_at_5": 0.55037,
+ "ndcg_at_10": 0.588247,
+ "recall_at_10": 0.689579,
+ "mrr_at_10": 0.555868,
+ "ndcg_at_20": 0.602934,
+ "recall_at_20": 0.747228,
+ "mrr_at_20": 0.559961,
+ "ndcg_at_50": 0.612606,
+ "recall_at_50": 0.796009,
+ "mrr_at_50": 0.561503,
+ "ndcg_at_100": 0.620505,
+ "recall_at_100": 0.844789,
+ "mrr_at_100": 0.562192,
+ "n_queries": 451
+}

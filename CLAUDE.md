@@ -129,7 +129,8 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 ## Current status (as of 3 November 2026)
 
 - GitHub repo connected; skeleton (folders, README, MIT LICENSE, docs templates) pushed on 3 November. The assignment PDF is kept local only (gitignored).
-- Smoke test passed on Colab L4 (3 November). Task chosen: **ViDoRe v1 DocVQA** (3 November). No evaluation numbers yet.
+- Smoke test passed on Colab L4 (3 November). Task chosen: **ViDoRe v1 DocVQA** (3 November).
+- **System B reproduced (3 November):** ColPali v1.3 nDCG@5 = 0.5752 measured vs 0.5845 model card (−0.93 pt); scores saved in `results/colpali_v1.3_docvqa/scores.npz`.
 - About 2 weeks left → plan compressed: ablation E reduced to RRF `k` sensitivity; control D is kept (main source of rigor).
 
 ## Timeline (compressed, from 3 November)
@@ -193,11 +194,12 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 2. ~~GPU environment~~ — Colab first (3 November).
 3. ~~Smoke test~~ — passed on Colab L4 (3 November, 7/8 top-1, peak 16.2 GB); `requirements.txt` pinned. Open item: investigate the high peak memory before full indexing (see `docs/experiment_log.md`).
 4. ~~Choose the ViDoRe task~~ — DocVQA (3 November).
-5. ~~Checkpoint~~ — v1.3. `scripts/run_colpali.py` + `configs/colpali_v1.3_docvqa.yaml` + `notebooks/colpali_docvqa_colab.ipynb` written (3 November), dry-run with a fake model on CPU. **Next: run on Colab L4**, download the zip, commit `results/colpali_v1.3_docvqa/`.
+5. ~~Checkpoint~~ — v1.3. `scripts/run_colpali.py` + `configs/colpali_v1.3_docvqa.yaml` + `notebooks/colpali_docvqa_colab.ipynb` written (3 November), dry-run with a fake model on CPU. Ran on Colab L4 (3 November): nDCG@5 0.5752; outputs committed.
 6. Then: dev/test split + query tagging (frozen before any fusion run), BM25 (A), BGE-M3 (D), RRF (C).
 
 ### Implementation notes
 
 - `src/evaluation.py` reproduces MTEB 1.16's `RetrievalEvaluator` exactly for nDCG/Recall/P/MAP (cross-checked: max |diff| = 0 on 451×500 bf16-tied scores, 3 Nov). MRR uses trec_eval tie order (score desc, doc id desc), so it can differ slightly from MTEB's MRR on ties.
 - We persist the **query × page score matrix** (`scores.npz`, ~1 MB) rather than the page embeddings (~126 MB): every downstream experiment (fusion, analysis) only needs ColPali's scores, and the matrix is small enough to commit. Embeddings can be regenerated with the committed script.
-- Getting outputs out of Colab: text outputs can be read from the page; binary ones (`scores.npz`) are zipped and downloaded through the browser — **ask the user before each download**.
+- Getting outputs out of Colab: text outputs can be read from the page; binary ones (`scores.npz`) are zipped and downloaded through the browser — **ask the user before each download**. Downloads Claude triggers can arrive late or not at all (seen 3 Nov); if nothing arrives within a minute, ask the user to click ▶ on the download cell. Downloads land in `~/Downloads`; verify contents (`diff`, sha256) before copying into `results/`.
+- `scripts/evaluate_scores.py` re-evaluates any saved `scores.npz` on CPU — run it after every GPU run as an independent check.
