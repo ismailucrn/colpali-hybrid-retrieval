@@ -25,3 +25,6 @@ YZM5110_Research_Project*.pdf
 .DS_Store
 .vscode/
 .idea/
+
+# Test cache
+.pytest_cache/

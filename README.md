@@ -57,6 +57,21 @@ python scripts/smoke_test.py --config configs/smoke_test.yaml
 
 Output: `results/smoke_test/<timestamp>_<device>.json` (scores, timings, peak memory, package versions, git commit, model and dataset revisions).
 
+### System B — ColPali v1.3 on DocVQA (GPU)
+
+Encodes all 500 pages and 451 queries of `vidore/docvqa_test_subsampled`, evaluates with the official ViDoRe protocol and records resource use.
+
+- Colab: open `notebooks/colpali_docvqa_colab.ipynb` on an L4 GPU runtime and run all cells.
+- Elsewhere: `python scripts/run_colpali.py --config configs/colpali_v1.3_docvqa.yaml`
+
+Output: `results/colpali_v1.3_docvqa/` — `scores.npz` (query × page scores), `metrics.json`, `per_query.csv`.
+
+### Fast tests (CPU, seconds)
+
+```bash
+python -m pytest -q tests
+```
+
 ## Data access
 
 *TBD once the ViDoRe task is chosen:* dataset name, revision, license and download command.

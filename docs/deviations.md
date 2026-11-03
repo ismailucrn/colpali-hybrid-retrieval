@@ -4,7 +4,7 @@ Every difference between our setup and the ColPali paper (arXiv 2407.01449), and
 
 | # | Aspect | Paper (published) | Ours (measured setup) | Reason | Effect on comparability |
 |---|---|---|---|---|---|
-| 1 | Checkpoint | `vidore/colpali` (v1.0): DocVQA nDCG@5 54.4 (Table 2, arXiv v6) | *(decision open: v1.3, model-card 58.45, or v1.0)* | v1.0 is marked not supported in colpali-engine 0.3.18 | if v1.3: compare against its model-card score, report the paper's v1.0 number as context only |
+| 1 | Checkpoint | `vidore/colpali` (v1.0): DocVQA nDCG@5 54.4 (Table 2, arXiv v6) | `vidore/colpali-v1.3` @ `b5c6dd6` (model-card DocVQA nDCG@5 0.5845) | v1.0 is marked not supported in colpali-engine 0.3.18 | reproduction is checked against the v1.3 model-card score (authors' self-reported, not peer-reviewed); the paper's 54.4 is context only |
 | 2 | Task / subset | ViDoRe v1, 10 tasks | DocVQA only (`vidore/docvqa_test_subsampled`, 500 pages, 451 unique queries) | scope: one task done well | no claim about the other tasks |
 | 3 | Query set | full task query set (451 deduplicated queries) | full set for reproduction; dev/test split for fusion experiments | tuning requires a held-out dev set | reproduction comparable; fusion results are on a subset (wider CIs) |
 | 4 | Hardware / precision | *(to verify)* | NVIDIA L4 (Colab Pro), bf16 | available GPU | precision matches the authors' README examples (bf16); hardware differs |

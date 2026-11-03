@@ -1,0 +1,25 @@
+# System B — ColPali reproduction on ViDoRe v1 DocVQA, full query set, official protocol.
+# Published comparison points (nDCG@5): model card v1.3 = 0.5845; paper Table 2 (v1.0) = 54.4.
+
+model:
+  name: vidore/colpali-v1.3
+  revision: b5c6dd62125326e6f0b540c1f7b36e901cdc0a11   # resolved in the smoke test, 2026-11-03
+  device: auto
+  dtype: bfloat16                                      # as in vidore-benchmark's ColPaliRetriever
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  split: test
+
+# vidore-benchmark CLI defaults
+batch_query: 4
+batch_passage: 4
+batch_score: 4
+
+latency:
+  n_queries: 451          # single-query latency (encode + score against all pages), batch size 1, on device
+  warmup: 5
+
+seed: 0
+output_dir: results/colpali_v1.3_docvqa

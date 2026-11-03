@@ -103,7 +103,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 
 ## Things to verify (do not state these as facts until checked)
 
-- **Checkpoint decision (open):** the paper's checkpoint `vidore/colpali` (v1.0) is marked *not supported* by current `colpali-engine`; v1.1–v1.3 are supported. Either pin an older `colpali-engine` for v1.0, or use v1.3 and compare against its own published model-card score — a documented deviation either way.
+- **Checkpoint: `vidore/colpali-v1.3` (decided 3 November 2026).** Reproduction target = its model-card DocVQA nDCG@5 0.5845; the paper's v1.0 value 54.4 is reported as context only. Reason: v1.0 is marked *not supported* in colpali-engine 0.3.18 and making old versions work has an unknown time cost. Optional extra, only if time remains: v1.0 with an older colpali-engine.
 - DocVQA dataset license (HF card shows none; DocVQA's original terms to check).
 - Whether `vidore/docvqa_test_subsampled_tesseract` text is the same OCR the paper used for its "Unstructured + OCR" BM25 baseline (paper used Unstructured with Tesseract; likely not identical).
 - Whether the topic was submitted to the instructor.
@@ -186,4 +186,11 @@ docs/         experiment_log.md, deviations.md, literature_matrix.md, ai_usage.m
 2. ~~GPU environment~~ — Colab first (3 November).
 3. ~~Smoke test~~ — passed on Colab L4 (3 November, 7/8 top-1, peak 16.2 GB); `requirements.txt` pinned. Open item: investigate the high peak memory before full indexing (see `docs/experiment_log.md`).
 4. ~~Choose the ViDoRe task~~ — DocVQA (3 November).
-5. Decide the reproduction checkpoint (v1.3 vs v1.0), then write the full-set reproduction script (encode 500 pages once, save embeddings, score 451 queries, metrics with the official protocol).
+5. ~~Checkpoint~~ — v1.3. `scripts/run_colpali.py` + `configs/colpali_v1.3_docvqa.yaml` + `notebooks/colpali_docvqa_colab.ipynb` written (3 November), dry-run with a fake model on CPU. **Next: run on Colab L4**, download the zip, commit `results/colpali_v1.3_docvqa/`.
+6. Then: dev/test split + query tagging (frozen before any fusion run), BM25 (A), BGE-M3 (D), RRF (C).
+
+### Implementation notes
+
+- `src/evaluation.py` reproduces MTEB 1.16's `RetrievalEvaluator` exactly for nDCG/Recall/P/MAP (cross-checked: max |diff| = 0 on 451×500 bf16-tied scores, 3 Nov). MRR uses trec_eval tie order (score desc, doc id desc), so it can differ slightly from MTEB's MRR on ties.
+- We persist the **query × page score matrix** (`scores.npz`, ~1 MB) rather than the page embeddings (~126 MB): every downstream experiment (fusion, analysis) only needs ColPali's scores, and the matrix is small enough to commit. Embeddings can be regenerated with the committed script.
+- Getting outputs out of Colab: text outputs can be read from the page; binary ones (`scores.npz`) are zipped and downloaded through the browser — **ask the user before each download**.
