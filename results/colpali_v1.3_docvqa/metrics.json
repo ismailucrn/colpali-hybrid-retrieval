@@ -1,0 +1,186 @@
+{
+  "timestamp_utc": "2026-11-03T06:11:57+00:00",
+  "config_path": "configs/colpali_v1.3_docvqa.yaml",
+  "config": {
+    "model": {
+      "name": "vidore/colpali-v1.3",
+      "revision": "b5c6dd62125326e6f0b540c1f7b36e901cdc0a11",
+      "base": "vidore/colpaligemma-3b-pt-448-base",
+      "base_revision": "30ab955d073de4a91dc5a288e8c97226647e3e5a",
+      "device": "auto",
+      "dtype": "bfloat16"
+    },
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "batch_query": 4,
+    "batch_passage": 4,
+    "batch_score": 4,
+    "latency": {
+      "n_queries": 451,
+      "warmup": 5
+    },
+    "seed": 0,
+    "output_dir": "results/colpali_v1.3_docvqa"
+  },
+  "seed": 0,
+  "git_commit": "0a716fa5ca6ca7db5aef3c88bee34fdc79c3939b",
+  "git_dirty": true,
+  "python": "3.13.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cuda",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "gpu_name": "NVIDIA L4",
+    "gpu_total_memory_mb": 22563.125,
+    "cuda_version": "13.0"
+  },
+  "command": "scripts/run_colpali.py --config configs/colpali_v1.3_docvqa.yaml",
+  "system": "B: ColPali",
+  "resolved": {
+    "dtype": "torch.bfloat16",
+    "model_sha": "b5c6dd62125326e6f0b540c1f7b36e901cdc0a11",
+    "base_model_sha": "30ab955d073de4a91dc5a288e8c97226647e3e5a",
+    "dataset_sha": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6"
+  },
+  "task": {
+    "n_queries": 451,
+    "n_pages": 500,
+    "n_duplicated_query_texts": 22
+  },
+  "metrics": {
+    "ndcg_at_1": 0.49002217294900224,
+    "recall_at_1": 0.49002217294900224,
+    "precision_at_1": 0.49002217294900224,
+    "map_at_1": 0.49002217294900224,
+    "mrr_at_1": 0.49002217294900224,
+    "ndcg_at_3": 0.5550347713256277,
+    "recall_at_3": 0.6008869179600886,
+    "precision_at_3": 0.20029563932002956,
+    "map_at_3": 0.5391722099039172,
+    "mrr_at_3": 0.5391722099039172,
+    "ndcg_at_5": 0.5751688523013816,
+    "recall_at_5": 0.6496674057649667,
+    "precision_at_5": 0.12993348115299333,
+    "map_at_5": 0.550369549150037,
+    "mrr_at_5": 0.550369549150037,
+    "ndcg_at_10": 0.5882468805186019,
+    "recall_at_10": 0.6895787139689579,
+    "precision_at_10": 0.06895787139689577,
+    "map_at_10": 0.5558679125752296,
+    "mrr_at_10": 0.5558679125752296,
+    "ndcg_at_20": 0.6029342862176335,
+    "recall_at_20": 0.7472283813747228,
+    "precision_at_20": 0.037361419068736135,
+    "map_at_20": 0.5599608430483919,
+    "mrr_at_20": 0.5599608430483919,
+    "ndcg_at_50": 0.6126058784990217,
+    "recall_at_50": 0.7960088691796009,
+    "precision_at_50": 0.015920177383592016,
+    "map_at_50": 0.5615028824158501,
+    "mrr_at_50": 0.5615028824158501,
+    "ndcg_at_100": 0.6205045419069292,
+    "recall_at_100": 0.844789356984479,
+    "precision_at_100": 0.00844789356984479,
+    "map_at_100": 0.5621924914698718,
+    "mrr_at_100": 0.5621924914698718,
+    "n_queries": 451
+  },
+  "metrics_without_duplicated_queries_posthoc": {
+    "ndcg_at_1": 0.5151515151515151,
+    "recall_at_1": 0.5151515151515151,
+    "precision_at_1": 0.5151515151515151,
+    "map_at_1": 0.5151515151515151,
+    "mrr_at_1": 0.5151515151515151,
+    "ndcg_at_3": 0.5808618930402952,
+    "recall_at_3": 0.627039627039627,
+    "precision_at_3": 0.209013209013209,
+    "map_at_3": 0.5648795648795649,
+    "mrr_at_3": 0.5648795648795649,
+    "ndcg_at_5": 0.6011267361937462,
+    "recall_at_5": 0.675990675990676,
+    "precision_at_5": 0.13519813519813517,
+    "map_at_5": 0.5761849261849262,
+    "mrr_at_5": 0.5761849261849262,
+    "ndcg_at_10": 0.61487543252467,
+    "recall_at_10": 0.717948717948718,
+    "precision_at_10": 0.07179487179487179,
+    "map_at_10": 0.581965256965257,
+    "mrr_at_10": 0.581965256965257,
+    "ndcg_at_20": 0.6279375495187421,
+    "recall_at_20": 0.7692307692307693,
+    "precision_at_20": 0.03846153846153845,
+    "map_at_20": 0.5856021196943819,
+    "mrr_at_20": 0.5856021196943819,
+    "ndcg_at_50": 0.6367637603161075,
+    "recall_at_50": 0.8135198135198135,
+    "precision_at_50": 0.016270396270396267,
+    "map_at_50": 0.5870291190596421,
+    "mrr_at_50": 0.5870291190596421,
+    "ndcg_at_100": 0.6443067640984179,
+    "recall_at_100": 0.8601398601398601,
+    "precision_at_100": 0.0086013986013986,
+    "map_at_100": 0.587686470582223,
+    "mrr_at_100": 0.587686470582223,
+    "n_queries": 429
+  },
+  "published": {
+    "ndcg_at_5_model_card_v1.3": 0.58452,
+    "ndcg_at_5_paper_table2_v1.0": 0.544
+  },
+  "timings": {
+    "data_load_s": 22.836814761999904,
+    "model_load_s": 30.715271721000136,
+    "index_pages_s": 111.69513748899999,
+    "index_per_page_s": 0.223390274978,
+    "encode_queries_s": 5.575930266000114,
+    "score_all_cpu_s": 18.305232386999933
+  },
+  "latency": {
+    "n_queries": 451,
+    "warmup": 5,
+    "encode": {
+      "mean_ms": 45.10926455432299,
+      "median_ms": 44.85196599989649,
+      "p95_ms": 46.698880500002815
+    },
+    "score": {
+      "mean_ms": 6.454805110865034,
+      "median_ms": 6.43467400004738,
+      "p95_ms": 6.636769500005357
+    },
+    "total": {
+      "mean_ms": 51.56406966518802,
+      "median_ms": 51.29878100001406,
+      "p95_ms": 53.28449649994127
+    },
+    "note": "batch size 1; scoring against all pages on the device"
+  },
+  "index": {
+    "n_pages": 500,
+    "vectors_per_page": [
+      1031
+    ],
+    "dim": 128,
+    "dtype": "torch.bfloat16",
+    "total_vectors": 515500,
+    "size_mb": 125.8544921875
+  },
+  "peak_memory": {
+    "peak_allocated_mb": 16188.8076171875,
+    "peak_reserved_mb": 16954.0,
+    "method": "torch.cuda.max_memory_*"
+  }
+}

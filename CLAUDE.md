@@ -153,6 +153,13 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 
 Templates: `docs/literature_matrix.md`.
 
+## Recording every run
+
+- **Every execution gets a row in `docs/run_registry.md`** — GPU runs on Colab, local checks, tests, dry runs — **including failed runs**, with: UTC time, where (colab-L4 / mac), script or notebook, commit, status (ok / FAILED + cause / partial), output files and log path.
+- **Save the console output** of every Colab run next to its results (`results/<run>/console_<YYYYMMDD_HHMM>[_FAILED].log`, copied from the notebook page) and of every local check (`results/checks/<timestamp>_<name>.log`). A result without a log does not count as reported.
+- Scripts used for checks live in the repo (`scripts/checks/`), never only in a scratch directory.
+- `docs/experiment_log.md` keeps the *reasoning* (decisions, interpretations); `docs/run_registry.md` keeps the *evidence* (what ran, when, with what outcome).
+
 ## Git workflow
 
 - Remote: https://github.com/ismailucrn/colpali-hybrid-retrieval, branch `main`.
@@ -171,7 +178,7 @@ src/          reusable code
 notebooks/    Colab notebooks (thin wrappers around scripts/)
 results/      small saved outputs: run files, metrics JSON/CSV, tables, figures
 data/         local data cache — gitignored
-docs/         experiment_log.md, deviations.md, literature_matrix.md, ai_usage.md, query_tagging.md
+docs/         experiment_log.md, run_registry.md, deviations.md, literature_matrix.md, ai_usage.md, query_tagging.md
 ```
 
 - Every reported number must be reproducible by a committed script + config.

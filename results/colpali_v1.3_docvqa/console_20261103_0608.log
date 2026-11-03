@@ -1,0 +1,44 @@
+# Console output copied from the Colab page (built-in browser) on 2026-11-03.
+# Notebook: notebooks/colpali_docvqa_colab.ipynb, repo at 0a716fa (git_dirty=true only because the earlier failed
+# run in the same runtime left an untracked pip_freeze_colab.txt) | Colab Pro, NVIDIA L4 | 2026-11-03 06:08–06:12 UTC
+# Download progress bars are abridged.
+
+$ !nvidia-smi
+Tue Nov  3 06:08:10 2026
+|   0  NVIDIA L4                      Off |   00000000:00:03.0 Off |                    0 |
+| N/A   41C    P8             12W /   72W |       0MiB /  23034MiB |      0%      Default |
+
+$ git log -1
+0a716fa5ca6ca7db5aef3c88bee34fdc79c3939b Fix pinned-revision loading of the ColPali adapter; log failed run and local checks
+
+$ !pip uninstall -y -q torchao && pip install -q -r requirements.txt
+WARNING: Skipping torchao as it is not installed.
+$ !python -m pytest -q tests
+......                                                                   [100%]
+6 passed in 0.12s
+
+$ !python scripts/run_colpali.py --config configs/colpali_v1.3_docvqa.yaml
+device=cuda dtype=torch.bfloat16
+451 queries, 500 pages, 22 duplicated query texts
+Fetching 19 files: 100% 19/19   (adapter snapshot vidore/colpali-v1.3 @ b5c6dd6)
+Fetching 2 files: 100% 2/2      (base vidore/colpaligemma-3b-pt-448-base @ 30ab955, 5.85 GB)
+Loading weights: 100% 605/605
+Loading weights: 100% 254/254
+
+nDCG@5 = 0.5752  (model card v1.3: 0.5845; paper v1.0: 0.544)
+Recall@5 = 0.6497  Recall@10 = 0.6896  nDCG@10 = 0.5882  MRR@10 = 0.5559
+post-hoc, without 22 duplicated query texts: nDCG@5 = 0.6011
+timings: {"data_load_s": 22.84, "model_load_s": 30.72, "index_pages_s": 111.7, "index_per_page_s": 0.22, "encode_queries_s": 5.58, "score_all_cpu_s": 18.31}
+latency per query (median): 51.3 ms; peak memory: {'peak_allocated_mb': 16188.8076171875, 'peak_reserved_mb': 16954.0, 'method': 'torch.cuda.max_memory_*'}
+
+wrote /content/colpali-hybrid-retrieval/results/colpali_v1.3_docvqa/{scores.npz, metrics.json, per_query.csv}
+
+$ !ls -la results/colpali_v1.3_docvqa
+-rw-r--r-- 1 root root   2514 Nov  3 06:08 console_20261103_0605_FAILED.log
+-rw-r--r-- 1 root root   5828 Nov  3 06:11 metrics.json
+-rw-r--r-- 1 root root  36482 Nov  3 06:11 per_query.csv
+-rw-r--r-- 1 root root  14196 Nov  3 06:12 pip_freeze_colab.txt
+-rw-r--r-- 1 root root 254870 Nov  3 06:11 scores.npz
+
+$ files.download("/content/colpali_v1.3_docvqa.zip")
+(no file arrived on the Mac; a second download attempt from a new cell did not execute — see run_registry.md)
