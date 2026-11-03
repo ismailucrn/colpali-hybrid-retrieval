@@ -103,10 +103,20 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 
 ## Things to verify (do not state these as facts until checked)
 
-- Published nDCG@5 of the reproduction checkpoint on the chosen task (paper table vs. model card / leaderboard).
-- **Checkpoint decision (open):** the paper's checkpoint `vidore/colpali` (v1.0) is marked *not supported* by current `colpali-engine`; v1.1–v1.3 are supported. Either pin an older `colpali-engine` for v1.0, or use v1.x and compare against that checkpoint's own published score — a documented deviation either way.
-- Dataset license and number of queries of the chosen task (determines how small the test split will be).
+- **Checkpoint decision (open):** the paper's checkpoint `vidore/colpali` (v1.0) is marked *not supported* by current `colpali-engine`; v1.1–v1.3 are supported. Either pin an older `colpali-engine` for v1.0, or use v1.3 and compare against its own published model-card score — a documented deviation either way.
+- DocVQA dataset license (HF card shows none; DocVQA's original terms to check).
+- Whether `vidore/docvqa_test_subsampled_tesseract` text is the same OCR the paper used for its "Unstructured + OCR" BM25 baseline (paper used Unstructured with Tesseract; likely not identical).
 - Whether the topic was submitted to the instructor.
+
+### Chosen task: ViDoRe v1 DocVQA (`vidore/docvqa_test_subsampled`), decided 3 November 2026
+
+- **Published nDCG@5 on DocVQA** (verified 3 Nov):
+  - Paper, arXiv 2407.01449v6, Table 2: ColPali **54.4**; BM25 on Unstructured text-only 34.1; BM25 on Unstructured + OCR **36.8**; BM25 on Unstructured + captioning 38.4; BGE-M3 on Unstructured + OCR 25.7.
+  - Model cards (`results.json` on each HF repo, self-reported by the authors): v1.0 `vidore/colpali` 0.5443, v1.1 0.5499, v1.2 0.5717, **v1.3 0.5845**.
+- **Data (measured 3 Nov):** 500 rows = 500 unique pages; 451 unique queries; 22 query texts occur more than once, each time on a *different* page (e.g. "What is the page number?" ×12, "What is the table number?" ×5). `_tesseract` variant: same row order, OCR text in `text_description`, 4 pages with empty text, median 134 words/page, noisy OCR.
+- **Official protocol** (`vidore-benchmark`, `ViDoReEvaluatorQA`): queries are deduplicated; each unique query has exactly **one** relevant page — for duplicated query texts, the page of its **last** occurrence (dict overwrite). Metrics via MTEB's `RetrievalEvaluator` (pytrec_eval). Paper's BM25 baseline: `rank_bm25` BM25Okapi with NLTK tokenisation and stopwords.
+  - *Interpretation:* the 22 duplicated generic queries are effectively ambiguous (one arbitrary gold page among several valid ones). We keep the official protocol for the published-vs-measured comparison and, as a labeled post-hoc sensitivity check, also report results without them.
+- **Control D (proposed, to confirm before any fusion result):** BGE-M3 as the dense text retriever — the paper's own dense text baseline, so D is a recognised, not hand-picked, model.
 
 ### Verified (3 November 2026, from the official README, PyPI and the HF Hub API)
 
@@ -119,7 +129,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 ## Current status (as of 3 November 2026)
 
 - GitHub repo connected; skeleton (folders, README, MIT LICENSE, docs templates) pushed on 3 November. The assignment PDF is kept local only (gitignored).
-- Smoke test passed on Colab L4 (3 November). No ViDoRe task chosen yet; no evaluation numbers yet.
+- Smoke test passed on Colab L4 (3 November). Task chosen: **ViDoRe v1 DocVQA** (3 November). No evaluation numbers yet.
 - About 2 weeks left → plan compressed: ablation E reduced to RRF `k` sensitivity; control D is kept (main source of rigor).
 
 ## Timeline (compressed, from 3 November)
@@ -175,4 +185,5 @@ docs/         experiment_log.md, deviations.md, literature_matrix.md, ai_usage.m
 1. ~~Repo skeleton, README, LICENSE, docs templates~~ — done 3 November.
 2. ~~GPU environment~~ — Colab first (3 November).
 3. ~~Smoke test~~ — passed on Colab L4 (3 November, 7/8 top-1, peak 16.2 GB); `requirements.txt` pinned. Open item: investigate the high peak memory before full indexing (see `docs/experiment_log.md`).
-4. Choose the ViDoRe task (mixed text-heavy and visual pages, manageable size, ideally with page text) together with the user.
+4. ~~Choose the ViDoRe task~~ — DocVQA (3 November).
+5. Decide the reproduction checkpoint (v1.3 vs v1.0), then write the full-set reproduction script (encode 500 pages once, save embeddings, score 451 queries, metrics with the official protocol).
