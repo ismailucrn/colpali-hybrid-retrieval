@@ -95,19 +95,25 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 
 ## Compute
 
-- Not yet confirmed. Plan: Google Colab or Kaggle GPU (~16 GB, e.g. T4/P100) for ColPali; laptop only for BM25, analysis and writing.
-- Do **not** assume local ColPali inference on the user's laptop works.
+- **Google Colab (free T4, 16 GB) first** for ColPali; laptop for BM25, analysis and writing. Kaggle as backup. T4 has no native bf16 → the script falls back to fp16 (record as a deviation).
+- User's laptop: Apple M5, 16 GB unified memory, macOS. ColPali via MPS is plausible but **untested** — do not assume it works.
 - Compute ColPali embeddings **once** and save them to disk (e.g. Google Drive) so sessions/disconnects don't force recomputation.
 - The PaliGemma-based checkpoint may require accepting a license on Hugging Face and an HF token. **Never commit tokens**; use environment variables / Colab secrets.
 
 ## Things to verify (do not state these as facts until checked)
 
-- Which ColPali checkpoint version (v1.0 / v1.2 / v1.3 / ...) matches the paper's reported table, and its published nDCG@5 for the chosen task.
-- Current `colpali-engine` API and versions — check the official README before writing code.
-- Whether the chosen ViDoRe dataset already ships page text (otherwise we OCR ourselves, e.g. Tesseract — a documented deviation).
-- Dataset size, license, and number of queries of the chosen task (determines how small the test split will be).
-- The user's GPU environment and HF license/token status.
+- Published nDCG@5 of the reproduction checkpoint on the chosen task (paper table vs. model card / leaderboard).
+- **Checkpoint decision (open):** the paper's checkpoint `vidore/colpali` (v1.0) is marked *not supported* by current `colpali-engine`; v1.1–v1.3 are supported. Either pin an older `colpali-engine` for v1.0, or use v1.x and compare against that checkpoint's own published score — a documented deviation either way.
+- Dataset license and number of queries of the chosen task (determines how small the test split will be).
 - Whether the topic was submitted to the instructor.
+
+### Verified (3 November 2026, from the official README, PyPI and the HF Hub API)
+
+- `colpali-engine` latest is **0.3.18** (Python >=3.10,<3.15, transformers >=5.3). The package is **deprecated** in favour of Sentence Transformers v6 `MultiVectorEncoder`, but kept "for research, reproducibility"; we use it because it is the authors' reference implementation. API: `ColPali.from_pretrained`, `ColPaliProcessor.process_images / process_queries / score_multi_vector`.
+- `vidore/colpali-v1.3` (LoRA adapter) and its base `vidore/colpaligemma-3b-pt-448-base` are **not gated** → no HF license acceptance or token strictly needed.
+- ViDoRe v1 tasks ship OCR text: `vidore/<task>_tesseract` datasets have a `text_description` column (also `_captioning`, `_ocr_chunk` variants) → page text for BM25 does not need our own OCR.
+- `vidore/docvqa_test_subsampled`: 500 (query, page) rows; `_beir` variant: 500 corpus pages, 451 queries, qrels.
+- GPU environment: Google Colab (free T4) chosen first; user's Mac (Apple M5, 16 GB) is a possible MPS alternative, untested.
 
 ## Current status (as of 3 November 2026)
 
@@ -166,6 +172,6 @@ docs/         experiment_log.md, deviations.md, literature_matrix.md, ai_usage.m
 ## Next immediate steps
 
 1. ~~Repo skeleton, README, LICENSE, docs templates~~ — done 3 November.
-2. Confirm the user's GPU environment (free Colab / Colab Pro / Kaggle / other) and HF access.
-3. Write `scripts/smoke_test.py` + a Colab notebook: load ColPali, encode a few page images and queries, print scores, peak GPU memory and timing.
+2. ~~GPU environment~~ — Colab first (3 November).
+3. `scripts/smoke_test.py` + `notebooks/smoke_test_colab.ipynb` written (3 November); data loading, processor and scoring tested on CPU/MPS without the model. **Next: user runs the notebook on Colab T4**, sends back the JSON + `pip_freeze_colab.txt`; we commit them and pin `requirements.txt`.
 4. Choose the ViDoRe task (mixed text-heavy and visual pages, manageable size, ideally with page text) together with the user.

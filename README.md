@@ -43,6 +43,20 @@ docs/       experiment log, deviations, literature matrix, query tagging rules, 
 - ColPali inference requires a GPU (planned: Google Colab / Kaggle, ~16 GB). BM25, fusion, evaluation and analysis run on CPU.
 - The PaliGemma-based checkpoint may require accepting its license on Hugging Face and an HF token. Provide the token via the `HF_TOKEN` environment variable or Colab secrets; never commit it.
 
+### Smoke test
+
+Checks that the checkpoint loads, encodes 8 ViDoRe pages and queries, and records timing and peak memory (needs a GPU; ~6 GB of weights are downloaded).
+
+- Colab: open `notebooks/smoke_test_colab.ipynb`, select a T4 GPU runtime, run all cells.
+- Any machine with Python ≥3.10:
+
+```bash
+pip install -r requirements.txt
+python scripts/smoke_test.py --config configs/smoke_test.yaml
+```
+
+Output: `results/smoke_test/<timestamp>_<device>.json` (scores, timings, peak memory, package versions, git commit, model and dataset revisions).
+
 ## Data access
 
 *TBD once the ViDoRe task is chosen:* dataset name, revision, license and download command.

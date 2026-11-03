@@ -6,3 +6,4 @@ The assignment allows disclosed AI assistance for search, coding and editing. Th
 |---|---|---|---|
 | 2026-10-23 → 2026-11-03 | Claude (claude.ai chat) | Discussed topic options; helped scope the project and draft the research plan (systems A–E, metrics, protocol); drafted the first `CLAUDE.md`. | Chose the topic and main paper; decided scope. |
 | 2026-11-03 | Claude Code (Claude Opus 5.5) | Reviewed `CLAUDE.md` against the assignment brief and revised it (evaluation split, pre-registered expectations, query tagging, control D conditions); set up the git remote, repository skeleton, README, license and docs templates. | Approved changes; *(to fill in)*. |
+| 2026-11-03 | Claude Code (Claude Opus 5.5) | Checked `colpali-engine` README/PyPI and HF Hub metadata; wrote `scripts/smoke_test.py`, `src/runinfo.py`, `configs/smoke_test.yaml` and the Colab notebook; tested data loading/processor/scoring locally. | Runs the notebook on Colab; *(to fill in)*. |

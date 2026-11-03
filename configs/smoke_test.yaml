@@ -1,0 +1,19 @@
+# Smoke test: load ColPali, encode a few ViDoRe pages and queries, check that each
+# query's own page scores highest, and record timing + peak memory.
+# Not an evaluation run — no metric from this file goes into the report.
+
+model:
+  name: vidore/colpali-v1.3        # checkpoint for the smoke test only; reproduction checkpoint decided separately
+  revision: null                   # null = main; resolved sha is written to the output
+  device: auto                     # auto = cuda > mps > cpu
+  dtype: auto                      # auto = bf16 on Ampere+/MPS, fp16 on older GPUs (T4/P100), fp32 on CPU
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: null
+  split: test
+  n_samples: 8                     # first N (query, page) pairs, streamed — no full download
+
+batch_size: 4
+seed: 0
+output_dir: results/smoke_test

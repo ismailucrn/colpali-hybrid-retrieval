@@ -1,0 +1,5 @@
+# Provisional: lower bounds / known-good versions before the first working run.
+# Will be replaced by exact pins (pip freeze) once the smoke test passes on the GPU environment.
+colpali-engine==0.3.18
+datasets>=2.19.1
+pyyaml>=6.0
