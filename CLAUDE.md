@@ -111,7 +111,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 
 ## Current status (as of 3 November 2026)
 
-- GitHub repo connected; first commit (`CLAUDE.md`, `.gitignore`) pushed on 3 November. The assignment PDF is kept local only (gitignored).
+- GitHub repo connected; skeleton (folders, README, MIT LICENSE, docs templates) pushed on 3 November. The assignment PDF is kept local only (gitignored).
 - No smoke test, no task chosen, nothing measured yet.
 - About 2 weeks left → plan compressed: ablation E reduced to RRF `k` sensitivity; control D is kept (main source of rigor).
 
@@ -165,7 +165,7 @@ docs/         experiment_log.md, deviations.md, literature_matrix.md, ai_usage.m
 
 ## Next immediate steps
 
-1. Sync with the GitHub remote (check whether it already has an initial commit), then create the folder structure, `README.md`, `.gitignore` additions and doc templates (`docs/experiment_log.md`, `docs/deviations.md`, `docs/literature_matrix.md`, `docs/ai_usage.md`, `docs/query_tagging.md`).
+1. ~~Repo skeleton, README, LICENSE, docs templates~~ — done 3 November.
 2. Confirm the user's GPU environment (free Colab / Colab Pro / Kaggle / other) and HF access.
 3. Write `scripts/smoke_test.py` + a Colab notebook: load ColPali, encode a few page images and queries, print scores, peak GPU memory and timing.
 4. Choose the ViDoRe task (mixed text-heavy and visual pages, manageable size, ideally with page text) together with the user.
