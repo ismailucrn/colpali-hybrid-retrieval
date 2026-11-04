@@ -138,3 +138,11 @@ Chronological record of every run and decision. One entry per run or decision; n
 - Rationale (stated before running): equal weights let a much weaker retriever override ColPali; a small text weight could still break ties or rescue near-misses where BM25 is confident (e.g. `exact` queries) without overriding ColPali elsewhere. *Hypothesis:* the best dev w is high (≥ 0.8); any gain over B is small.
 - Risk: 90 configurations on 226 dev queries → the selected dev score is optimistically biased; only the single test run counts.
 - The pre-registered C and D (equal weight, k = 1) remain the primary result; C_w/D_w are reported alongside, clearly as an ablation.
+
+### 2026-11-04 — Ablation E on dev: weighted RRF
+- Type: run (registry row 18), dev only; grid and rule committed beforehand (`b558ceb`).
+- **Measured (dev nDCG@5; B ColPali = 0.5804):**
+  - C_w = wRRF(BM25, ColPali): best **0.5851** at w = 0.95, k = 20 (+0.47 pt over B). Near the top, w = 0.85–0.95 with k = 5–20 gives 0.580–0.585; w = 0.5 (plain RRF) gives ≤ 0.5335.
+  - D_w = wRRF(BGE-M3, ColPali): best 0.5804 — equal to B; no configuration beats ColPali alone. Selected by the tie rule: w = 0.95, k = 10.
+- *Interpretation:* the text retrievers only help (if at all) when they are allowed to reorder ColPali's ranking marginally; any weight that lets them override ColPali hurts. BM25 shows a small dev gain that BGE-M3 does not — consistent with P3's direction, but +0.47 pt after a 90-config search is within what selection bias alone could produce *(hypothesis; the test run and paired test will tell)*.
+- **Frozen for the single test run:** C k=1; D k=1; C_w (w=0.95, k=20); D_w (w=0.95, k=10); plus A, B and BGE-M3 alone.

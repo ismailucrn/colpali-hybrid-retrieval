@@ -200,7 +200,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 6. ~~Dev/test split + query tagging~~ — frozen 3 November (`results/splits/`, `docs/query_tagging.md`): dev 226 / test 225; visual 35, exact 186, general 230.
 7. ~~BM25 (A)~~ — 4 November: full-set nDCG@5 0.3907 (paper 36.8 with different OCR); `results/bm25_docvqa/`. Runs on the Mac CPU in seconds.
 8. ~~BGE-M3 (D's text component)~~ — 4 November: full-set nDCG@5 0.2486 (paper 25.7); `results/bge_m3_docvqa/`. Ran on the Mac (MPS) in ~1 minute.
-9. Next: `scripts/run_fusion_dev.py` (written, not yet run) — choose RRF `k` for C and D on dev only; then one test run.
+9. ~~Dev selection~~ — 4 November. Equal-weight RRF hurts on dev (B 0.5804; C 0.5335, D 0.5263 at k=1). Dev-informed ablation E (weighted RRF, pre-registered in `b558ceb`): C_w w=0.95/k=20 dev 0.5851; D_w w=0.95/k=10 dev 0.5804 (= B).
+10. Next: the **single test run** of all frozen systems (A, B, BGE-M3, C, D, C_w, D_w) with bootstrap CIs, paired tests vs B, per-type breakdown, resource table.
 
 ### Implementation notes
 
