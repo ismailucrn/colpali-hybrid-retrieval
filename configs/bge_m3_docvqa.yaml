@@ -1,0 +1,33 @@
+# Dense text retriever used by control D: BGE-M3 dense vectors over the same OCR text as BM25.
+# Implemented like vidore-benchmark's BGEM3Retriever (FlagEmbedding BGEM3FlagModel, fp16, query max_length 512,
+# dot product). Pre-registered 2026-11-04 (commit 2dfcf31) before any BGE-M3 or fusion result.
+# Published comparison point (nDCG@5, paper Table 2): BGE-M3 on Unstructured + OCR = 25.7 (different OCR pipeline).
+
+model:
+  name: BAAI/bge-m3
+  revision: 5617a9f61b028005a4858fdac845db406aefb181
+  # Only the files the M3 embedder needs (skips onnx/ and images, ~2.3 GB less).
+  allow_patterns: ["*.json", "pytorch_model.bin", "*.pt", "sentencepiece.bpe.model"]
+  device: auto              # cuda > mps > cpu
+  use_fp16: true            # as in vidore-benchmark; ignored on CPU
+  query_max_length: 512     # as in vidore-benchmark
+  # Explicit on purpose: FlagEmbedding's default changed from 8192 (1.2.x, the paper's era) to 512 (1.4.x).
+  # 8192 covers every DocVQA page (max ~1.3k words), so BGE-M3 sees the same full text as BM25.
+  passage_max_length: 8192
+  batch_size: 4             # vidore-benchmark CLI default
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  text_dataset: vidore/docvqa_test_subsampled_tesseract
+  text_revision: 9a183a7237d678eaaf68dc0f640a42f46016802f
+  split: test
+
+splits: results/splits/docvqa_split.json    # only full-set and dev metrics are printed
+
+latency:
+  n_queries: 451
+  warmup: 5
+
+seed: 0
+output_dir: results/bge_m3_docvqa

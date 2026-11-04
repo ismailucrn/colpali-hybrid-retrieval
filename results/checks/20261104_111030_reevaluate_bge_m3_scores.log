@@ -1,0 +1,27 @@
+# Re-evaluation of BGE-M3 scores.npz | 2026-11-04T11:10:30Z | commit 2dfcf31 (+ uncommitted BGE-M3 and fusion code) | Mac M5, Python 3.11 venv
+# sha256 scores.npz: 4e56d389b5061a5785766b7410fe0eba4cbc9497ac81731afa67ca5d2185c12c
+$ python scripts/evaluate_scores.py --scores results/bge_m3_docvqa/scores.npz
+{
+ "ndcg_at_1": 0.210643,
+ "recall_at_1": 0.210643,
+ "mrr_at_1": 0.210643,
+ "ndcg_at_3": 0.227668,
+ "recall_at_3": 0.239468,
+ "mrr_at_3": 0.223577,
+ "ndcg_at_5": 0.248643,
+ "recall_at_5": 0.292683,
+ "mrr_at_5": 0.234664,
+ "ndcg_at_10": 0.284958,
+ "recall_at_10": 0.405765,
+ "mrr_at_10": 0.2495,
+ "ndcg_at_20": 0.305768,
+ "recall_at_20": 0.487805,
+ "mrr_at_20": 0.255246,
+ "ndcg_at_50": 0.325807,
+ "recall_at_50": 0.5898,
+ "mrr_at_50": 0.258386,
+ "ndcg_at_100": 0.343082,
+ "recall_at_100": 0.696231,
+ "mrr_at_100": 0.259914,
+ "n_queries": 451
+}

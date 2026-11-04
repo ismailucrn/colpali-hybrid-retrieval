@@ -1,0 +1,14 @@
+# BGE-M3 dense text (control D component) | 2026-11-04T11:09:04Z | commit 2dfcf31 (+ uncommitted scripts/run_bge_m3.py, configs/bge_m3_docvqa.yaml) | Mac M5 (MPS), Python 3.11 venv, FlagEmbedding 1.4.2
+$ python scripts/run_bge_m3.py --config configs/bge_m3_docvqa.yaml
+device=mps fp16=True
+451 queries, 500 pages
+
+full set: nDCG@5 = 0.2486  (paper, BGE-M3 on Unstructured + OCR: 0.257)
+Recall@5 = 0.2927  Recall@10 = 0.4058  nDCG@10 = 0.2850  MRR@10 = 0.2495
+dev (226 queries): nDCG@5 = 0.2351
+post-hoc, without 22 duplicated query texts: nDCG@5 = 0.2604
+timings: {"data_load_s": 3.21, "model_load_s": 22.75, "index_pages_s": 21.1, "index_per_page_s": 0.04, "encode_queries_s": 3.54}
+latency per query (median): 29.0 ms; peak memory: {'peak_driver_allocated_mb': 2139.984375, 'method': 'sampled torch.mps.driver_allocated_memory'}
+
+wrote results/bge_m3_docvqa/{scores.npz, metrics.json, per_query.csv}
+# exit status: 0 (reported by the background task runner)

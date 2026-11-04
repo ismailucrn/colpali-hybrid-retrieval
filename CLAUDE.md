@@ -130,6 +130,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 
 - GitHub repo connected; skeleton (folders, README, MIT LICENSE, docs templates) pushed on 3 November. The assignment PDF is kept local only (gitignored).
 - Smoke test passed on Colab L4 (3 November). Task chosen: **ViDoRe v1 DocVQA** (3 November).
+- **BGE-M3 measured (4 November):** nDCG@5 = 0.2486 (full set).
 - **System A measured (4 November):** BM25 nDCG@5 = 0.3907 (full set).
 - **System B reproduced (3 November):** ColPali v1.3 nDCG@5 = 0.5752 measured vs 0.5845 model card (−0.93 pt); scores saved in `results/colpali_v1.3_docvqa/scores.npz`.
 - About 2 weeks left → plan compressed: ablation E reduced to RRF `k` sensitivity; control D is kept (main source of rigor).
@@ -198,7 +199,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 5. ~~Checkpoint~~ — v1.3. `scripts/run_colpali.py` + `configs/colpali_v1.3_docvqa.yaml` + `notebooks/colpali_docvqa_colab.ipynb` written (3 November), dry-run with a fake model on CPU. Ran on Colab L4 (3 November): nDCG@5 0.5752; outputs committed.
 6. ~~Dev/test split + query tagging~~ — frozen 3 November (`results/splits/`, `docs/query_tagging.md`): dev 226 / test 225; visual 35, exact 186, general 230.
 7. ~~BM25 (A)~~ — 4 November: full-set nDCG@5 0.3907 (paper 36.8 with different OCR); `results/bm25_docvqa/`. Runs on the Mac CPU in seconds.
-8. Next: BGE-M3 (D) dense text retriever on the same OCR text; then RRF (C) and (D); choose `k` on dev only.
+8. ~~BGE-M3 (D's text component)~~ — 4 November: full-set nDCG@5 0.2486 (paper 25.7); `results/bge_m3_docvqa/`. Ran on the Mac (MPS) in ~1 minute.
+9. Next: `scripts/run_fusion_dev.py` (written, not yet run) — choose RRF `k` for C and D on dev only; then one test run.
 
 ### Implementation notes
 

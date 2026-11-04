@@ -100,3 +100,12 @@ Chronological record of every run and decision. One entry per run or decision; n
 - Why this model: it is the paper's own dense text baseline (Table 2: 25.7 nDCG@5 on DocVQA with Unstructured + OCR), so the control is not chosen to make C look good or bad.
 - Fusion (C and D) will use the same RRF formula and the same `k` search on dev; neither BM25 nor BGE-M3 gets any tuning of its own.
 - No BGE-M3 scores and no fusion scores exist at the time of this commit.
+
+### 2026-11-04 — Dense text component of control D: BGE-M3 (full set)
+- Type: run (registry rows 14–15)
+- Setup: `BAAI/bge-m3` @ `5617a9f`, FlagEmbedding 1.4.2 `BGEM3FlagModel`, dense vectors, fp16 on Apple MPS (Mac M5), query max_length 512, **passage max_length 8192** (explicit: FlagEmbedding's default changed from 8192 in 1.2.x to 512 in 1.4.x; 8192 keeps whole pages, matching the text BM25 sees), batch size 4, dot product. Same `_tesseract` text as BM25 (`9a183a7`).
+- **Result (measured):** full set nDCG@5 **0.2486**; Recall@5 0.2927; Recall@10 0.4058; nDCG@10 0.2850; MRR@10 0.2495. Dev 0.2351. Post-hoc without duplicated queries 0.2604.
+- **Published:** paper Table 2, BGE-M3 on Unstructured + OCR **25.7**.
+- *Interpretation:* within ~1 point of the paper despite different OCR text and hardware; like the paper, the dense text retriever is clearly below BM25 on DocVQA (0.2486 vs 0.3907), plausibly because noisy OCR hurts a semantic encoder more than term matching *(hypothesis)*.
+- **Resources (measured, Mac M5 MPS):** indexing 21.1 s for 500 pages (0.04 s/page); single-query latency median 29.0 ms (encode on MPS + numpy dot product); index 1.95 MB (500 × 1024 float32); peak MPS driver memory 2.14 GB (sampled).
+- Deviation: run on Apple MPS (fp16), while ColPali ran on an NVIDIA L4. Latencies of the components are therefore not directly comparable across devices; this is noted for the resource comparison.

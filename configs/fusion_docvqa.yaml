@@ -1,0 +1,23 @@
+# Systems C and D: RRF fusion of a text retriever with ColPali, on ViDoRe v1 DocVQA.
+# k is chosen on the DEV split only, with the same grid and rule for C and D (equal tuning budget).
+# The test split is not evaluated by this config's dev step.
+
+colpali_scores: results/colpali_v1.3_docvqa/scores.npz      # System B
+
+systems:
+  C: {name: "RRF(BM25, ColPali)",   text_scores: results/bm25_docvqa/scores.npz}
+  D: {name: "RRF(BGE-M3, ColPali)", text_scores: results/bge_m3_docvqa/scores.npz}
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  split: test
+
+splits: results/splits/docvqa_split.json
+
+rrf:
+  k_grid: [1, 5, 10, 20, 40, 60, 80, 100, 200, 500]
+  selection_metric: ndcg_at_5   # on dev
+  tie_break: closest_to_60      # if several k give the same dev score, prefer the one closest to the common default 60
+
+output_dir: results/fusion_docvqa

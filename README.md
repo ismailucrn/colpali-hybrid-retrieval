@@ -74,6 +74,14 @@ python scripts/run_bm25.py --config configs/bm25_docvqa.yaml
 
 Output: `results/bm25_docvqa/`. NLTK data is downloaded once into `data/nltk_data/` (gitignored).
 
+### Control D's text component — BGE-M3 on DocVQA (Mac MPS / GPU, ~1 min; CPU works but slower)
+
+```bash
+python scripts/run_bge_m3.py --config configs/bge_m3_docvqa.yaml
+```
+
+Output: `results/bge_m3_docvqa/`.
+
 ### Fast tests (CPU, seconds)
 
 ```bash
