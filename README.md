@@ -66,6 +66,14 @@ Encodes all 500 pages and 451 queries of `vidore/docvqa_test_subsampled`, evalua
 
 Output: `results/colpali_v1.3_docvqa/` — `scores.npz` (query × page scores), `metrics.json`, `per_query.csv`.
 
+### System A — BM25 on DocVQA (CPU, seconds)
+
+```bash
+python scripts/run_bm25.py --config configs/bm25_docvqa.yaml
+```
+
+Output: `results/bm25_docvqa/`. NLTK data is downloaded once into `data/nltk_data/` (gitignored).
+
 ### Fast tests (CPU, seconds)
 
 ```bash

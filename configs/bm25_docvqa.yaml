@@ -1,0 +1,19 @@
+# System A — BM25 over OCR page text on ViDoRe v1 DocVQA (CPU).
+# Implementation and parameters identical to vidore-benchmark's BM25Retriever (rank_bm25 defaults, no tuning).
+# Published comparison point (nDCG@5, paper Table 2): BM25 on Unstructured + OCR = 36.8 (different OCR pipeline).
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  text_dataset: vidore/docvqa_test_subsampled_tesseract   # `text_description` = Tesseract OCR, released by the authors
+  text_revision: 9a183a7237d678eaaf68dc0f640a42f46016802f   # pinned after the first run (2026-11-04), which used null = this sha
+  split: test
+
+splits: results/splits/docvqa_split.json    # frozen 2026-11-03; only full-set and dev metrics are printed
+
+latency:
+  n_queries: 451
+  warmup: 5
+
+seed: 0
+output_dir: results/bm25_docvqa

@@ -17,3 +17,5 @@ pillow==11.3.0
 pyyaml==6.0.3
 pytrec-eval-terrier==0.5.11
 pytest==8.4.2
+rank-bm25==0.2.2
+nltk==3.10.4

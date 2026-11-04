@@ -1,0 +1,27 @@
+# Re-evaluation of BM25 scores.npz | 2026-11-04T10:42:53Z | commit 55fa350 (+ uncommitted System A code) | Mac M5, Python 3.11 venv
+# sha256 scores.npz: c25f7b2c2d8c10361787ae77899854e62531d745ae7dbd8333ee5ead06fe220e
+$ python scripts/evaluate_scores.py --scores results/bm25_docvqa/scores.npz
+{
+ "ndcg_at_1": 0.325942,
+ "recall_at_1": 0.325942,
+ "mrr_at_1": 0.325942,
+ "ndcg_at_3": 0.376385,
+ "recall_at_3": 0.414634,
+ "mrr_at_3": 0.363267,
+ "ndcg_at_5": 0.390692,
+ "recall_at_5": 0.450111,
+ "mrr_at_5": 0.371027,
+ "ndcg_at_10": 0.40365,
+ "recall_at_10": 0.490022,
+ "mrr_at_10": 0.376404,
+ "ndcg_at_20": 0.414923,
+ "recall_at_20": 0.534368,
+ "mrr_at_20": 0.379534,
+ "ndcg_at_50": 0.434497,
+ "recall_at_50": 0.631929,
+ "mrr_at_50": 0.382763,
+ "ndcg_at_100": 0.443042,
+ "recall_at_100": 0.685144,
+ "mrr_at_100": 0.383491,
+ "n_queries": 451
+}

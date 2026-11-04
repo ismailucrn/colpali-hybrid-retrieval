@@ -83,3 +83,13 @@ Chronological record of every run and decision. One entry per run or decision; n
   - Stratified 50/50 split, seed 0: dev 226, test 225. Committed before any run of A, C, D, E.
   - Changed plan vs the draft: tags are fully automatic instead of manual, for reproducibility and to rule out outcome-dependent tagging.
   - *Limitation:* only ~17 visual queries per split.
+
+### 2026-11-04 — System A: BM25 over Tesseract OCR text (full set)
+- Type: run (registry rows 12–13)
+- Implementation: identical to vidore-benchmark `BM25Retriever` (NLTK `word_tokenize`, alphanumeric tokens only, lowercase, NLTK English stopwords; `rank_bm25.BM25Okapi` defaults k1=1.5, b=0.75 — no tuning). Text: `vidore/docvqa_test_subsampled_tesseract` @ `9a183a7`, `text_description`.
+- **Result (measured):** full set nDCG@5 **0.3907**; Recall@5 0.4501; Recall@10 0.4900; nDCG@10 0.4036; MRR@10 0.3764. Dev nDCG@5 0.3995. Post-hoc without duplicated queries 0.4093. Test-split metrics not computed (touched once, at the end).
+- **Published:** paper Table 2, BM25 on Unstructured + OCR **36.8**; Unstructured text-only 34.1.
+- *Interpretation:* +2.3 points over the paper's BM25, but the text differs (Tesseract dump vs Unstructured layout-aware chunks), so this is a deviation, not a reproduction of 36.8. Same order of magnitude; ColPali (0.5752) is far ahead, as in the paper.
+- **Resources (measured, Mac M5 CPU):** index build 0.35 s for 500 pages; single-query latency median 0.12 ms; index 0.63 MB pickled (56,470 tokens, 14,573 terms); peak process RSS 922 MB (mostly the dataset/Python, not BM25).
+- **Observation relevant to the hypothesis:** the official preprocessing removes some lexical anchors — non-alphanumeric tokens (`Log-in`, `B&W`, `2012-2013`) and stopwords such as "no" are dropped; 2 queries become empty (all-zero scores). So some `exact`-tagged queries cannot benefit from BM25 by construction. We keep the official preprocessing (comparability with the paper) and will report this in the failure analysis; a different tokenizer would be a separate, unplanned change.
+- 4 pages have empty OCR text → BM25 can never retrieve them.

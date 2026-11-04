@@ -61,3 +61,23 @@ def evaluate(qrels: dict[str, dict[str, int]], run: dict[str, dict[str, float]],
     aggregate = {name: float(np.mean([row[name] for row in per_query.values()])) for name in metric_names}
     aggregate["n_queries"] = len(per_query)
     return aggregate, per_query
+
+
+def subset(qrels: dict, run: dict, queries: list[str]) -> tuple[dict, dict]:
+    """Restrict qrels and run to a query subset (e.g. the dev split or one query type)."""
+    return {q: qrels[q] for q in queries}, {q: run[q] for q in queries}
+
+
+def write_per_query_csv(path, queries: list[str], qrels: dict, per_query: dict, extra: dict[str, dict] | None = None) -> None:
+    """Per-query metrics; `extra` maps column name -> {query: value} (e.g. tag, split, duplicated)."""
+    import csv
+
+    extra = extra or {}
+    metric_cols = ["gold_rank", "ndcg_at_5", "recall_at_5", "recall_at_10", "ndcg_at_10", "mrr_at_10"]
+    with open(path, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["query", "gold_page", *extra, *metric_cols])
+        for q in queries:
+            row = per_query[q]
+            values = [row["gold_rank"], *(round(row[c], 6) for c in metric_cols[1:])]
+            writer.writerow([q, next(iter(qrels[q])), *(col[q] for col in extra.values()), *values])

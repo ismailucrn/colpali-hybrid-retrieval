@@ -1,0 +1,13 @@
+# System A (BM25) | 2026-11-04T10:42:30Z | commit 55fa350 (+ uncommitted src/bm25.py, scripts/run_bm25.py, configs/bm25_docvqa.yaml) | Mac M5 CPU, Python 3.11 venv (rank-bm25 0.2.2, nltk 3.10.4)
+$ python scripts/run_bm25.py --config configs/bm25_docvqa.yaml
+451 queries, 500 pages, 4 pages with empty OCR text
+
+full set: nDCG@5 = 0.3907  (paper, BM25 on Unstructured + OCR: 0.368)
+Recall@5 = 0.4501  Recall@10 = 0.4900  nDCG@10 = 0.4036  MRR@10 = 0.3764
+dev (226 queries): nDCG@5 = 0.3995
+post-hoc, without 22 duplicated query texts: nDCG@5 = 0.4093
+queries with no tokens left after preprocessing: 2
+timings: {"data_load_s": 5.105, "index_pages_s": 0.347, "index_per_page_s": 0.001, "score_all_s": 0.063}
+latency per query (median): 0.12 ms; index: {'n_pages': 500, 'total_tokens': 56470, 'vocabulary_size': 14573, 'pickled_size_mb': 0.6288890838623047, 'note': 'pickled BM25Okapi object (term frequencies + idf) as a proxy for index size'}
+
+wrote results/bm25_docvqa/{scores.npz, metrics.json, per_query.csv}
