@@ -1,0 +1,9 @@
+# Fusion dev k-selection (C and D) | 2026-11-04T11:49:21Z | commit f8dc985 | Mac M5 CPU, Python 3.11 venv
+$ python scripts/run_fusion_dev.py --config configs/fusion_docvqa.yaml
+C RRF(BM25, ColPali) dev ndcg_at_5: k=1: 0.5335  k=5: 0.5126  k=10: 0.4900  k=20: 0.4762  k=40: 0.4686  k=60: 0.4669  k=80: 0.4651  k=100: 0.4651  k=200: 0.4665  k=500: 0.4648
+  -> selected k = 1
+D RRF(BGE-M3, ColPali) dev ndcg_at_5: k=1: 0.5263  k=5: 0.5132  k=10: 0.4833  k=20: 0.4543  k=40: 0.4305  k=60: 0.4219  k=80: 0.4238  k=100: 0.4238  k=200: 0.4174  k=500: 0.4169
+  -> selected k = 1
+
+B ColPali dev ndcg_at_5: 0.5804
+wrote results/fusion_docvqa/dev_selection.json

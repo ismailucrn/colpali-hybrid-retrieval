@@ -109,3 +109,23 @@ Chronological record of every run and decision. One entry per run or decision; n
 - *Interpretation:* within ~1 point of the paper despite different OCR text and hardware; like the paper, the dense text retriever is clearly below BM25 on DocVQA (0.2486 vs 0.3907), plausibly because noisy OCR hurts a semantic encoder more than term matching *(hypothesis)*.
 - **Resources (measured, Mac M5 MPS):** indexing 21.1 s for 500 pages (0.04 s/page); single-query latency median 29.0 ms (encode on MPS + numpy dot product); index 1.95 MB (500 × 1024 float32); peak MPS driver memory 2.14 GB (sampled).
 - Deviation: run on Apple MPS (fp16), while ColPali ran on an NVIDIA L4. Latencies of the components are therefore not directly comparable across devices; this is noted for the resource comparison.
+
+### 2026-11-04 — Dev selection for C and D: equal-weight RRF hurts ColPali on dev
+- Type: run (registry rows 16–17), **dev split only — test not touched**
+- Grid k ∈ {1, 5, 10, 20, 40, 60, 80, 100, 200, 500}, same for C and D; rule: max dev nDCG@5, ties → closest to 60.
+- **Measured (dev, 226 queries, nDCG@5):** B ColPali 0.5804; A BM25 0.3995; BGE-M3 0.2351. C = RRF(BM25, ColPali): 0.5335 at k=1 (best), 0.4669 at k=60. D = RRF(BGE-M3, ColPali): 0.5263 at k=1, 0.4219 at k=60. **Selected k = 1 for both** — at the lower edge of the grid; scores fall monotonically as k grows.
+- **By query type (dev, nDCG@5):**
+
+  | system | all (226) | exact (93) | general (115) | visual (18) |
+  |---|---|---|---|---|
+  | A BM25 | 0.3995 | 0.6437 | 0.2559 | 0.0556 |
+  | BGE-M3 | 0.2351 | 0.4046 | 0.1181 | 0.1073 |
+  | B ColPali | 0.5804 | 0.8283 | 0.4105 | 0.3850 |
+  | C k=1 | 0.5335 | 0.7858 | 0.3737 | 0.2513 |
+  | D k=1 | 0.5263 | 0.7762 | 0.3575 | 0.3138 |
+
+- *Interpretation:*
+  - Pre-registered P1 (C > B) is **not supported on dev**: equal-weight RRF with a much weaker second retriever pulls good ColPali rankings down. Smaller k helps because it lets each system's top ranks dominate, which favours ColPali when it is right.
+  - P2's premise is **contradicted on dev**: ColPali is already strongest on `exact` queries (0.83 vs BM25 0.64), so there is little lexical headroom; BM25 is nearly useless on `visual` queries (0.06), and fusion hurts there most — the "least help on visual" half of P2 holds, as harm.
+  - P3 (C > D): on dev C is slightly above D overall (0.5335 vs 0.5263) and on exact/general, below on visual; both below B, so the comparison is between two harmful fusions.
+- k = 1 is now frozen for the test run of C and D. Any further variant (e.g. weighting) is a dev-informed change and must be labelled as such.

@@ -1,0 +1,8 @@
+# Dev breakdown by query type, nDCG@5 | 2026-11-04T11:49:50Z | commit f8dc985 (+ uncommitted scripts/analyze_dev_by_type.py) | Mac M5 CPU
+$ python scripts/analyze_dev_by_type.py --k 1
+system                               all dev (n=226)        exact (n=93)     general (n=115)       visual (n=18)
+A BM25                                        0.3995              0.6437              0.2559              0.0556
+BGE-M3                                        0.2351              0.4046              0.1181              0.1073
+B ColPali                                     0.5804              0.8283              0.4105              0.3850
+C RRF(BM25,ColPali) k=1                       0.5335              0.7858              0.3737              0.2513
+D RRF(BGE-M3,ColPali) k=1                     0.5263              0.7762              0.3575              0.3138
