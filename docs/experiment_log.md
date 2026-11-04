@@ -152,3 +152,21 @@ Chronological record of every run and decision. One entry per run or decision; n
 - Statistics, decided before seeing test: per-system percentile bootstrap 95% CI of mean nDCG@5 (10,000 resamples over queries, seed 0); paired comparisons vs B with paired bootstrap CI of Δ and a two-sided sign-flip permutation test (10,000, seed 0); Holm correction over the six comparisons vs B; P3 pairs C vs D and C_w vs D_w reported separately; per-type breakdown exploratory and uncorrected; post-hoc analysis without the 22 duplicated query texts.
 - Resources: per-component measurements reused from each system's run (different devices — stated in the table), fusion overhead measured per query; sequential and parallel latency reported.
 - Dry run on dev (registry row 19) reproduced all dev numbers; on dev, C_w vs B is +0.0047 with p = 0.25 — even on the data it was tuned on, the gain is not significant.
+
+### 2026-11-04 — SINGLE TEST RUN: results and verdict on the pre-registered predictions
+- Type: run (registry row 20). Commit `deec1d8`; config `configs/test_evaluation.yaml`; outputs `results/test_evaluation/` (`summary.md` has all tables). Test split n = 225 (exact 93, general 115, visual 17). Run once; nothing tuned afterwards.
+- **Measured (test, nDCG@5 [95% bootstrap CI]):** A BM25 0.3818 [0.323, 0.441]; BGE-M3 0.2622 [0.209, 0.317]; **B ColPali 0.5699 [0.510, 0.628]**; C 0.5162 [0.457, 0.574]; D 0.5187 [0.460, 0.578]; C_w 0.5706 [0.511, 0.629]; D_w 0.5699 (identical ranking to B in the top 5 for all 225 queries).
+- **Paired vs B (Δ nDCG@5 [95% CI], permutation p, Holm p, W/T/L):**
+  - C: −0.054 [−0.076, −0.032], p 0.0001, Holm 0.0006, 9/167/49.
+  - D: −0.051 [−0.072, −0.030], p 0.0001, Holm 0.0006, 4/171/50.
+  - C_w: +0.001 [−0.002, +0.005], p 0.94, Holm 1.0, 2/220/3.
+  - D_w: 0, 0/225/0.
+- **P3 pairs:** C vs D −0.003 [−0.027, +0.021], p 0.84; C_w vs D_w +0.001, p 0.94.
+- **Verdict on pre-registered predictions:**
+  - **P1 (C > B): rejected.** Equal-weight RRF with BM25 is significantly *worse* than ColPali alone (−5.4 pt), confirming the dev finding on unseen queries.
+  - **P2 (gain concentrated on exact, little on visual): not supported.** There is no gain anywhere; C loses on exact (−0.059), general (−0.046) and visual (−0.074, n = 17, not significant). ColPali is strongest on `exact` queries (0.833 vs BM25 0.617), so the premise that ColPali is weak on lexical-match queries does not hold on DocVQA.
+  - **P3 (C > D): not supported.** C and D are indistinguishable (p 0.84); the harm comes from ensembling with a much weaker retriever, whatever its kind.
+  - Ablation E (dev-informed weighting): the best weighted fusion is statistically indistinguishable from ColPali (+0.08 pt, p 0.94); the +0.47 pt seen on dev was selection noise.
+- **Resources:** fusion adds ~0.13 ms per query (rank + combine) on top of the components; C costs +0.35 s indexing and +0.6 MB over B, D +21 s and +2 MB; with parallel retrieval the latency is set by ColPali (~51 ms). Caveat: components were measured on different devices.
+- Post-hoc (without 22 duplicated queries, n = 212): same picture (B 0.5977; C −0.056; C_w +0.001).
+- *Interpretation:* on DocVQA, ColPali's page-image embeddings already capture the lexical anchors that BM25 relies on (its OCR-free reading of the page text is better than Tesseract OCR + BM25), and rank fusion can only import BM25's errors. A lexical signal could still help where ColPali reads text poorly (dense small print, other languages) — an open question for other ViDoRe tasks, not tested here.

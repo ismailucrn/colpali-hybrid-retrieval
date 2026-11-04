@@ -1,0 +1,925 @@
+{
+  "timestamp_utc": "2026-11-04T13:10:30+00:00",
+  "config_path": "configs/test_evaluation.yaml",
+  "config": {
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "tags": "results/splits/docvqa_query_tags.csv",
+    "scores": {
+      "A": "results/bm25_docvqa/scores.npz",
+      "B": "results/colpali_v1.3_docvqa/scores.npz",
+      "BGE": "results/bge_m3_docvqa/scores.npz"
+    },
+    "systems": {
+      "A": {
+        "name": "A: BM25",
+        "kind": "single",
+        "scores": "A",
+        "role": "text baseline"
+      },
+      "BGE": {
+        "name": "BGE-M3 (dense text)",
+        "kind": "single",
+        "scores": "BGE",
+        "role": "D's text component"
+      },
+      "B": {
+        "name": "B: ColPali v1.3",
+        "kind": "single",
+        "scores": "B",
+        "role": "reproduced baseline"
+      },
+      "C": {
+        "name": "C: RRF(BM25, ColPali) k=1",
+        "kind": "rrf",
+        "inputs": [
+          "A",
+          "B"
+        ],
+        "k": 1,
+        "role": "pre-registered improvement"
+      },
+      "D": {
+        "name": "D: RRF(BGE-M3, ColPali) k=1",
+        "kind": "rrf",
+        "inputs": [
+          "BGE",
+          "B"
+        ],
+        "k": 1,
+        "role": "pre-registered control"
+      },
+      "C_w": {
+        "name": "C_w: wRRF(BM25, ColPali) w=.95 k=20",
+        "kind": "wrrf",
+        "inputs": [
+          "B",
+          "A"
+        ],
+        "weights": [
+          0.95,
+          0.05
+        ],
+        "k": 20,
+        "role": "ablation E, dev-informed"
+      },
+      "D_w": {
+        "name": "D_w: wRRF(BGE-M3, ColPali) w=.95 k=10",
+        "kind": "wrrf",
+        "inputs": [
+          "B",
+          "BGE"
+        ],
+        "weights": [
+          0.95,
+          0.05
+        ],
+        "k": 10,
+        "role": "ablation E, dev-informed"
+      }
+    },
+    "baseline": "B",
+    "compare_to_baseline": [
+      "A",
+      "BGE",
+      "C",
+      "D",
+      "C_w",
+      "D_w"
+    ],
+    "extra_pairs": [
+      [
+        "C",
+        "D"
+      ],
+      [
+        "C_w",
+        "D_w"
+      ]
+    ],
+    "statistics": {
+      "metric": "ndcg_at_5",
+      "bootstrap_resamples": 10000,
+      "permutations": 10000,
+      "alpha": 0.05,
+      "seed": 0,
+      "multiple_comparisons": "holm"
+    },
+    "output_dir": "results/test_evaluation"
+  },
+  "seed": 0,
+  "git_commit": "deec1d8bf1723908a7f94c1c876700a4e334578d",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.1",
+    "peft": "0.20.0",
+    "datasets": "5.1.0",
+    "huggingface-hub": "2.4.0",
+    "pillow": "13.0.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_test_evaluation.py --config configs/test_evaluation.yaml",
+  "n_test_queries": 225,
+  "results": {
+    "A": {
+      "name": "A: BM25",
+      "role": "text baseline",
+      "metrics": {
+        "ndcg_at_5": 0.3818168465314686,
+        "recall_at_5": 0.4444444444444444,
+        "recall_at_10": 0.49777777777777776,
+        "ndcg_at_10": 0.39908637651396084,
+        "mrr_at_10": 0.36855202821869487
+      },
+      "ndcg_at_5_ci95": [
+        0.3231485075813466,
+        0.4409692240061987
+      ]
+    },
+    "BGE": {
+      "name": "BGE-M3 (dense text)",
+      "role": "D's text component",
+      "metrics": {
+        "ndcg_at_5": 0.2622118984405109,
+        "recall_at_5": 0.30666666666666664,
+        "recall_at_10": 0.4177777777777778,
+        "ndcg_at_10": 0.29731167644418216,
+        "mrr_at_10": 0.261994708994709
+      },
+      "ndcg_at_5_ci95": [
+        0.20870931965999504,
+        0.31691279636528047
+      ]
+    },
+    "B": {
+      "name": "B: ColPali v1.3",
+      "role": "reproduced baseline",
+      "metrics": {
+        "ndcg_at_5": 0.5698845531501103,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5788816778359264,
+        "mrr_at_10": 0.5459365079365079
+      },
+      "ndcg_at_5_ci95": [
+        0.5104222964046498,
+        0.6274600432665112
+      ]
+    },
+    "C": {
+      "name": "C: RRF(BM25, ColPali) k=1",
+      "role": "pre-registered improvement",
+      "metrics": {
+        "ndcg_at_5": 0.5161824330359406,
+        "recall_at_5": 0.6177777777777778,
+        "recall_at_10": 0.6666666666666666,
+        "ndcg_at_10": 0.532439404117414,
+        "mrr_at_10": 0.48948500881834217
+      },
+      "ndcg_at_5_ci95": [
+        0.4574161380621114,
+        0.573976730142814
+      ]
+    },
+    "D": {
+      "name": "D: RRF(BGE-M3, ColPali) k=1",
+      "role": "pre-registered control",
+      "metrics": {
+        "ndcg_at_5": 0.518731113454203,
+        "recall_at_5": 0.6088888888888889,
+        "recall_at_10": 0.6666666666666666,
+        "ndcg_at_10": 0.5371577708101063,
+        "mrr_at_10": 0.4958994708994709
+      },
+      "ndcg_at_5_ci95": [
+        0.4596814086644979,
+        0.5778251554002013
+      ]
+    },
+    "C_w": {
+      "name": "C_w: wRRF(BM25, ColPali) w=.95 k=20",
+      "role": "ablation E, dev-informed",
+      "metrics": {
+        "ndcg_at_5": 0.5706348511542458,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5796319758400619,
+        "mrr_at_10": 0.5470476190476191
+      },
+      "ndcg_at_5_ci95": [
+        0.5109079973778363,
+        0.6286773771750082
+      ]
+    },
+    "D_w": {
+      "name": "D_w: wRRF(BGE-M3, ColPali) w=.95 k=10",
+      "role": "ablation E, dev-informed",
+      "metrics": {
+        "ndcg_at_5": 0.5698845531501103,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5788816778359264,
+        "mrr_at_10": 0.5459365079365079
+      },
+      "ndcg_at_5_ci95": [
+        0.5104222964046498,
+        0.6274600432665112
+      ]
+    }
+  },
+  "vs_baseline": {
+    "A": {
+      "delta": -0.1880677066186418,
+      "delta_ci95": [
+        -0.2365938381033494,
+        -0.1422193281033816
+      ],
+      "p_permutation": 9.999000099990002e-05,
+      "wins": 10,
+      "ties": 144,
+      "losses": 71,
+      "n": 225,
+      "p_holm": 0.0005999400059994001
+    },
+    "BGE": {
+      "delta": -0.3076726547095994,
+      "delta_ci95": [
+        -0.3637227417364376,
+        -0.2518822029509437
+      ],
+      "p_permutation": 9.999000099990002e-05,
+      "wins": 5,
+      "ties": 122,
+      "losses": 98,
+      "n": 225,
+      "p_holm": 0.0005999400059994001
+    },
+    "C": {
+      "delta": -0.05370212011416974,
+      "delta_ci95": [
+        -0.07587986801186673,
+        -0.03215400859971227
+      ],
+      "p_permutation": 9.999000099990002e-05,
+      "wins": 9,
+      "ties": 167,
+      "losses": 49,
+      "n": 225,
+      "p_holm": 0.0005999400059994001
+    },
+    "D": {
+      "delta": -0.05115343969590731,
+      "delta_ci95": [
+        -0.07156175539527093,
+        -0.029761980929098944
+      ],
+      "p_permutation": 9.999000099990002e-05,
+      "wins": 4,
+      "ties": 171,
+      "losses": 50,
+      "n": 225,
+      "p_holm": 0.0005999400059994001
+    },
+    "C_w": {
+      "delta": 0.0007502980041354578,
+      "delta_ci95": [
+        -0.002088132590767715,
+        0.004920936619047233
+      ],
+      "p_permutation": 0.9366063393660634,
+      "wins": 2,
+      "ties": 220,
+      "losses": 3,
+      "n": 225,
+      "p_holm": 1.0
+    },
+    "D_w": {
+      "delta": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "p_permutation": 1.0,
+      "wins": 0,
+      "ties": 225,
+      "losses": 0,
+      "n": 225,
+      "p_holm": 1.0
+    }
+  },
+  "pairs": {
+    "C vs D": {
+      "delta": -0.002548680418262436,
+      "delta_ci95": [
+        -0.026809393190345962,
+        0.02116481217648154
+      ],
+      "p_permutation": 0.8439156084391561,
+      "wins": 25,
+      "ties": 174,
+      "losses": 26,
+      "n": 225
+    },
+    "C_w vs D_w": {
+      "delta": 0.0007502980041354578,
+      "delta_ci95": [
+        -0.002088132590767715,
+        0.004920936619047233
+      ],
+      "p_permutation": 0.9366063393660634,
+      "wins": 2,
+      "ties": 220,
+      "losses": 3,
+      "n": 225
+    }
+  },
+  "by_type": {
+    "exact": {
+      "n": 93,
+      "systems": {
+        "A": {
+          "mean": 0.6166999407195691,
+          "ci95": [
+            0.520669086027844,
+            0.7082289835625135
+          ]
+        },
+        "BGE": {
+          "mean": 0.45773465340632874,
+          "ci95": [
+            0.3636244149320014,
+            0.5510945527040929
+          ]
+        },
+        "B": {
+          "mean": 0.8334165941373893,
+          "ci95": [
+            0.7648675107577976,
+            0.8951186253652829
+          ]
+        },
+        "C": {
+          "mean": 0.7740026189644027,
+          "ci95": [
+            0.6974332208259283,
+            0.8442337393833412
+          ]
+        },
+        "D": {
+          "mean": 0.7708433678781437,
+          "ci95": [
+            0.6963199640278922,
+            0.8414663946428916
+          ]
+        },
+        "C_w": {
+          "mean": 0.8373850914108146,
+          "ci95": [
+            0.7687724561620057,
+            0.8994532997677162
+          ]
+        },
+        "D_w": {
+          "mean": 0.8334165941373893,
+          "ci95": [
+            0.7648675107577976,
+            0.8951186253652829
+          ]
+        }
+      },
+      "vs_baseline": {
+        "A": {
+          "delta": -0.21671665341782032,
+          "delta_ci95": [
+            -0.29595396789554657,
+            -0.14349868851372266
+          ],
+          "p_permutation": 9.999000099990002e-05,
+          "wins": 2,
+          "ties": 62,
+          "losses": 29,
+          "n": 93
+        },
+        "BGE": {
+          "delta": -0.3756819407310607,
+          "delta_ci95": [
+            -0.4658664837137631,
+            -0.2889200677422306
+          ],
+          "p_permutation": 9.999000099990002e-05,
+          "wins": 2,
+          "ties": 45,
+          "losses": 46,
+          "n": 93
+        },
+        "C": {
+          "delta": -0.05941397517298662,
+          "delta_ci95": [
+            -0.09233481624306639,
+            -0.028951369437744588
+          ],
+          "p_permutation": 0.00029997000299970003,
+          "wins": 2,
+          "ties": 72,
+          "losses": 19,
+          "n": 93
+        },
+        "D": {
+          "delta": -0.06257322625924581,
+          "delta_ci95": [
+            -0.09506121468146682,
+            -0.030993360113936504
+          ],
+          "p_permutation": 9.999000099990002e-05,
+          "wins": 2,
+          "ties": 70,
+          "losses": 21,
+          "n": 93
+        },
+        "C_w": {
+          "delta": 0.0039684972734251875,
+          "delta_ci95": [
+            0.0,
+            0.011905491820275563
+          ],
+          "p_permutation": 1.0,
+          "wins": 1,
+          "ties": 92,
+          "losses": 0,
+          "n": 93
+        },
+        "D_w": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 93,
+          "losses": 0,
+          "n": 93
+        }
+      }
+    },
+    "general": {
+      "n": 115,
+      "systems": {
+        "A": {
+          "mean": 0.23091909550139553,
+          "ci95": [
+            0.16483654237962275,
+            0.29834680762123206
+          ]
+        },
+        "BGE": {
+          "mean": 0.12981177723762063,
+          "ci95": [
+            0.07536082500159527,
+            0.18943981322981518
+          ]
+        },
+        "B": {
+          "mean": 0.39090801475525816,
+          "ci95": [
+            0.3126633545313733,
+            0.46754768142554776
+          ]
+        },
+        "C": {
+          "mean": 0.34485916408171446,
+          "ci95": [
+            0.2707444592746331,
+            0.4162177220460444
+          ]
+        },
+        "D": {
+          "mean": 0.34256641357353795,
+          "ci95": [
+            0.2659568929899366,
+            0.41929388093914494
+          ]
+        },
+        "C_w": {
+          "mean": 0.3897694951589846,
+          "ci95": [
+            0.3109676652505183,
+            0.46634065392404345
+          ]
+        },
+        "D_w": {
+          "mean": 0.39090801475525816,
+          "ci95": [
+            0.3126633545313733,
+            0.46754768142554776
+          ]
+        }
+      },
+      "vs_baseline": {
+        "A": {
+          "delta": -0.15998891925386263,
+          "delta_ci95": [
+            -0.2235479186609434,
+            -0.09737225572215255
+          ],
+          "p_permutation": 9.999000099990002e-05,
+          "wins": 8,
+          "ties": 70,
+          "losses": 37,
+          "n": 115
+        },
+        "BGE": {
+          "delta": -0.26109623751763755,
+          "delta_ci95": [
+            -0.33335765680178453,
+            -0.18328237656440965
+          ],
+          "p_permutation": 9.999000099990002e-05,
+          "wins": 3,
+          "ties": 65,
+          "losses": 47,
+          "n": 115
+        },
+        "C": {
+          "delta": -0.04604885067354369,
+          "delta_ci95": [
+            -0.07822944106319296,
+            -0.015057393967178747
+          ],
+          "p_permutation": 0.005699430056994301,
+          "wins": 7,
+          "ties": 82,
+          "losses": 26,
+          "n": 115
+        },
+        "D": {
+          "delta": -0.04834160118172024,
+          "delta_ci95": [
+            -0.07881228793862817,
+            -0.014814339770354389
+          ],
+          "p_permutation": 0.001999800019998,
+          "wins": 2,
+          "ties": 85,
+          "losses": 28,
+          "n": 115
+        },
+        "C_w": {
+          "delta": -0.0011385195962735437,
+          "delta_ci95": [
+            -0.0040854768080237905,
+            0.0012056250769844686
+          ],
+          "p_permutation": 0.7430256974302569,
+          "wins": 1,
+          "ties": 112,
+          "losses": 2,
+          "n": 115
+        },
+        "D_w": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 115,
+          "losses": 0,
+          "n": 115
+        }
+      }
+    },
+    "visual": {
+      "n": 17,
+      "systems": {
+        "A": {
+          "mean": 0.11764705882352941,
+          "ci95": [
+            0.0,
+            0.29411764705882354
+          ]
+        },
+        "BGE": {
+          "mean": 0.08823529411764706,
+          "ci95": [
+            0.0,
+            0.23529411764705882
+          ]
+        },
+        "B": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.14705882352941177,
+            0.5448152651260538
+          ]
+        },
+        "C": {
+          "mean": 0.2647058823529412,
+          "ci95": [
+            0.08823529411764706,
+            0.47058823529411764
+          ]
+        },
+        "D": {
+          "mean": 0.33123116197479163,
+          "ci95": [
+            0.14705882352941177,
+            0.5371135149159681
+          ]
+        },
+        "C_w": {
+          "mean": 0.3348550626597828,
+          "ci95": [
+            0.14298097400431722,
+            0.5421326517354199
+          ]
+        },
+        "D_w": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.14705882352941177,
+            0.5448152651260538
+          ]
+        }
+      },
+      "vs_baseline": {
+        "A": {
+          "delta": -0.22128585336134798,
+          "delta_ci95": [
+            -0.4054581918067278,
+            -0.06652527962185044
+          ],
+          "p_permutation": 0.06059394060593941,
+          "wins": 0,
+          "ties": 12,
+          "losses": 5,
+          "n": 17
+        },
+        "BGE": {
+          "delta": -0.25069761806723034,
+          "delta_ci95": [
+            -0.4579752071428674,
+            -0.07422702983193619
+          ],
+          "p_permutation": 0.0575942405759424,
+          "wins": 0,
+          "ties": 12,
+          "losses": 5,
+          "n": 17
+        },
+        "C": {
+          "delta": -0.07422702983193619,
+          "delta_ci95": [
+            -0.16246232394958324,
+            -0.007701750210085737
+          ],
+          "p_permutation": 0.12808719128087193,
+          "wins": 0,
+          "ties": 13,
+          "losses": 4,
+          "n": 17
+        },
+        "D": {
+          "delta": -0.007701750210085737,
+          "delta_ci95": [
+            -0.023105250630257212,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 16,
+          "losses": 1,
+          "n": 17
+        },
+        "C_w": {
+          "delta": -0.004077849525094526,
+          "delta_ci95": [
+            -0.012233548575283578,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 16,
+          "losses": 1,
+          "n": 17
+        },
+        "D_w": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 17,
+          "losses": 0,
+          "n": 17
+        }
+      }
+    }
+  },
+  "posthoc_without_duplicated_queries": {
+    "n": 212,
+    "systems": {
+      "A": 0.4022540599811744,
+      "BGE": 0.2782909299486554,
+      "B": 0.5976709523489095,
+      "C": 0.5416203682442391,
+      "D": 0.5485086036279354,
+      "C_w": 0.5984672591929212,
+      "D_w": 0.5976709523489095
+    },
+    "vs_baseline": {
+      "A": {
+        "delta": -0.1954168923677352,
+        "delta_ci95": [
+          -0.2465302547066147,
+          -0.14674732409026614
+        ],
+        "p_permutation": 9.999000099990002e-05,
+        "wins": 9,
+        "ties": 134,
+        "losses": 69,
+        "n": 212
+      },
+      "BGE": {
+        "delta": -0.31938002240025404,
+        "delta_ci95": [
+          -0.37760246781224893,
+          -0.2607054696851439
+        ],
+        "p_permutation": 9.999000099990002e-05,
+        "wins": 5,
+        "ties": 112,
+        "losses": 95,
+        "n": 212
+      },
+      "C": {
+        "delta": -0.056050584104670426,
+        "delta_ci95": [
+          -0.07986746760391478,
+          -0.033209378645722855
+        ],
+        "p_permutation": 9.999000099990002e-05,
+        "wins": 8,
+        "ties": 157,
+        "losses": 47,
+        "n": 212
+      },
+      "D": {
+        "delta": -0.04916234872097424,
+        "delta_ci95": [
+          -0.07086716960376649,
+          -0.026988912094556772
+        ],
+        "p_permutation": 9.999000099990002e-05,
+        "wins": 4,
+        "ties": 161,
+        "losses": 47,
+        "n": 212
+      },
+      "C_w": {
+        "delta": 0.0007963068440116887,
+        "delta_ci95": [
+          -0.0022161784571827167,
+          0.005222692166441638
+        ],
+        "p_permutation": 0.9377062293770623,
+        "wins": 2,
+        "ties": 207,
+        "losses": 3,
+        "n": 212
+      },
+      "D_w": {
+        "delta": 0.0,
+        "delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "p_permutation": 1.0,
+        "wins": 0,
+        "ties": 212,
+        "losses": 0,
+        "n": 212
+      }
+    }
+  },
+  "resources": {
+    "components": {
+      "A": {
+        "device": "cpu",
+        "index_time_s": 0.3473937500093598,
+        "index_size_mb": 0.6288890838623047,
+        "query_latency_median_ms": 0.12400001287460327,
+        "peak_memory_mb": 921.953125,
+        "peak_memory_kind": "peak_process_rss_mb"
+      },
+      "B": {
+        "device": "cuda (NVIDIA L4)",
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_median_ms": 51.29878100001406,
+        "peak_memory_mb": 16188.8076171875,
+        "peak_memory_kind": "peak_allocated_mb"
+      },
+      "BGE": {
+        "device": "mps",
+        "index_time_s": 21.09505387500394,
+        "index_size_mb": 1.953125,
+        "query_latency_median_ms": 29.042874986771494,
+        "peak_memory_mb": 2139.984375,
+        "peak_memory_kind": "peak_driver_allocated_mb"
+      }
+    },
+    "systems": {
+      "A": {
+        "components": [
+          "A"
+        ],
+        "index_time_s": 0.3473937500093598,
+        "index_size_mb": 0.6288890838623047,
+        "query_latency_sequential_ms": 0.12400001287460327,
+        "query_latency_parallel_ms": 0.12400001287460327,
+        "fusion_overhead_ms": 0.0
+      },
+      "BGE": {
+        "components": [
+          "BGE"
+        ],
+        "index_time_s": 21.09505387500394,
+        "index_size_mb": 1.953125,
+        "query_latency_sequential_ms": 29.042874986771494,
+        "query_latency_parallel_ms": 29.042874986771494,
+        "fusion_overhead_ms": 0.0
+      },
+      "B": {
+        "components": [
+          "B"
+        ],
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_sequential_ms": 51.29878100001406,
+        "query_latency_parallel_ms": 51.29878100001406,
+        "fusion_overhead_ms": 0.0
+      },
+      "C": {
+        "components": [
+          "A",
+          "B"
+        ],
+        "index_time_s": 112.04253123900935,
+        "index_size_mb": 126.4833812713623,
+        "query_latency_sequential_ms": 51.55082302394476,
+        "query_latency_parallel_ms": 51.426823011070155,
+        "fusion_overhead_ms": 0.12804201105609536
+      },
+      "D": {
+        "components": [
+          "BGE",
+          "B"
+        ],
+        "index_time_s": 132.79019136400393,
+        "index_size_mb": 127.8076171875,
+        "query_latency_sequential_ms": 80.47378098876834,
+        "query_latency_parallel_ms": 51.430906001996846,
+        "fusion_overhead_ms": 0.13212500198278576
+      },
+      "C_w": {
+        "components": [
+          "B",
+          "A"
+        ],
+        "index_time_s": 112.04253123900935,
+        "index_size_mb": 126.4833812713623,
+        "query_latency_sequential_ms": 51.56338502297331,
+        "query_latency_parallel_ms": 51.439385010098704,
+        "fusion_overhead_ms": 0.14060401008464396
+      },
+      "D_w": {
+        "components": [
+          "B",
+          "BGE"
+        ],
+        "index_time_s": 132.79019136400393,
+        "index_size_mb": 127.8076171875,
+        "query_latency_sequential_ms": 80.47446898876842,
+        "query_latency_parallel_ms": 51.43159400199693,
+        "fusion_overhead_ms": 0.13281300198286772
+      }
+    },
+    "note": "Component latencies were measured on different devices (ColPali: L4 GPU; BGE-M3: Mac MPS; BM25 and fusion: Mac CPU). Sequential = sum of components + fusion; parallel = slowest component + fusion."
+  }
+}

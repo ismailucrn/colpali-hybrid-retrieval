@@ -130,6 +130,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 
 - GitHub repo connected; skeleton (folders, README, MIT LICENSE, docs templates) pushed on 3 November. The assignment PDF is kept local only (gitignored).
 - Smoke test passed on Colab L4 (3 November). Task chosen: **ViDoRe v1 DocVQA** (3 November).
+- **Test run done (4 November):** fusion does not beat ColPali; equal-weight RRF hurts significantly. See `docs/experiment_log.md`.
 - **BGE-M3 measured (4 November):** nDCG@5 = 0.2486 (full set).
 - **System A measured (4 November):** BM25 nDCG@5 = 0.3907 (full set).
 - **System B reproduced (3 November):** ColPali v1.3 nDCG@5 = 0.5752 measured vs 0.5845 model card (−0.93 pt); scores saved in `results/colpali_v1.3_docvqa/scores.npz`.
@@ -201,7 +202,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 7. ~~BM25 (A)~~ — 4 November: full-set nDCG@5 0.3907 (paper 36.8 with different OCR); `results/bm25_docvqa/`. Runs on the Mac CPU in seconds.
 8. ~~BGE-M3 (D's text component)~~ — 4 November: full-set nDCG@5 0.2486 (paper 25.7); `results/bge_m3_docvqa/`. Ran on the Mac (MPS) in ~1 minute.
 9. ~~Dev selection~~ — 4 November. Equal-weight RRF hurts on dev (B 0.5804; C 0.5335, D 0.5263 at k=1). Dev-informed ablation E (weighted RRF, pre-registered in `b558ceb`): C_w w=0.95/k=20 dev 0.5851; D_w w=0.95/k=10 dev 0.5804 (= B).
-10. Next: the **single test run** of all frozen systems (A, B, BGE-M3, C, D, C_w, D_w) with bootstrap CIs, paired tests vs B, per-type breakdown, resource table.
+10. ~~Single test run~~ — 4 November (`results/test_evaluation/`). **Negative result:** B 0.5699; C 0.5162 (−5.4 pt, p_Holm 0.0006); D 0.5187; C_w +0.08 pt (p 0.94); C ≈ D. P1, P2, P3 not supported.
+11. Next: failure analysis with concrete examples (wins and losses), figures, literature matrix, report.
 
 ### Implementation notes
 
