@@ -30,3 +30,13 @@ def rrf(score_matrices: list[np.ndarray], page_ids: list[str], k: float = 60.0) 
     for scores in score_matrices:
         fused += 1.0 / (k + ranks_from_scores(scores, page_ids))
     return fused
+
+
+def weighted_rrf(score_matrices: list[np.ndarray], weights: list[float], page_ids: list[str], k: float = 60.0) -> np.ndarray:
+    """Weighted RRF: fused(d) = sum_s w_s / (k + rank_s(d)). Equal weights give plain RRF (up to a constant factor)."""
+    if len(score_matrices) != len(weights):
+        raise ValueError("one weight per system")
+    fused = np.zeros_like(score_matrices[0], dtype=np.float64)
+    for scores, w in zip(score_matrices, weights):
+        fused += w / (k + ranks_from_scores(scores, page_ids))
+    return fused

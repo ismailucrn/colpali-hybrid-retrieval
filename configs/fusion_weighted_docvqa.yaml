@@ -1,0 +1,27 @@
+# Ablation E (dev-informed, added 2026-11-04 AFTER seeing that equal-weight RRF hurts on dev):
+# weighted RRF  fused = w / (k + rank_ColPali) + (1 - w) / (k + rank_text).
+# Same grid and selection rule for C' (BM25 text) and D' (BGE-M3 text): equal tuning budget.
+# w = 0.5 is plain RRF; w = 1.0 is ColPali alone (included so the dev search may conclude "no fusion").
+# Selection on the DEV split only; the test split is evaluated once, later, with the frozen choice.
+
+colpali_scores: results/colpali_v1.3_docvqa/scores.npz
+
+systems:
+  C_w: {name: "wRRF(BM25, ColPali)",   text_scores: results/bm25_docvqa/scores.npz}
+  D_w: {name: "wRRF(BGE-M3, ColPali)", text_scores: results/bge_m3_docvqa/scores.npz}
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  split: test
+
+splits: results/splits/docvqa_split.json
+
+weighted_rrf:
+  w_grid: [0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 0.98, 1.0]     # weight on ColPali
+  k_grid: [1, 5, 10, 20, 40, 60, 80, 100, 200, 500]
+  selection_metric: ndcg_at_5
+  # Ties on dev: prefer w closest to 0.5 (closest to plain RRF), then k closest to 60.
+  tie_break: closest_to_plain_rrf
+
+output_dir: results/fusion_docvqa

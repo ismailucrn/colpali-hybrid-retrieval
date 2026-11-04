@@ -35,3 +35,24 @@ def test_rrf_of_one_system_preserves_its_ranking():
     pages = [f"p{i}" for i in range(20)]
     s = rng.normal(size=(5, 20))
     assert (ranks_from_scores(rrf([s], pages, k=10), pages) == ranks_from_scores(s, pages)).all()
+
+
+def test_weighted_rrf_equal_weights_matches_plain_rrf_ranking():
+    from src.fusion import weighted_rrf
+
+    rng = np.random.default_rng(1)
+    pages = [f"p{i}" for i in range(15)]
+    a, b = rng.normal(size=(4, 15)), rng.normal(size=(4, 15))
+    plain = ranks_from_scores(rrf([a, b], pages, k=5), pages)
+    weighted = ranks_from_scores(weighted_rrf([a, b], [0.5, 0.5], pages, k=5), pages)
+    assert (plain == weighted).all()
+
+
+def test_weighted_rrf_full_weight_reproduces_one_system():
+    from src.fusion import weighted_rrf
+
+    rng = np.random.default_rng(2)
+    pages = [f"p{i}" for i in range(15)]
+    a, b = rng.normal(size=(4, 15)), rng.normal(size=(4, 15))
+    fused = weighted_rrf([a, b], [1.0, 0.0], pages, k=1)
+    assert (ranks_from_scores(fused, pages) == ranks_from_scores(a, pages)).all()

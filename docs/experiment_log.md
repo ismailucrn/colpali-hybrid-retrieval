@@ -129,3 +129,12 @@ Chronological record of every run and decision. One entry per run or decision; n
   - P2's premise is **contradicted on dev**: ColPali is already strongest on `exact` queries (0.83 vs BM25 0.64), so there is little lexical headroom; BM25 is nearly useless on `visual` queries (0.06), and fusion hurts there most — the "least help on visual" half of P2 holds, as harm.
   - P3 (C > D): on dev C is slightly above D overall (0.5335 vs 0.5263) and on exact/general, below on visual; both below B, so the comparison is between two harmful fusions.
 - k = 1 is now frozen for the test run of C and D. Any further variant (e.g. weighting) is a dev-informed change and must be labelled as such.
+
+### 2026-11-04 — Pre-registration of ablation E: weighted RRF (dev-informed, before running it)
+- Type: decision (user approved), **made after seeing the dev results above** — labelled dev-informed everywhere.
+- Method: `fused = w / (k + rank_ColPali) + (1 − w) / (k + rank_text)`; systems C_w (BM25 text) and D_w (BGE-M3 text), same grid and rule for both.
+- Grid: w ∈ {0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 0.98, 1.0} (w = 0.5 is plain RRF, w = 1.0 is ColPali alone, so "no fusion" is a possible outcome); k ∈ {1, 5, 10, 20, 40, 60, 80, 100, 200, 500}. 90 configurations per system.
+- Rule: max dev nDCG@5; ties → w closest to 0.5, then k closest to 60.
+- Rationale (stated before running): equal weights let a much weaker retriever override ColPali; a small text weight could still break ties or rescue near-misses where BM25 is confident (e.g. `exact` queries) without overriding ColPali elsewhere. *Hypothesis:* the best dev w is high (≥ 0.8); any gain over B is small.
+- Risk: 90 configurations on 226 dev queries → the selected dev score is optimistically biased; only the single test run counts.
+- The pre-registered C and D (equal weight, k = 1) remain the primary result; C_w/D_w are reported alongside, clearly as an ablation.
