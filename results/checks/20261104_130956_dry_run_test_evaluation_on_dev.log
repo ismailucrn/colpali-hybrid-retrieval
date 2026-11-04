@@ -1,0 +1,58 @@
+# Dry run of the test evaluation ON DEV (dev queries passed as 'test'; output in scratch) | 2026-11-04T13:09:56Z | commit 3116350 (+ uncommitted evaluation code) | Mac M5 CPU
+$ python scripts/checks/dry_run_test_evaluation.py --out <scratch>/testdry2
+# Test-split results (n = 226 queries), nDCG@5 unless stated
+
+| System | Role | nDCG@5 [95% CI] | Recall@5 | Recall@10 | nDCG@10 | MRR@10 | Δ vs B [95% CI] | p (perm.) | p (Holm) | W/T/L vs B |
+|---|---|---|---|---|---|---|---|---|---|---|
+| A: BM25 | baseline | 0.3995 [0.3403, 0.4613] | 0.4558 | 0.4823 | 0.4082 | 0.3842 | -0.1809 [-0.2299, -0.1334] | 0.0001 | 0.0006 | 12/146/68 |
+| BGE-M3 (dense text) | baseline | 0.2351 [0.1842, 0.2880] | 0.2788 | 0.3938 | 0.2727 | 0.2371 | -0.3453 [-0.4025, -0.2892] | 0.0001 | 0.0006 | 4/121/101 |
+| B: ColPali v1.3 | baseline | 0.5804 [0.5204, 0.6406] | 0.6460 | 0.6991 | 0.5976 | 0.5658 | – | – | – | – |
+| C: RRF(BM25, ColPali) k=1 | pre-registered improvement | 0.5335 [0.4737, 0.5927] | 0.6150 | 0.6814 | 0.5545 | 0.5146 | -0.0469 [-0.0702, -0.0237] | 0.0002 | 0.0006 | 11/172/43 |
+| D: RRF(BGE-M3, ColPali) k=1 | pre-registered control | 0.5263 [0.4669, 0.5865] | 0.6018 | 0.6549 | 0.5436 | 0.5083 | -0.0541 [-0.0727, -0.0355] | 0.0001 | 0.0006 | 2/179/45 |
+| C_w: wRRF(BM25, ColPali) w=.95 k=20 | ablation E, dev-informed | 0.5851 [0.5249, 0.6454] | 0.6504 | 0.6991 | 0.6008 | 0.5701 | +0.0047 [-0.0003, +0.0113] | 0.2549 | 0.5097 | 3/222/1 |
+| D_w: wRRF(BGE-M3, ColPali) w=.95 k=10 | ablation E, dev-informed | 0.5804 [0.5204, 0.6406] | 0.6460 | 0.6991 | 0.5976 | 0.5658 | +0.0000 [+0.0000, +0.0000] | 1.0000 | 1.0000 | 0/226/0 |
+
+## Pairs (P3: lexical signal vs any second retriever)
+
+| Pair | Δ [95% CI] | p (perm.) | W/T/L |
+|---|---|---|---|
+| C vs D | +0.0072 [-0.0169, +0.0311] | 0.5626 | 27/175/24 |
+| C_w vs D_w | +0.0047 [-0.0003, +0.0113] | 0.2549 | 3/222/1 |
+
+## By query type (exploratory, uncorrected)
+
+| System | exact (n=93) | general (n=115) | visual (n=18) |
+|---|---|---|---|
+| A: BM25 | 0.644 (Δ -0.185, p=0.000) | 0.256 (Δ -0.155, p=0.000) | 0.056 (Δ -0.329, p=0.014) |
+| BGE-M3 (dense text) | 0.405 (Δ -0.424, p=0.000) | 0.118 (Δ -0.292, p=0.000) | 0.107 (Δ -0.278, p=0.021) |
+| B: ColPali v1.3 | 0.828 | 0.411 | 0.385 |
+| C: RRF(BM25, ColPali) k=1 | 0.786 (Δ -0.043, p=0.018) | 0.374 (Δ -0.037, p=0.033) | 0.251 (Δ -0.134, p=0.030) |
+| D: RRF(BGE-M3, ColPali) k=1 | 0.776 (Δ -0.052, p=0.001) | 0.357 (Δ -0.053, p=0.000) | 0.314 (Δ -0.071, p=0.124) |
+| C_w: wRRF(BM25, ColPali) w=.95 k=20 | 0.832 (Δ +0.004, p=1.000) | 0.417 (Δ +0.006, p=0.502) | 0.381 (Δ -0.004, p=1.000) |
+| D_w: wRRF(BGE-M3, ColPali) w=.95 k=10 | 0.828 (Δ +0.000, p=1.000) | 0.411 (Δ +0.000, p=1.000) | 0.385 (Δ +0.000, p=1.000) |
+
+## Post-hoc: without duplicated query texts (n = 217)
+
+| System | nDCG@5 | Δ vs B |
+|---|---|---|
+| A: BM25 | 0.4161 | -0.1884 |
+| BGE-M3 (dense text) | 0.2429 | -0.3616 |
+| B: ColPali v1.3 | 0.6045 | – |
+| C: RRF(BM25, ColPali) k=1 | 0.5556 | -0.0489 |
+| D: RRF(BGE-M3, ColPali) k=1 | 0.5481 | -0.0564 |
+| C_w: wRRF(BM25, ColPali) w=.95 k=20 | 0.6094 | +0.0049 |
+| D_w: wRRF(BGE-M3, ColPali) w=.95 k=10 | 0.6045 | +0.0000 |
+
+## Resources (per system; components measured on different devices, see note)
+
+| System | Index time (s) | Index size (MB) | Query latency, sequential (ms) | parallel (ms) | Fusion overhead (ms) |
+|---|---|---|---|---|---|
+| A: BM25 | 0.35 | 0.63 | 0.12 | 0.12 | 0.000 |
+| BGE-M3 (dense text) | 21.10 | 1.95 | 29.04 | 29.04 | 0.000 |
+| B: ColPali v1.3 | 111.70 | 125.85 | 51.30 | 51.30 | 0.000 |
+| C: RRF(BM25, ColPali) k=1 | 112.04 | 126.48 | 51.55 | 51.42 | 0.124 |
+| D: RRF(BGE-M3, ColPali) k=1 | 132.79 | 127.81 | 80.47 | 51.43 | 0.131 |
+| C_w: wRRF(BM25, ColPali) w=.95 k=20 | 112.04 | 126.48 | 51.55 | 51.42 | 0.125 |
+| D_w: wRRF(BGE-M3, ColPali) w=.95 k=10 | 132.79 | 127.81 | 80.47 | 51.43 | 0.132 |
+
+Component latencies were measured on different devices (ColPali: L4 GPU; BGE-M3: Mac MPS; BM25 and fusion: Mac CPU). Sequential = sum of components + fusion; parallel = slowest component + fusion.

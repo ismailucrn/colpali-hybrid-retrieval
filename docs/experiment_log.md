@@ -146,3 +146,9 @@ Chronological record of every run and decision. One entry per run or decision; n
   - D_w = wRRF(BGE-M3, ColPali): best 0.5804 — equal to B; no configuration beats ColPali alone. Selected by the tie rule: w = 0.95, k = 10.
 - *Interpretation:* the text retrievers only help (if at all) when they are allowed to reorder ColPali's ranking marginally; any weight that lets them override ColPali hurts. BM25 shows a small dev gain that BGE-M3 does not — consistent with P3's direction, but +0.47 pt after a 90-config search is within what selection bias alone could produce *(hypothesis; the test run and paired test will tell)*.
 - **Frozen for the single test run:** C k=1; D k=1; C_w (w=0.95, k=20); D_w (w=0.95, k=10); plus A, B and BGE-M3 alone.
+
+### 2026-11-04 — Test-evaluation plan (committed before the single test run)
+- Script `scripts/run_test_evaluation.py`, config `configs/test_evaluation.yaml`; it refuses to run if the fusion settings differ from the dev selection files.
+- Statistics, decided before seeing test: per-system percentile bootstrap 95% CI of mean nDCG@5 (10,000 resamples over queries, seed 0); paired comparisons vs B with paired bootstrap CI of Δ and a two-sided sign-flip permutation test (10,000, seed 0); Holm correction over the six comparisons vs B; P3 pairs C vs D and C_w vs D_w reported separately; per-type breakdown exploratory and uncorrected; post-hoc analysis without the 22 duplicated query texts.
+- Resources: per-component measurements reused from each system's run (different devices — stated in the table), fusion overhead measured per query; sequential and parallel latency reported.
+- Dry run on dev (registry row 19) reproduced all dev numbers; on dev, C_w vs B is +0.0047 with p = 0.25 — even on the data it was tuned on, the gain is not significant.

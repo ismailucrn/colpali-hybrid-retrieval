@@ -1,0 +1,39 @@
+# The single test-split evaluation of all frozen systems (run once).
+# Fusion settings are frozen from dev (results/fusion_docvqa/dev_selection*.json); the script checks they match.
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  split: test
+
+splits: results/splits/docvqa_split.json
+tags: results/splits/docvqa_query_tags.csv
+
+scores:
+  A: results/bm25_docvqa/scores.npz
+  B: results/colpali_v1.3_docvqa/scores.npz
+  BGE: results/bge_m3_docvqa/scores.npz
+
+# Order matters only for display. Weights in weighted RRF are [ColPali, text].
+systems:
+  A:   {name: "A: BM25",                          kind: single, scores: A, role: "text baseline"}
+  BGE: {name: "BGE-M3 (dense text)",              kind: single, scores: BGE, role: "D's text component"}
+  B:   {name: "B: ColPali v1.3",                  kind: single, scores: B, role: "reproduced baseline"}
+  C:   {name: "C: RRF(BM25, ColPali) k=1",        kind: rrf, inputs: [A, B], k: 1, role: "pre-registered improvement"}
+  D:   {name: "D: RRF(BGE-M3, ColPali) k=1",      kind: rrf, inputs: [BGE, B], k: 1, role: "pre-registered control"}
+  C_w: {name: "C_w: wRRF(BM25, ColPali) w=.95 k=20", kind: wrrf, inputs: [B, A], weights: [0.95, 0.05], k: 20, role: "ablation E, dev-informed"}
+  D_w: {name: "D_w: wRRF(BGE-M3, ColPali) w=.95 k=10", kind: wrrf, inputs: [B, BGE], weights: [0.95, 0.05], k: 10, role: "ablation E, dev-informed"}
+
+baseline: B
+compare_to_baseline: [A, BGE, C, D, C_w, D_w]
+extra_pairs: [[C, D], [C_w, D_w]]      # P3: lexical signal vs any second retriever
+
+statistics:
+  metric: ndcg_at_5
+  bootstrap_resamples: 10000
+  permutations: 10000
+  alpha: 0.05
+  seed: 0
+  multiple_comparisons: holm          # over the comparisons vs the baseline
+
+output_dir: results/test_evaluation
