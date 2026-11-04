@@ -93,3 +93,10 @@ Chronological record of every run and decision. One entry per run or decision; n
 - **Resources (measured, Mac M5 CPU):** index build 0.35 s for 500 pages; single-query latency median 0.12 ms; index 0.63 MB pickled (56,470 tokens, 14,573 terms); peak process RSS 922 MB (mostly the dataset/Python, not BM25).
 - **Observation relevant to the hypothesis:** the official preprocessing removes some lexical anchors — non-alphanumeric tokens (`Log-in`, `B&W`, `2012-2013`) and stopwords such as "no" are dropped; 2 queries become empty (all-zero scores). So some `exact`-tagged queries cannot benefit from BM25 by construction. We keep the official preprocessing (comparability with the paper) and will report this in the failure analysis; a different tokenizer would be a separate, unplanned change.
 - 4 pages have empty OCR text → BM25 can never retrieve them.
+
+### 2026-11-04 — Pre-registration: control D uses BGE-M3 (before any BGE-M3 or fusion result)
+- Type: decision (confirmed by the user)
+- Dense text retriever for control D: `BAAI/bge-m3` @ `5617a9f`, dense vectors only, implemented like vidore-benchmark `BGEM3Retriever` (FlagEmbedding, fp16, query max_length 512, dot-product scoring), over the same `vidore/docvqa_test_subsampled_tesseract` text as BM25 (`9a183a7`).
+- Why this model: it is the paper's own dense text baseline (Table 2: 25.7 nDCG@5 on DocVQA with Unstructured + OCR), so the control is not chosen to make C look good or bad.
+- Fusion (C and D) will use the same RRF formula and the same `k` search on dev; neither BM25 nor BGE-M3 gets any tuning of its own.
+- No BGE-M3 scores and no fusion scores exist at the time of this commit.
