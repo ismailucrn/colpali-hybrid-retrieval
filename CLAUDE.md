@@ -144,18 +144,12 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 - **14–18 Nov:** report, figures, literature matrix completion, repo cleanup, tag `v1.0-submission`, slides.
 - Literature matrix runs in parallel: roughly one paper per day.
 
-## Literature (candidate set for the 5+ paper matrix — verify details before citing)
+## Literature (matrix filled 6 Nov — `docs/literature_matrix.md`; the user must still read and confirm every cell)
 
-- ColPali (2407.01449) — main paper.
-- ColBERT (2004.12832) — late interaction / multi-vector retrieval origin.
-- ViDoRe Benchmark V2 (2505.17166) — newer evaluation protocol.
-- VisRAG (2410.10594) — vision-based RAG including generation (related work only, not implemented).
-- DSE, Document Screenshot Embedding — single-vector visual document retrieval (competing approach).
-- Cormack et al., 2009, Reciprocal Rank Fusion — method used in the improvement.
-- A text-IR paper on lexical vs dense / hybrid retrieval (e.g. BEIR, 2104.08663 — verify) — evidence that BM25 + dense fusion helps in text retrieval; supports the research gap.
-- Lewis et al., 2020, RAG (2005.11401) — background only.
-
-Templates: `docs/literature_matrix.md`.
+- **Matrix (8):** ColPali (2407.01449); ColBERT (2004.12832); DSE (2406.11251); ViDoRe V2 (2505.17166); RRF, Cormack et al. SIGIR 2009; Bruch et al., fusion functions (2210.11934); IRPAPERS (2602.17687); slide-retrieval study (2509.15211).
+- **Related work only:** BEIR (2104.08663; does *not* evaluate fusion); VisRAG (2410.10594); Lost in OCR Translation? (2505.05666). Dropped: RAG (2005.11401).
+- **Note 2026-11-06 on the research gap:** the original wording ("visual retrievers are usually evaluated alone") is too broad. The targeted search found prior text + visual fusion (IRPAPERS helps with clean transcriptions; DSE App. A.2 "minimal improvement"; slide study no gain), none with significance tests, a second-retriever control or query-type analysis, and none on a ViDoRe task with the benchmark OCR. The refined gap is in `docs/literature_matrix.md` §5. The pre-registered predictions above are unchanged.
+- Open verification items are listed at the end of the matrix file.
 
 ## Recording every run
 
@@ -205,7 +199,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 10. ~~Single test run~~ — 4 November (`results/test_evaluation/`). **Negative result:** B 0.5699; C 0.5162 (−5.4 pt, p_Holm 0.0006); D 0.5187; C_w +0.08 pt (p 0.94); C ≈ D. P1, P2, P3 not supported.
 11. ~~Failure analysis~~ — 6 November (`results/failure_analysis/`): BM25 hits where ColPali misses on only 3/225 test queries (0 exact); 42/49 of C's losses come from BM25 misses; lexical overlap explains BM25 success.
 12. ~~Figures~~ — 6 November: `scripts/make_figures.py` → `results/figures/fig1–6` (listed in README).
-13. Next: literature matrix, report draft, presentation; final repo cleanup and tag `v1.0-submission`.
+13. ~~Literature matrix~~ — 6 November (`docs/literature_matrix.md`): 8 papers + 3 related, search approach, refined research gap. User must read and confirm.
+14. Next: report draft, presentation; final repo cleanup and tag `v1.0-submission`.
 
 ### Implementation notes
 
