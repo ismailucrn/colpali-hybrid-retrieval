@@ -204,7 +204,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 9. ~~Dev selection~~ — 4 November. Equal-weight RRF hurts on dev (B 0.5804; C 0.5335, D 0.5263 at k=1). Dev-informed ablation E (weighted RRF, pre-registered in `b558ceb`): C_w w=0.95/k=20 dev 0.5851; D_w w=0.95/k=10 dev 0.5804 (= B).
 10. ~~Single test run~~ — 4 November (`results/test_evaluation/`). **Negative result:** B 0.5699; C 0.5162 (−5.4 pt, p_Holm 0.0006); D 0.5187; C_w +0.08 pt (p 0.94); C ≈ D. P1, P2, P3 not supported.
 11. ~~Failure analysis~~ — 6 November (`results/failure_analysis/`): BM25 hits where ColPali misses on only 3/225 test queries (0 exact); 42/49 of C's losses come from BM25 misses; lexical overlap explains BM25 success.
-12. Next: figures (scripts that regenerate them), literature matrix, report draft, presentation.
+12. ~~Figures~~ — 6 November: `scripts/make_figures.py` → `results/figures/fig1–6` (listed in README).
+13. Next: literature matrix, report draft, presentation; final repo cleanup and tag `v1.0-submission`.
 
 ### Implementation notes
 

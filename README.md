@@ -82,6 +82,27 @@ python scripts/run_bge_m3.py --config configs/bge_m3_docvqa.yaml
 
 Output: `results/bge_m3_docvqa/`.
 
+### Fusion, test evaluation, failure analysis and figures (CPU, seconds — no GPU, no model download)
+
+```bash
+python scripts/run_fusion_dev.py --config configs/fusion_docvqa.yaml                  # RRF k on dev (C, D)
+python scripts/run_weighted_fusion_dev.py --config configs/fusion_weighted_docvqa.yaml # ablation E on dev
+python scripts/run_test_evaluation.py --config configs/test_evaluation.yaml            # the single test run
+python scripts/failure_analysis.py                                                    # test, descriptive
+python scripts/make_figures.py                                                        # results/figures/
+```
+
+These read only the committed `scores.npz` files and split/tag files, so every table and figure can be regenerated on a laptop.
+
+| Figure | File | Shows |
+|---|---|---|
+| 1 | `results/figures/fig1_test_ndcg5` | test nDCG@5 with 95% CI, Δ vs ColPali (Holm p) |
+| 2 | `results/figures/fig2_dev_k_sweep` | dev nDCG@5 vs RRF k for C and D (ablation E) |
+| 3 | `results/figures/fig3_dev_weighted_rrf` | dev Δ vs ColPali over the weighted-RRF grid |
+| 4 | `results/figures/fig4_test_by_type` | test nDCG@5 by query type; Δ of fusions vs ColPali |
+| 5 | `results/figures/fig5_headroom` | who finds the gold page (top 5), per query type |
+| 6 | `results/figures/fig6_overlap` | hit rate vs query–OCR lexical overlap |
+
 ### Fast tests (CPU, seconds)
 
 ```bash

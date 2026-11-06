@@ -1,0 +1,8 @@
+# make_figures | 2026-11-06T07:19:57Z | commit 464c398 (+ uncommitted scripts/make_figures.py) | Mac M5 CPU, matplotlib 3.11.2
+$ python scripts/make_figures.py
+wrote results/figures/fig1_test_ndcg5.png/.pdf
+wrote results/figures/fig2_dev_k_sweep.png/.pdf
+wrote results/figures/fig3_dev_weighted_rrf.png/.pdf
+wrote results/figures/fig4_test_by_type.png/.pdf
+wrote results/figures/fig5_headroom.png/.pdf
+wrote results/figures/fig6_overlap.png/.pdf
