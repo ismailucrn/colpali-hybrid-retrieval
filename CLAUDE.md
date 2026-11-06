@@ -203,7 +203,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 8. ~~BGE-M3 (D's text component)~~ — 4 November: full-set nDCG@5 0.2486 (paper 25.7); `results/bge_m3_docvqa/`. Ran on the Mac (MPS) in ~1 minute.
 9. ~~Dev selection~~ — 4 November. Equal-weight RRF hurts on dev (B 0.5804; C 0.5335, D 0.5263 at k=1). Dev-informed ablation E (weighted RRF, pre-registered in `b558ceb`): C_w w=0.95/k=20 dev 0.5851; D_w w=0.95/k=10 dev 0.5804 (= B).
 10. ~~Single test run~~ — 4 November (`results/test_evaluation/`). **Negative result:** B 0.5699; C 0.5162 (−5.4 pt, p_Holm 0.0006); D 0.5187; C_w +0.08 pt (p 0.94); C ≈ D. P1, P2, P3 not supported.
-11. Next: failure analysis with concrete examples (wins and losses), figures, literature matrix, report.
+11. ~~Failure analysis~~ — 6 November (`results/failure_analysis/`): BM25 hits where ColPali misses on only 3/225 test queries (0 exact); 42/49 of C's losses come from BM25 misses; lexical overlap explains BM25 success.
+12. Next: figures (scripts that regenerate them), literature matrix, report draft, presentation.
 
 ### Implementation notes
 

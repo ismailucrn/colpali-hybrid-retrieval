@@ -1,0 +1,59 @@
+query,tag,duplicated,gold_page,overlap,rank_A,rank_BGE,rank_B,rank_C,rank_C_w,ndcg5_B,ndcg5_C,ndcg5_C_w,top1_A,top1_B,top1_C
+What is the Log-in No. ?,exact,0,fryn0081,,467,141,1,2,1,1.0,0.6309,1.0,zznp0227,fryn0081,zznp0227
+What is No. 2-26 of subheading H ?,exact,0,kkwg0227,0.0,342,8,1,3,1,1.0,0.5,1.0,kkpj0226,kkwg0227,ghlw0228
+What Tobacco brand of GPI is shown in the picture?,visual,0,znbx0223,0.2,31,168,1,3,1,1.0,0.5,1.0,xhxj0037,znbx0223,sqxg0023
+Which year was the meeting held?,general,0,jhhd0227,0.333,57,164,4,8,4,0.4307,0.0,0.4307,qznc0227,jpdd0228,jpdd0228
+What is the full form of AHA?,exact,0,hqlf0227,0.0,413,24,5,9,5,0.3869,0.0,0.3869,hkpv0001,hgpf0227,hgpf0227
+What is the number of live births for Alabama?,exact,0,lmyc0227,0.0,324,241,1,2,1,1.0,0.6309,1.0,ggbm0227,lmyc0227,ggbm0227
+When was the meeting held?,general,0,sncj0037,0.5,21,14,4,7,4,0.4307,0.0,0.4307,qznc0227,xfpj0226,qznc0227
+What % of vests is available for conversion after 3 year?,exact,0,ynbx0223,0.6,1,5,2,1,2,0.6309,1.0,0.6309,ynbx0223,krcy0227,ynbx0223
+What is the name of the airline?,general,0,lxkp0227,0.5,3,1,1,2,1,1.0,0.6309,1.0,zqww0228,lxkp0227,zqww0228
+What is the amount of check?,general,0,zggb0228,0.5,6,91,4,6,3,0.4307,0.0,0.5,tllg0227,frcy0227,tllg0227
+What is the name of the client?,general,0,hnvw0217,0.5,4,115,2,3,2,0.6309,0.5,0.6309,jfgf0077,lqcw0217,jfgf0077
+What is the name of the foundation?,general,0,nqhb0228,0.5,3,9,2,3,2,0.6309,0.5,0.6309,nngv0228,zzhg0227,nngv0228
+Who is the sender of the Fax?,exact,0,htdw0217,0.5,4,1,4,6,4,0.4307,0.0,0.4307,xqdw0217,ylkw0228,ylkw0228
+When is the next meeting held?,general,0,ysvw0217,0.667,7,27,1,2,1,1.0,0.6309,1.0,jrgn0226,ysvw0217,jrgn0226
+What is the progress Report number?,exact,1,lkvw0217,0.667,13,104,2,4,2,0.6309,0.4307,0.6309,rpgn0226,lqcw0217,rpgn0226
+Which cigarette brand beats Marlboro lights?,exact,0,gycp0080,0.4,2,1,1,2,1,1.0,0.6309,1.0,xnbl0037,gycp0080,xnbl0037
+Which university ‘letterhead’ is given?,exact,1,hjxc0228,0.333,22,98,3,5,3,0.5,0.3869,0.5,fqgv0228,nfnw0228,nfnw0228
+What is the VO. NO.?,exact,0,rzgm0227,0.0,137,148,1,3,1,1.0,0.5,1.0,ghlw0228,rzgm0227,ggyf0227
+What is the full form of I.P. ?,exact,0,rmcd0228,0.0,188,127,1,2,1,1.0,0.6309,1.0,hkpv0001,rmcd0228,hkpv0001
+What is the page no mentioned in this newspaper?,general,0,lynf0227,0.333,56,115,5,9,5,0.3869,0.0,0.3869,rflm0227,mhfk0226,rflm0227
+Who is the secretary?,general,0,njxw0228,1.0,9,160,5,7,5,0.3869,0.0,0.3869,xrvm0227,nqhb0228,nqhb0228
+what is the project number ?,general,0,rpgn0226,1.0,1,55,2,1,2,0.6309,1.0,0.6309,rpgn0226,trhk0037,rpgn0226
+What is the name of the laboratory?,general,0,hkbp0078,1.0,3,48,14,4,14,0.0,0.4307,0.0,fyvb0228,yzbw0217,lqcg0227
+What is the announcement on?,general,0,kkbm0227,0.0,336,137,3,6,4,0.5,0.0,0.4307,tllk0226,jpwd0227,tllk0226
+When is the effective date mentioned in the form?,general,0,hhhh0224,0.5,12,20,1,2,1,1.0,0.6309,1.0,krlf0023,hhhh0224,krlf0023
+For which brand  of soft drink is the product information provided?,general,0,hjpj0226,0.5,5,2,1,3,1,1.0,0.5,1.0,yhpj0226,hjpj0226,yhpj0226
+Who is this fax for?,general,0,ylkw0228,1.0,6,8,2,5,2,0.6309,0.3869,0.6309,xqdw0217,kyvw0217,kyvw0217
+What is the name of the hotel?,general,0,jrcy0227,0.0,390,45,1,2,1,1.0,0.6309,1.0,nlwg0227,jrcy0227,nlwg0227
+What is the cost of postage ( see the postal stamp at top left)?,visual,0,phjc0228,0.0,252,3,3,7,4,0.5,0.0,0.4307,jzfv0228,zkbg0227,jzfv0228
+At what time did Charles Muller call Dr. Darby?,exact,0,zrww0228,0.2,32,46,1,2,1,1.0,0.6309,1.0,qhmf0227,zrww0228,tlgw0228
+What is the full form of EPA?,exact,0,nlcn0226,0.333,11,11,5,6,5,0.3869,0.0,0.3869,lhcn0226,kzbn0226,lhcn0226
+which committee is mentioned in the document?,general,0,qtvb0228,0.333,34,57,3,5,3,0.5,0.3869,0.5,kxxn0226,xrvm0227,kxxn0226
+What is the time of the reception?,general,0,thwm0227,0.5,1,8,2,1,2,0.6309,1.0,0.6309,thwm0227,pnbv0228,thwm0227
+Which session is mentioned here?,general,0,kmhx0227,0.5,7,7,3,4,3,0.5,0.4307,0.5,yzbd0227,nzvv0228,yzbd0227
+Who should you contact if you have any questions? And what is the contact number?,exact,0,shcn0226,0.667,10,363,2,3,2,0.6309,0.5,0.6309,fypn0000,srjf0226,fypn0000
+What kind of voucher is given here?,general,0,ypcx0078,0.333,6,10,1,2,1,1.0,0.6309,1.0,jxjh0227,ypcx0078,tllg0227
+What is written at the bottom right end of the ‘notice’?,exact,0,ytyp0227,0.2,27,62,3,5,3,0.5,0.3869,0.5,zfkf0226,xrcy0227,xrcy0227
+What is the title on page 2?,exact,0,rjxg0227,0.333,139,311,5,11,5,0.3869,0.0,0.3869,znvw0008,trhk0226,trhk0226
+What is  the title of figure 4?,visual,0,rqcy0227,0.333,24,149,2,3,2,0.6309,0.5,0.6309,sphv0228,lhcb0228,lhcb0228
+What is the date of Analysis?,exact,0,pryh0227,0.5,13,30,2,4,2,0.6309,0.4307,0.6309,lhcb0228,tgph0227,tgph0227
+Who is from Indiana?,exact,0,ggbm0227,1.0,1,23,2,1,1,0.6309,1.0,1.0,ggbm0227,phjc0228,ggbm0227
+Which company’s memorandum is given?,general,0,jxjh0227,0.667,4,1,6,5,6,0.0,0.3869,0.0,xgcc0228,qhmf0227,xgcc0228
+What is the title of the research project?,general,0,nhyk0226,0.667,10,11,1,2,1,1.0,0.6309,1.0,pyfg0227,nhyk0226,pyfg0227
+what is the first quote written at the top right of the page?,general,0,xmwn0226,0.0,148,56,2,4,2,0.6309,0.4307,0.6309,rkww0217,zybd0227,zybd0227
+What is the name of the memo ?,general,0,xyyv0228,0.0,107,8,3,5,3,0.5,0.3869,0.5,tkdk0226,qlbk0226,qlbk0226
+What is the name of the factory ?,general,1,lgph0227,0.5,2,33,5,3,5,0.3869,0.5,0.3869,mfmh0227,tgph0227,tgph0227
+What is the main heading of the document given under APPENDIX V-9?,exact,0,snyc0227,0.2,27,358,1,3,1,1.0,0.5,1.0,slcn0226,snyc0227,slcn0226
+When is the remittance due ?,general,0,qtyp0227,1.0,1,16,2,1,2,0.6309,1.0,0.6309,qtyp0227,thwm0227,qtyp0227
+What is subheading X ?,exact,0,rycg0227,0.0,159,148,2,4,2,0.6309,0.4307,0.6309,jxbx0227,hmwn0226,jxbx0227
+What is the date of the order?,general,0,fypn0000,1.0,10,15,4,5,4,0.4307,0.3869,0.4307,hkpv0001,pzyy0078,hkpv0001
+What is the invoice no.?,general,0,hsmw0228,1.0,4,23,1,2,1,1.0,0.6309,1.0,rjxn0226,hsmw0228,rjxn0226
+Who is the letter to ?,general,0,zslg0227,0.0,21,9,2,4,2,0.6309,0.4307,0.6309,tqnh0227,zzfv0228,tqnh0227
+"In fig 3, what is plotted along x axis?",visual,0,ggyf0227,0.333,8,87,2,3,2,0.6309,0.5,0.6309,ylvd0228,njpf0227,ylvd0228
+Who is the holder of this curriculum vitae?,general,0,prxn0226,0.0,199,253,2,3,3,0.6309,0.5,0.5,mlcj0227,mlcj0227,mlcj0227
+What is the name of the travel agency?,general,0,hkdv0228,0.0,428,19,1,2,1,1.0,0.6309,1.0,tkwg0227,hkdv0228,tkwg0227
+How many bullet points are there?,general,0,zpxl0226,0.333,2,116,136,4,99,0.0,0.4307,0.0,fmbk0226,ynjf0226,ysmc0228
+Which page of the form is this,general,0,jggn0226,0.5,71,104,1,2,1,1.0,0.6309,1.0,znvw0008,jggn0226,znvw0008
+Which session of 85th congress is mentioned in this document?,exact,0,yskd0228,0.0,82,31,1,2,1,1.0,0.6309,1.0,yzbd0227,yskd0228,yzbd0227

@@ -1,0 +1,135 @@
+# Failure analysis on test (post-hoc, descriptive) | 2026-11-06T07:14:06Z | commit 658dbd1 (+ uncommitted scripts/failure_analysis.py) | Mac M5 CPU
+$ python scripts/failure_analysis.py
+{
+ "headroom_at_5": {
+  "all": {
+   "n": 225,
+   "B_hit": 147,
+   "A_hit": 100,
+   "A_hit_B_miss (max gain)": 3,
+   "B_hit_A_miss (risk)": 50,
+   "both_miss": 75,
+   "oracle_A_or_B_hit": 150
+  },
+  "exact": {
+   "n": 93,
+   "B_hit": 84,
+   "A_hit": 62,
+   "A_hit_B_miss (max gain)": 0,
+   "B_hit_A_miss (risk)": 22,
+   "both_miss": 9,
+   "oracle_A_or_B_hit": 84
+  },
+  "general": {
+   "n": 115,
+   "B_hit": 56,
+   "A_hit": 36,
+   "A_hit_B_miss (max gain)": 3,
+   "B_hit_A_miss (risk)": 23,
+   "both_miss": 56,
+   "oracle_A_or_B_hit": 59
+  },
+  "visual": {
+   "n": 17,
+   "B_hit": 7,
+   "A_hit": 2,
+   "A_hit_B_miss (max gain)": 0,
+   "B_hit_A_miss (risk)": 5,
+   "both_miss": 10,
+   "oracle_A_or_B_hit": 7
+  }
+ },
+ "rank_transitions": {
+  "B->C": {
+   "1 -> 1": 86,
+   "1 -> 2-5": 20,
+   "2-5 -> 1": 5,
+   "2-5 -> 2-5": 25,
+   "2-5 -> 6-10": 10,
+   "2-5 -> >10": 1,
+   "6-10 -> 2-5": 1,
+   "6-10 -> 6-10": 1,
+   "6-10 -> >10": 4,
+   ">10 -> 2-5": 2,
+   ">10 -> >10": 70
+  },
+  "B->C_w": {
+   "1 -> 1": 106,
+   "2-5 -> 1": 1,
+   "2-5 -> 2-5": 40,
+   "6-10 -> 6-10": 6,
+   ">10 -> >10": 72
+  },
+  "B->D": {
+   "1 -> 1": 91,
+   "1 -> 2-5": 15,
+   "2-5 -> 1": 1,
+   "2-5 -> 2-5": 28,
+   "2-5 -> 6-10": 10,
+   "2-5 -> >10": 2,
+   "6-10 -> 2-5": 1,
+   "6-10 -> 6-10": 1,
+   "6-10 -> >10": 4,
+   ">10 -> 1": 1,
+   ">10 -> 6-10": 2,
+   ">10 -> >10": 69
+  }
+ },
+ "lexical_overlap": {
+  "A_hit": [
+   0.7331785714285713,
+   100
+  ],
+  "A_miss": [
+   0.17886178861788618,
+   123
+  ],
+  "B_hit_A_miss": [
+   0.3152777777777778,
+   48
+  ],
+  "A_hit_B_miss": [
+   0.6666666666666666,
+   3
+  ],
+  "queries_with_no_bm25_tokens": 2,
+  "gold_pages_with_empty_ocr": 1
+ },
+ "hit_rate_by_overlap": {
+  "0": {
+   "n": 75,
+   "A_hit_rate": 0.0,
+   "B_hit_rate": 0.22666666666666666
+  },
+  "(0, 0.5]": {
+   "n": 72,
+   "A_hit_rate": 0.4583333333333333,
+   "B_hit_rate": 0.7638888888888888
+  },
+  "(0.5, 1)": {
+   "n": 33,
+   "A_hit_rate": 0.8484848484848485,
+   "B_hit_rate": 0.9696969696969697
+  },
+  "1": {
+   "n": 43,
+   "A_hit_rate": 0.9069767441860465,
+   "B_hit_rate": 0.9534883720930233
+  }
+ },
+ "C_vs_B": {
+  "wins": 9,
+  "losses": 49,
+  "loss_tags": {
+   "exact": 19,
+   "visual": 4,
+   "general": 26
+  },
+  "loss_mechanism": {
+   "BM25 missed (gold > 5)": 42,
+   "BM25 also hit (top 5)": 7
+  }
+ },
+ "C_w_changed_queries": 5
+}
+wrote results/failure_analysis/{analysis.json, changed_queries.csv, examples.md}
