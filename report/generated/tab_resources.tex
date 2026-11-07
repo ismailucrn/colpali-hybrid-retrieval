@@ -1,0 +1,16 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lrrrrr}
+\toprule
+System & Index time (s) & Index size (MB) & Latency seq.\ (ms) & Latency par.\ (ms) & Fusion (ms) \\
+\midrule
+A & 0.35 & 0.63 & 0.12 & 0.12 & 0.00 \\
+BGE-M3 & 21.10 & 1.95 & 29.04 & 29.04 & 0.00 \\
+B & 111.70 & 125.85 & 51.30 & 51.30 & 0.00 \\
+C & 112.04 & 126.48 & 51.55 & 51.43 & 0.13 \\
+D & 132.79 & 127.81 & 80.47 & 51.43 & 0.13 \\
+C$_w$ & 112.04 & 126.48 & 51.56 & 51.44 & 0.14 \\
+D$_w$ & 132.79 & 127.81 & 80.47 & 51.43 & 0.13 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Medians over single queries. Components were measured on different devices: ColPali on an NVIDIA L4 (bf16, peak GPU memory 15.8~GiB), BGE-M3 on Apple M5 MPS (fp16), BM25 and fusion on the M5 CPU. Sequential = sum of components + fusion; parallel = slowest component + fusion.}

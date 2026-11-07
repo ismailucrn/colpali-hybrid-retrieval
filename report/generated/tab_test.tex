@@ -1,0 +1,16 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{llllllll}
+\toprule
+System & Role & nDCG@5 [95\% CI] & R@5 & R@10 & MRR@10 & $\Delta$ vs B [95\% CI] & $p_\mathrm{Holm}$ \\
+\midrule
+A & text baseline & 0.382 [0.323, 0.441] & 0.444 & 0.498 & 0.369 & $-$0.188 [$-$0.237, $-$0.142] & $<$0.001 \\
+BGE-M3 & D's text part & 0.262 [0.209, 0.317] & 0.307 & 0.418 & 0.262 & $-$0.308 [$-$0.364, $-$0.252] & $<$0.001 \\
+B & reproduced baseline & 0.570 [0.510, 0.627] & 0.653 & 0.680 & 0.546 & -- & -- \\
+C & proposed & 0.516 [0.457, 0.574] & 0.618 & 0.667 & 0.489 & $-$0.054 [$-$0.076, $-$0.032] & $<$0.001 \\
+D & control & 0.519 [0.460, 0.578] & 0.609 & 0.667 & 0.496 & $-$0.051 [$-$0.072, $-$0.030] & $<$0.001 \\
+C$_w$ & ablation E & 0.571 [0.511, 0.629] & 0.653 & 0.680 & 0.547 & +0.001 [$-$0.002, +0.005] & 1.000 \\
+D$_w$ & ablation E & 0.570 [0.510, 0.627] & 0.653 & 0.680 & 0.546 & +0.000 [+0.000, +0.000] & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Test split, 225 queries, run once with settings frozen on dev. CI: percentile bootstrap over queries (10{,}000 resamples). $p$: two-sided paired sign-flip permutation test (10{,}000), Holm-corrected over the six comparisons with B.}

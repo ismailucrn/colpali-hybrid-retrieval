@@ -90,6 +90,7 @@ python scripts/run_weighted_fusion_dev.py --config configs/fusion_weighted_docvq
 python scripts/run_test_evaluation.py --config configs/test_evaluation.yaml            # the single test run
 python scripts/failure_analysis.py                                                    # test, descriptive
 python scripts/make_figures.py                                                        # results/figures/
+python scripts/make_report_tables.py && (cd report && tectonic main.tex)           # report numbers/tables + PDF
 ```
 
 These read only the committed `scores.npz` files and split/tag files, so every table and figure can be regenerated on a laptop.

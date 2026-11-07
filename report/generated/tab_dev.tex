@@ -1,0 +1,18 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{llrr}
+\toprule
+System (dev only) & ColPali weight & nDCG@5 & $\Delta$ vs B \\
+\midrule
+B: ColPali & -- & 0.580 & -- \\
+A: BM25 & -- & 0.400 & $-$0.180 \\
+BGE-M3 & -- & 0.235 & $-$0.345 \\
+C: RRF, $k{=}1$ (selected) & equal & 0.534 & $-$0.047 \\
+C: RRF, $k{=}60$ (default) & equal & 0.467 & $-$0.114 \\
+D: RRF, $k{=}1$ (selected) & equal & 0.526 & $-$0.054 \\
+D: RRF, $k{=}60$ (default) & equal & 0.422 & $-$0.159 \\
+C$_w$: wRRF, $k{=}20$ (selected) & $w{=}0.95$ & 0.585 & +0.005 \\
+D$_w$: wRRF, $k{=}10$ (selected) & $w{=}0.95$ & 0.580 & +0.000 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Dev split, 226 queries. Equal-weight RRF: $k$ grid of 10 values, best $k$ at the lower edge. Weighted RRF: 9$\times$10 grid, chosen after the equal-weight results were seen (dev-informed), so its dev score is optimistically biased.}

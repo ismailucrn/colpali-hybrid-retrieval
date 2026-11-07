@@ -200,7 +200,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 11. ~~Failure analysis~~ — 6 November (`results/failure_analysis/`): BM25 hits where ColPali misses on only 3/225 test queries (0 exact); 42/49 of C's losses come from BM25 misses; lexical overlap explains BM25 success.
 12. ~~Figures~~ — 6 November: `scripts/make_figures.py` → `results/figures/fig1–6` (listed in README).
 13. ~~Literature matrix~~ — 6 November (`docs/literature_matrix.md`): 8 papers + 3 related, search approach, refined research gap. User must read and confirm.
-14. Next: report draft, presentation; final repo cleanup and tag `v1.0-submission`.
+14. ~~Report draft~~ — 7 November: `report/main.tex` → `report/main.pdf` (19 pp.). Every number comes from `report/generated/` (`scripts/make_report_tables.py`). Red TODOs: last name/ID, ±2 tolerance confirmation, DocVQA license, paper hardware, venues, AI-use self-verification, tag hash.
+15. Next: presentation; README cleanup (stale "TBD"/status sections); rename PDF to `<LastName>_YZM5110_Research.pdf`; tag `v1.0-submission`.
 
 ### Implementation notes
 
