@@ -1,0 +1,226 @@
+query,tag,duplicated,gold_page,A_ndcg_at_5,A_gold_rank,A_code_ndcg_at_5,A_code_gold_rank,B_ndcg_at_5,B_gold_rank,C_ndcg_at_5,C_gold_rank,C_code_ndcg_at_5,C_code_gold_rank,C_cc_ndcg_at_5,C_cc_gold_rank,D_cc_ndcg_at_5,D_cc_gold_rank
+What is the dividend payout in 2012?,exact,0,rnbx0223,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the person in the CC field ?,exact,0,lflm0081,0.0,11,0.0,11,0.0,6,0.0,8,0.0,8,0.0,6,0.0,6
+What is the table number?,general,1,flwg0227,0.0,485,0.0,485,0.0,37,0.0,76,0.0,75,0.0,37,0.0,37
+What is the Log-in No. ?,exact,0,fryn0081,0.0,467,1.0,1,1.0,1,0.63093,2,1.0,1,1.0,1,1.0,1
+What is No. 2-26 of subheading H ?,exact,0,kkwg0227,0.0,342,0.63093,2,1.0,1,0.5,3,1.0,1,1.0,1,1.0,1
+Which is the railways company?,general,0,yjdv0228,0.0,15,0.0,13,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+How many adult deaths were in 1978 as per 2nd quarter report ?,exact,0,kqbf0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What Tobacco brand of GPI is shown in the picture?,visual,0,znbx0223,0.0,31,0.0,31,1.0,1,0.5,3,0.63093,2,1.0,1,1.0,1
+Which year was the meeting held?,general,0,jhhd0227,0.0,57,0.0,64,0.430677,4,0.0,8,0.0,7,0.430677,4,0.430677,4
+What is the full form of AHA?,exact,0,hqlf0227,0.0,413,0.0,413,0.386853,5,0.0,9,0.0,9,0.386853,5,0.386853,5
+Which year's Budget was this?,exact,0,grvv0228,0.0,13,0.0,15,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the fullform of AAN?,exact,0,fxbw0217,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Which hospital is mentioned in Appendix V ?,exact,0,hfyf0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+"What is the date and time mentioned at the top of the page, outside of the Tabular representation?",exact,0,rnww0217,0.0,270,0.0,276,0.0,368,0.0,374,0.0,377,0.0,368,0.0,368
+What is the title of the document ?,general,1,fkkj0079,0.0,490,0.0,490,0.0,492,0.0,494,0.0,494,0.0,492,0.0,492
+What is the number of live births for Alabama?,exact,0,lmyc0227,0.0,324,0.0,324,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+Experiences of the which branch of the clan will you be most interested in?,general,0,fsgl0228,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What are the letters in the monogram logo at the top right of the document?,visual,0,tnbx0223,0.0,131,0.0,132,0.0,354,0.0,236,0.0,236,0.0,354,0.0,354
+"What is the number in parentheses [ ], between the two Tables?",exact,0,hlvj0223,0.0,429,0.0,429,0.0,13,0.0,27,0.0,28,0.0,13,0.0,13
+What is the income tax for 2003?,exact,0,xnbx0223,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+"How much menthol does KOOL ""C"" have?",exact,0,hyhk0037,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the Medical Monitor or designee?,exact,0,mjbw0217,0.63093,2,0.63093,2,0.63093,2,0.63093,2,0.63093,2,0.63093,2,0.63093,2
+To whom is the letter is addressed?,general,0,xhxj0037,0.0,85,0.0,86,0.0,16,0.0,29,0.0,29,0.0,16,0.0,16
+What is the average age of camel smoker?,general,0,xnbl0037,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+When was the meeting held?,general,0,sncj0037,0.0,21,0.0,24,0.430677,4,0.0,7,0.0,7,0.430677,4,0.430677,4
+What is the value given for girls of 13-15 yrs for 3 months?,exact,0,mqyg0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+For when is startup of the wiegand evaporator system at park 500 is scheduled?,exact,0,mxxj0037,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the company on top of the document ?,general,0,jycw0217,0.0,392,0.0,393,0.0,334,0.0,393,0.0,394,0.0,334,0.0,334
+At what rate is Methoprene currently added to B&W's tobaccos?,exact,0,txcj0037,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the heading of the document?,general,1,pnbx0223,0.0,221,0.0,221,0.0,208,0.0,226,0.0,226,0.0,208,0.0,208
+What is the Page Number?,exact,0,fqvw0217,0.0,477,0.0,477,0.0,15,0.0,31,0.0,30,0.0,15,0.0,15
+what is the title of this page ?,general,0,khxj0037,0.0,365,0.0,366,0.0,256,0.0,335,0.0,335,0.0,256,0.0,256
+what is the subject of this letter?,general,0,prvl0037,0.0,32,0.0,29,0.0,27,0.0,33,0.0,31,0.0,27,0.0,27
+What has to be provided to SULT/SLT development?,exact,0,hjbl0037,0.0,7,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+which floor details are mentioned in the document?,general,0,mgbv0228,0.386853,5,0.386853,5,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the bank?,general,0,stbm0227,0.63093,2,0.63093,2,0.63093,2,0.63093,2,0.63093,2,0.63093,2,0.63093,2
+What is the name of the company on the letter head ?,general,0,fsdw0217,0.0,473,0.0,473,0.0,13,0.0,26,0.0,27,0.0,13,0.0,13
+What % of vests is available for conversion after 3 year?,exact,0,ynbx0223,1.0,1,1.0,1,0.63093,2,1.0,1,1.0,1,0.63093,2,0.63093,2
+Which is the first year on x-axis?,visual,0,tkyg0227,0.0,161,0.0,192,0.0,7,0.0,14,0.0,14,0.0,7,0.0,7
+What is the name of the airline?,general,0,lxkp0227,0.5,3,0.63093,2,1.0,1,0.63093,2,1.0,1,1.0,1,1.0,1
+What is the amount of check?,general,0,zggb0228,0.0,6,0.0,6,0.430677,4,0.0,6,0.0,6,0.430677,4,0.430677,4
+What is the page number?,general,1,lkwg0227,0.0,347,0.0,348,0.0,217,0.0,314,0.0,315,0.0,217,0.0,217
+what is the index of shared of the 21-25 segment,exact,0,rzbj0037,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the client?,general,0,hnvw0217,0.430677,4,0.63093,2,0.63093,2,0.5,3,0.63093,2,0.63093,2,0.63093,2
+What is the name of the foundation?,general,0,nqhb0228,0.5,3,0.5,3,0.63093,2,0.5,3,0.5,3,0.63093,2,0.63093,2
+What is the RDA for Calories for Sedentary woman(1948 report)?,exact,0,gfpg0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the budget offered for 3 Posters( including production)?,exact,0,lpcw0217,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the sender of the Fax?,exact,0,htdw0217,0.430677,4,0.430677,4,0.430677,4,0.0,6,0.0,6,0.430677,4,0.430677,4
+What is the Budget Estimate for CME Reviewer Provider Fee?,exact,0,lzbw0217,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Which company's fax message is this?,general,0,lfdw0217,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+When is the next meeting held?,general,0,ysvw0217,0.0,7,0.0,7,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+What is the Dept.No?,exact,0,nxym0227,0.0,215,0.0,9,1.0,1,1.0,1,0.63093,2,1.0,1,1.0,1
+Which proposed section would require food processors promulgated by FDA?,exact,0,ghpj0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the progress Report number?,exact,1,lkvw0217,0.0,13,0.0,18,0.63093,2,0.430677,4,0.5,3,0.63093,2,0.63093,2
+What is the Strategic Publication Development Budget?,exact,0,lmvw0217,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What type of letter is this?,general,1,nhlg0227,0.0,252,0.0,254,0.0,32,0.0,66,0.0,67,0.0,32,0.0,32
+What is the phone number given at the top left end of the page?,general,0,qmhh0078,0.0,272,0.0,274,0.0,196,0.0,280,0.0,281,0.0,196,0.0,196
+Which cigarette brand beats Marlboro lights?,exact,0,gycp0080,0.63093,2,0.63093,2,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+Which university ‘letterhead’ is given?,exact,1,hjxc0228,0.0,22,0.0,20,0.5,3,0.386853,5,0.386853,5,0.5,3,0.5,3
+What is the phone number given?,general,0,rgcw0217,0.0,218,0.0,218,0.0,111,0.0,174,0.0,174,0.0,111,0.0,111
+Who is the Chairman of special Committee members?,exact,0,kxxn0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the Professor of History of Religions?,exact,0,yxgg0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+When was this meeting happened?,general,0,yzbd0227,0.0,37,0.0,39,0.0,18,0.0,30,0.0,33,0.0,18,0.0,18
+Who is the sender of this letter?,general,0,kgpj0226,0.0,349,0.0,349,0.0,83,0.0,159,0.0,159,0.0,83,0.0,83
+What is the Requisition No. given in the document?,exact,0,sjxn0226,1.0,1,0.63093,2,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the ‘Senior Product Manager ‘of Wyeth-Ayerst Pharmaceuticals?,exact,0,kjvw0217,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the company mentioned at the top of the page?,general,0,tlgw0228,0.0,213,0.0,215,0.0,76,0.0,141,0.0,139,0.0,76,0.0,76
+What is the name of the Client given in the report?,exact,0,kkww0217,0.0,13,0.0,17,0.0,10,0.0,14,0.0,16,0.0,10,0.0,10
+What is the VO. NO.?,exact,0,rzgm0227,0.0,137,0.0,24,1.0,1,0.5,3,0.63093,2,1.0,1,1.0,1
+What is the title of table 3?,exact,0,qpbx0227,0.0,33,0.0,31,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the full form of I.P. ?,exact,0,rmcd0228,0.0,188,1.0,1,1.0,1,0.63093,2,1.0,1,1.0,1,1.0,1
+Who is the staff representative as per the agenda?,general,0,jzhd0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the page no mentioned in this document?,general,1,yhpv0001,0.0,125,0.0,124,0.0,40,0.0,72,0.0,77,0.0,40,0.0,40
+When was the Nutrition Committee held?,exact,0,hgpf0227,0.386853,5,0.430677,4,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the page no mentioned in this newspaper?,general,0,lynf0227,0.0,56,0.0,55,0.386853,5,0.0,9,0.0,9,0.386853,5,0.386853,5
+what is the carcinoma(transitional cell )  of group 1 ?,exact,0,hmjf0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+who is the lead responsibility for evaluating data from study OCT020,exact,0,qtjf0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Which is precurser (d) of Tuberculosis ?,exact,0,ptcj0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the Direct account name?,exact,0,sqxg0023,0.386853,5,0.386853,5,0.5,3,0.5,3,0.5,3,0.5,3,0.5,3
+Who is the secretary?,general,0,njxw0228,0.0,9,0.0,10,0.386853,5,0.0,7,0.0,7,0.386853,5,0.386853,5
+What is the ‘EXPIRATION DATE’ of the Manufacturer coupon?,exact,0,frhw0081,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is written at the top of the page in bold capital letters?,visual,0,lfyx0078,0.0,347,0.0,349,0.0,36,0.0,76,0.0,76,0.0,36,0.0,36
+What is the discount for Safeway employees on race tickets?,exact,0,lrwp0078,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the date mentioned at the top of the page?,general,0,hkvd0079,0.0,49,0.0,45,0.0,422,0.0,110,0.0,98,0.0,422,0.0,422
+what is the project number ?,general,0,rpgn0226,1.0,1,1.0,1,0.63093,2,1.0,1,1.0,1,0.63093,2,0.63093,2
+Who is the Dealer?,exact,0,lzkg0078,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the date of the document mentioned at the top?,general,0,hjyc0079,0.0,438,0.0,439,0.0,257,0.0,375,0.0,376,0.0,257,0.0,257
+What is the name of the laboratory?,general,0,hkbp0078,0.5,3,1.0,1,0.0,14,0.430677,4,0.63093,2,0.0,14,0.0,14
+When to return the complete account information form?,general,0,rxnv0079,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the winner of the 1978 Christopher Book award?,exact,0,rflm0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+what is the minimum value of sodium in mg/100kcal?,exact,0,mlcf0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the day and date of the program?,general,0,tzwm0227,0.0,55,0.0,53,0.0,29,0.0,44,0.0,41,0.0,29,0.0,29
+How much is the 'Meetings Budget' of RAISH in $?,exact,0,fmxn0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the announcement on?,general,0,kkbm0227,0.0,336,0.0,336,0.5,3,0.0,6,0.0,6,0.5,3,0.5,3
+How much funds ‘from Reserve’?,exact,0,lkgb0228,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+When is the effective date mentioned in the form?,general,0,hhhh0224,0.0,12,0.0,8,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+What is the test name?,general,0,lrwn0081,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the amount ?,general,0,frcy0227,0.0,472,0.0,472,0.0,16,0.0,30,0.0,33,0.0,16,0.0,16
+What shortens life?,general,0,ysmc0228,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the meeting?,general,0,sxvw0217,0.0,7,0.0,7,0.0,25,0.0,13,0.0,13,0.0,25,0.0,25
+Which advertisement theme did the 'coke adds life to ..' campaign replace?,exact,0,hzyj0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+For which brand  of soft drink is the product information provided?,general,0,hjpj0226,0.386853,5,0.0,6,1.0,1,0.5,3,0.5,3,1.0,1,1.0,1
+Which institute's medical advisory board meeting is mentioned here?,general,0,hpmp0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is this fax for?,general,0,ylkw0228,0.0,6,0.0,6,0.63093,2,0.386853,5,0.386853,5,0.63093,2,0.63093,2
+What is the name of the hotel?,general,0,jrcy0227,0.0,390,0.0,390,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+What is the cost of postage ( see the postal stamp at top left)?,visual,0,phjc0228,0.0,252,0.0,256,0.5,3,0.0,7,0.0,6,0.5,3,0.5,3
+Which is the 10% neutral buffered formalin used?,exact,0,mjxn0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+At what time did Charles Muller call Dr. Darby?,exact,0,zrww0228,0.0,32,0.0,20,1.0,1,0.63093,2,0.5,3,1.0,1,1.0,1
+What is the date of the letter ?,general,0,srjf0226,0.0,190,0.0,195,0.0,32,0.0,61,0.0,65,0.0,32,0.0,32
+What is the title of the document?,general,0,tqvc0228,0.0,127,0.0,129,0.0,162,0.0,179,0.0,182,0.0,162,0.0,162
+Who will bring cots and EMS equipment?,exact,0,pflf0024,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the full form of FERS?,exact,0,npbn0226,0.0,245,0.0,247,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the full form of EPA?,exact,0,nlcn0226,0.0,11,0.0,8,0.386853,5,0.0,6,0.0,6,0.386853,5,0.386853,5
+Were CME credits offered?,exact,0,hlmd0217,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+which committee is mentioned in the document?,general,0,qtvb0228,0.0,34,0.0,38,0.5,3,0.386853,5,0.386853,5,0.5,3,0.5,3
+What is the title?,general,0,thcn0226,0.0,122,0.0,124,0.0,17,0.0,34,0.0,33,0.0,17,0.0,17
+What is the time of the reception?,general,0,thwm0227,1.0,1,1.0,1,0.63093,2,1.0,1,1.0,1,0.63093,2,0.63093,2
+What is the name of chocolate brand?,general,0,pmwm0227,0.0,246,0.0,248,0.0,340,0.0,356,0.0,357,0.0,340,0.0,340
+What is the heading of the first column of the table?,general,0,rrgj0223,0.0,193,0.0,193,0.0,19,0.0,43,0.0,42,0.0,19,0.0,19
+What is the name of the company mentioned just below the logo?,visual,0,tybx0223,0.0,169,0.0,169,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Which organization has suggested the definition of Best available science ?,exact,0,kzbn0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Whose picture is given?,visual,1,lknp0227,0.0,310,0.0,310,0.0,11,0.0,21,0.0,22,0.0,11,0.0,11
+By whom are the 'Observations/ concerns' raised?,exact,0,lhcn0226,0.386853,5,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+"What is the highest value for ""Intake, mg/1000 kcal "" plotted on the 'X' axis of the graph?",visual,0,hslf0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Which session is mentioned here?,general,0,kmhx0227,0.0,7,0.0,7,0.5,3,0.430677,4,0.430677,4,0.5,3,0.5,3
+What type of Mail is it?,exact,0,jzfv0228,0.5,3,0.5,3,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the company mentioned at the top of the table?,general,0,mhjb0228,0.0,328,0.0,329,0.0,37,0.0,75,0.0,75,0.0,37,0.0,37
+what type of communication is this?,general,0,lrgn0226,0.0,296,0.0,297,0.0,99,0.0,179,0.0,180,0.0,99,0.0,99
+Which department is mentioned in the document?,general,0,jycg0227,0.0,29,0.0,29,0.0,17,0.0,27,0.0,26,0.0,17,0.0,17
+What is the company's name on the letter head?,general,0,hlhp0053,0.0,435,0.0,435,0.0,86,0.0,170,0.0,171,0.0,86,0.0,86
+What is the professional title of Dr.Albert Siegel ?,exact,0,mynp0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+"What is the name of the company issuing the ' royalty payment form',  mentioned at the top of the document?",exact,0,qjgn0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+How much is the grand total of the budget of the Institution?,exact,0,szhw0228,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+To whom the memoranda submitted?,general,0,xlvb0228,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who should you contact if you have any questions? And what is the contact number?,exact,0,shcn0226,0.0,10,0.0,10,0.63093,2,0.5,3,0.5,3,0.63093,2,0.63093,2
+What is the subject?,general,1,xgmw0227,0.0,117,0.0,119,0.0,266,0.0,178,0.0,181,0.0,266,0.0,266
+What type of document is this?,general,1,kldk0226,0.0,346,0.0,346,0.0,342,0.0,354,0.0,354,0.0,342,0.0,342
+What is the title of the sheet?,general,0,fgbd0079,0.430677,4,0.430677,4,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the color of the walking stick?,visual,0,njnp0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Which company is Martin Miller associated with?,exact,0,trhk0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the secretary of chamber of commerce?,general,0,sqvx0227,0.63093,2,0.63093,2,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the location code?,general,0,lfgn0226,1.0,1,1.0,1,0.63093,2,0.63093,2,0.63093,2,0.63093,2,0.63093,2
+What is the name of the country mentioned at the top of the page?,general,0,nngv0228,0.0,44,0.0,44,0.0,161,0.0,79,0.0,81,0.0,161,0.0,161
+What is the PO box number of Mr and Mrs. Edward Lehman?,exact,0,lfxv0228,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who wrote the ‘letter’?,exact,0,zzfv0228,0.0,17,0.0,17,0.0,33,0.0,22,0.0,22,0.0,33,0.0,33
+What kind of voucher is given here?,general,0,ypcx0078,0.0,6,0.0,6,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+What is written at the bottom right end of the ‘notice’?,exact,0,ytyp0227,0.0,27,0.0,25,0.5,3,0.386853,5,0.386853,5,0.5,3,0.5,3
+What is the amount of  'Research support for Scholars'?,exact,0,jkxw0228,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Whose nomination is endorsed ?,general,0,ppbn0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What course Mr.Bill has to present at Eleventh Graduate Summer Session in Epidemiology held at the University of Minnesota?,exact,0,smnp0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the title on page 2?,exact,0,rjxg0227,0.0,139,0.0,183,0.386853,5,0.0,11,0.0,10,0.386853,5,0.386853,5
+what is the name of the company mentioned on the bottom left of the page ?,general,0,fkxn0226,0.0,490,0.0,490,0.0,318,0.0,439,0.0,439,0.0,318,0.0,318
+What is the Title of the document ?,exact,0,pyfg0227,0.0,34,0.0,35,0.0,210,0.0,80,0.0,82,0.0,210,0.0,210
+How many points are there under the title ‘distribution’?,exact,0,jxmk0226,0.0,16,0.0,8,0.0,7,0.0,11,0.0,9,0.0,7,0.0,7
+Who is shown in the picture/photo?,visual,0,sgwb0228,0.0,143,0.0,145,0.0,21,0.0,40,0.0,40,0.0,21,0.0,21
+What is written in bold letters?,visual,0,mzmk0226,0.0,250,0.0,250,0.0,307,0.0,313,0.0,313,0.0,307,0.0,307
+What is the total cost of fertilizer?,general,0,jxbx0227,0.5,3,0.386853,5,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is  the title of figure 4?,visual,0,rqcy0227,0.0,24,0.0,15,0.63093,2,0.5,3,0.5,3,0.63093,2,0.63093,2
+What is the date of the letter mentioned by William J Darby?,exact,0,zkvm0227,0.5,3,0.5,3,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the company on the letter head?,general,0,pzyy0078,0.0,30,0.0,29,0.0,147,0.0,56,0.0,53,0.0,147,0.0,147
+What is the date of Analysis?,exact,0,pryh0227,0.0,13,0.0,11,0.63093,2,0.430677,4,0.430677,4,0.63093,2,0.63093,2
+What is the heading below SECTION 1?,exact,0,qjvc0228,0.5,3,0.63093,2,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is from Indiana?,exact,0,ggbm0227,1.0,1,1.0,1,0.63093,2,1.0,1,1.0,1,0.63093,2,0.63093,2
+How many hours of sound sleep needed each night for good health?,general,0,phwk0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Which company’s memorandum is given?,general,0,jxjh0227,0.430677,4,0.5,3,0.0,6,0.386853,5,0.386853,5,0.0,6,0.0,6
+Which meeting is this?,general,0,ghkw0228,0.0,18,0.0,12,0.0,35,0.0,27,0.0,22,0.0,35,0.0,35
+What memo is it?,general,0,qlbk0226,0.63093,2,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the goal for CB < 175?,exact,0,fgvh0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the title of the research project?,general,0,nhyk0226,0.0,10,0.0,7,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+Who is there in the first photo?,visual,0,fkbk0226,0.0,30,0.0,30,0.0,57,0.0,44,0.0,44,0.0,57,0.0,57
+what is the first quote written at the top right of the page?,general,0,xmwn0226,0.0,148,0.0,150,0.63093,2,0.430677,4,0.430677,4,0.63093,2,0.63093,2
+Who is the assistant director of center for International studies?,exact,0,ysmp0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the number printed at the top right of first slip?,general,0,jppp0227,0.0,402,0.0,403,0.0,65,0.0,136,0.0,136,0.0,65,0.0,65
+What is the y-axis of the plot?,visual,0,xkbw0217,0.0,69,0.0,70,0.0,12,0.0,21,0.0,21,0.0,12,0.0,12
+"What was the duration of the course ""teaching of epidomiology"" in hours?",exact,0,kfhd0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the memo ?,general,0,xyyv0228,0.0,107,0.0,108,0.5,3,0.386853,5,0.430677,4,0.5,3,0.5,3
+What is the name of the factory ?,general,1,lgph0227,0.63093,2,0.63093,2,0.386853,5,0.5,3,0.5,3,0.386853,5,0.386853,5
+Who has written the note?,general,0,fjpk0226,0.0,491,0.0,491,0.0,37,0.0,82,0.0,82,0.0,37,0.0,37
+What is the body weight of Pig#2 at 3 days of age?,exact,0,zhyk0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the first heading of the table?,general,0,mfmh0227,0.0,25,0.0,35,0.0,293,0.0,51,0.0,70,0.0,293,0.0,293
+What is the main heading of the document given under APPENDIX V-9?,exact,0,snyc0227,0.0,27,1.0,1,1.0,1,0.5,3,1.0,1,1.0,1,1.0,1
+What is the analysis about?,general,0,yhph0227,0.5,3,0.5,3,0.63093,2,0.63093,2,0.5,3,0.63093,2,0.63093,2
+"Which chicken entrees is made with good chicken broth,meat and green peppers?",general,0,jtnk0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+When is the remittance due ?,general,0,qtyp0227,1.0,1,1.0,1,0.63093,2,1.0,1,1.0,1,0.63093,2,0.63093,2
+What is the title of the page?,general,0,yqxd0227,0.0,99,0.0,104,0.0,69,0.0,113,0.0,112,0.0,69,0.0,69
+What is the date of the Approval note?,exact,0,qtyc0003,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is subheading X ?,exact,0,rycg0227,0.0,159,0.0,163,0.63093,2,0.430677,4,0.386853,5,0.63093,2,0.63093,2
+What is the title of first plot?,visual,0,jyxg0226,0.0,369,0.0,370,0.0,6,0.0,11,0.0,11,0.0,6,0.0,6
+What is page number printed at the bottom of the page?,general,0,rrcw0217,0.0,86,0.0,85,0.0,70,0.0,94,0.0,93,0.0,70,0.0,70
+what is the budget bureau no.?,general,0,fjvg0227,0.0,20,0.0,12,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Whose photograph is shown at the top left side of the page ?,visual,0,smvd0227,0.0,191,0.0,193,0.0,11,0.0,22,0.0,22,0.0,11,0.0,11
+What is the document about?,general,0,xpww0217,0.0,83,0.0,83,0.0,83,0.0,101,0.0,101,0.0,83,0.0,83
+What is the date of the order?,general,0,fypn0000,0.0,10,0.0,10,0.430677,4,0.386853,5,0.0,6,0.430677,4,0.430677,4
+What is the invoice no.?,general,0,hsmw0228,0.430677,4,0.63093,2,1.0,1,0.63093,2,1.0,1,1.0,1,1.0,1
+Who is the letter to ?,general,0,zslg0227,0.0,21,0.0,21,0.63093,2,0.430677,4,0.430677,4,0.63093,2,0.63093,2
+What form of communication is used?,general,0,ptdg0227,0.0,234,0.0,234,0.0,132,0.0,194,0.0,194,0.0,132,0.0,132
+Who has signed the card?,general,0,xhmw0227,0.386853,5,0.0,7,0.5,3,0.5,3,0.430677,4,0.5,3,0.5,3
+Who is the note to?,general,0,qslg0227,0.0,184,0.0,184,0.0,89,0.0,140,0.0,140,0.0,89,0.0,89
+What is the table number mentioned at the top centre of the page?,general,0,ggxn0226,0.0,78,0.0,79,0.0,38,0.0,52,0.0,52,0.0,38,0.0,38
+"In fig 3, what is plotted along x axis?",visual,0,ggyf0227,0.0,8,0.0,9,0.63093,2,0.5,3,0.5,3,0.63093,2,0.63093,2
+Who is the note from?,general,1,sjkg0227,0.0,146,0.0,146,0.0,71,0.0,112,0.0,112,0.0,71,0.0,71
+What is the title given above the cartoon in right side of the page?,general,0,hffn0226,0.0,448,0.0,449,0.0,11,0.0,23,0.0,23,0.0,11,0.0,11
+What is the year mentioned at the top?,general,0,gmvg0227,0.0,453,0.0,453,0.0,44,0.0,110,0.0,107,0.0,44,0.0,44
+What is serial number I of the ‘Wyeth-Ayers Laboratories’ Meeting agenda?,exact,0,yzbw0217,1.0,1,0.63093,2,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the owner of Edson Express ?,exact,0,ggjh0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Which is the birth defects special treatment center in North Carolina?,exact,0,ngxh0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What was the parking fee at St. Luis airport?,exact,0,yhxd0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the holder of this curriculum vitae?,general,0,prxn0226,0.0,199,0.0,199,0.63093,2,0.5,3,0.5,3,0.63093,2,0.63093,2
+What is title given at the top of the page?,general,0,rjxn0226,0.0,223,0.0,226,0.0,483,0.0,336,0.0,340,0.0,483,0.0,483
+What is the Received date stamped?,exact,0,jhkp0227,0.0,408,0.0,409,0.0,40,0.0,89,0.0,90,0.0,40,0.0,40
+What is the last line on the page?,general,0,pzwd0228,0.0,238,0.0,238,0.0,190,0.0,245,0.0,245,0.0,190,0.0,190
+What is the name of the travel agency?,general,0,hkdv0228,0.0,428,0.0,18,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+What is the date of the executive committee meeting ?,general,0,zhjl0226,0.386853,5,0.386853,5,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the number shown below the heading on top right corner?,general,0,rrlw0227,0.0,203,0.0,204,0.0,229,0.0,274,0.0,275,0.0,229,0.0,229
+What is Payee's Account No?,exact,0,tllg0227,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the date given?,general,0,fphl0226,0.0,478,0.0,478,0.0,445,0.0,476,0.0,476,0.0,445,0.0,445
+How many bullet points are there?,general,0,zpxl0226,0.63093,2,0.63093,2,0.0,136,0.430677,4,0.430677,4,0.0,136,0.0,136
+Which page of the form is this,general,0,jggn0226,0.0,71,0.0,71,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+What is the name printed on the top of the page?,general,0,mrnl0226,0.0,303,0.0,306,0.0,232,0.0,297,0.0,300,0.0,232,0.0,232
+What is the date mentioned at the bottom of the page?,general,0,rmjl0226,0.0,252,0.0,259,0.0,158,0.0,255,0.0,260,0.0,158,0.0,158
+What is the first name of the month mentioned at the top of the page?,general,0,kqnl0226,0.0,375,0.0,377,0.0,107,0.0,210,0.0,208,0.0,107,0.0,107
+What is the day and date of dinner?,general,0,kljw0228,0.63093,2,0.63093,2,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the city mentioned?,general,0,zhdw0228,0.0,91,0.0,93,0.0,59,0.0,85,0.0,84,0.0,59,0.0,59
+Which session of 85th congress is mentioned in this document?,exact,0,yskd0228,0.0,82,0.0,82,1.0,1,0.63093,2,0.63093,2,1.0,1,1.0,1
+"who is the president of sugar research foundation,inc.?",general,0,ngxl0226,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1

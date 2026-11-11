@@ -250,3 +250,15 @@ Chronological record of every run and decision. One entry per run or decision; n
   - The rule selects **alpha = 1.0 (ColPali alone) for both**.
   - The pre-registered hypothesis (alpha ≥ 0.8) holds in its strongest form: dev concludes "no fusion".
 - **Frozen for the post-hoc test run:** C_cc alpha = 1.0, D_cc alpha = 1.0 (both therefore identical to B on test by construction); C_code = RRF(A_code, B), k = 1.
+
+### 2026-11-11 — POST-HOC test evaluation (run once; exploratory)
+- Type: run (registry row 35). Config `configs/posthoc_test_evaluation.yaml` (frozen from dev in `8c4ad0c`); outputs `results/posthoc_extensions/` (`metrics.json`, `per_query.csv`, `summary.md`, console log).
+- **Measured (test, n = 225, nDCG@5):**
+  - A_code 0.4052 vs A 0.3818: Δ +0.023 [+0.004, +0.046], p 0.027 (uncorrected pair), W/T/L 14/206/5. The gain is on `exact` queries: 0.617 → 0.667.
+  - C_code = RRF(A_code, B): 0.5253, Δ vs B −0.045 [−0.066, −0.024], p_Holm 0.0003. C_code vs C: +0.009, p 0.09.
+  - C_cc = D_cc = B (alpha = 1 selected on dev), Δ 0 by construction.
+- **Headroom (top-5, test):** A_code finds the gold page where ColPali misses it on **3** queries, the same as A. Among exact queries the count is still 0. A_code's extra hits (103 vs 100) fall on queries ColPali already gets right ("B only" drops from 50 to 47).
+- **Verdict on the post-hoc hypotheses:**
+  - CC: as expected, no gain. Dev already rejects every alpha < 1.
+  - Tokenizer: A_code is better than A, as expected. The expected rise in "A only" did **not** happen; C_code is still significantly below B, as expected.
+- *Interpretation:* better lexical matching improves BM25 on its own, but only on queries ColPali already solves. This strengthens the main conclusion: on DocVQA the lexical signal is largely redundant with ColPali, whatever the tokenizer and whatever the fusion function (rank or score). Caveat: post-hoc, single task.

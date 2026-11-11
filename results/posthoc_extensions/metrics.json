@@ -1,0 +1,837 @@
+{
+  "timestamp_utc": "2026-11-11T08:58:47+00:00",
+  "config_path": "configs/posthoc_test_evaluation.yaml",
+  "config": {
+    "title": "POST-HOC test-split results (exploratory; main test run was 2026-11-04)",
+    "frozen_check": "posthoc",
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "tags": "results/splits/docvqa_query_tags.csv",
+    "scores": {
+      "A": "results/bm25_docvqa/scores.npz",
+      "A_code": "results/bm25_codes_docvqa/scores.npz",
+      "B": "results/colpali_v1.3_docvqa/scores.npz",
+      "BGE": "results/bge_m3_docvqa/scores.npz"
+    },
+    "component_metrics": {
+      "A": "results/bm25_docvqa/metrics.json",
+      "A_code": "results/bm25_codes_docvqa/metrics.json",
+      "B": "results/colpali_v1.3_docvqa/metrics.json",
+      "BGE": "results/bge_m3_docvqa/metrics.json"
+    },
+    "systems": {
+      "A": {
+        "name": "A: BM25 (official tokenizer)",
+        "kind": "single",
+        "scores": "A",
+        "role": "reference"
+      },
+      "A_code": {
+        "name": "A_code: BM25, code-preserving tokenizer",
+        "kind": "single",
+        "scores": "A_code",
+        "role": "post-hoc"
+      },
+      "B": {
+        "name": "B: ColPali v1.3",
+        "kind": "single",
+        "scores": "B",
+        "role": "baseline"
+      },
+      "C": {
+        "name": "C: RRF(BM25, ColPali) k=1",
+        "kind": "rrf",
+        "inputs": [
+          "A",
+          "B"
+        ],
+        "k": 1,
+        "role": "reference (main run)"
+      },
+      "C_code": {
+        "name": "C_code: RRF(A_code, ColPali) k=1",
+        "kind": "rrf",
+        "inputs": [
+          "A_code",
+          "B"
+        ],
+        "k": 1,
+        "role": "post-hoc"
+      },
+      "C_cc": {
+        "name": "C_cc: CC(BM25, ColPali)",
+        "kind": "cc",
+        "inputs": [
+          "B",
+          "A"
+        ],
+        "alpha": 1.0,
+        "role": "post-hoc"
+      },
+      "D_cc": {
+        "name": "D_cc: CC(BGE-M3, ColPali)",
+        "kind": "cc",
+        "inputs": [
+          "B",
+          "BGE"
+        ],
+        "alpha": 1.0,
+        "role": "post-hoc control"
+      }
+    },
+    "baseline": "B",
+    "compare_to_baseline": [
+      "C_cc",
+      "D_cc",
+      "C_code"
+    ],
+    "extra_pairs": [
+      [
+        "C_cc",
+        "D_cc"
+      ],
+      [
+        "A_code",
+        "A"
+      ],
+      [
+        "C_code",
+        "C"
+      ]
+    ],
+    "pairs_title": "Pairs (post-hoc): lexical vs dense under CC; tokenizer effect alone and inside RRF",
+    "headroom_pairs": [
+      [
+        "A",
+        "B"
+      ],
+      [
+        "A_code",
+        "B"
+      ]
+    ],
+    "statistics": {
+      "metric": "ndcg_at_5",
+      "bootstrap_resamples": 10000,
+      "permutations": 10000,
+      "alpha": 0.05,
+      "seed": 0,
+      "multiple_comparisons": "holm"
+    },
+    "output_dir": "results/posthoc_extensions"
+  },
+  "seed": 0,
+  "git_commit": "8c4ad0c8e046608c56b986ce1bc644bc55351061",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": null,
+    "torch": null,
+    "transformers": null,
+    "peft": null,
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_test_evaluation.py --config configs/posthoc_test_evaluation.yaml",
+  "n_test_queries": 225,
+  "results": {
+    "A": {
+      "name": "A: BM25 (official tokenizer)",
+      "role": "reference",
+      "metrics": {
+        "ndcg_at_5": 0.3818168465314686,
+        "recall_at_5": 0.4444444444444444,
+        "recall_at_10": 0.49777777777777776,
+        "ndcg_at_10": 0.39908637651396084,
+        "mrr_at_10": 0.36855202821869487
+      },
+      "ndcg_at_5_ci95": [
+        0.3231485075813466,
+        0.4409692240061987
+      ]
+    },
+    "A_code": {
+      "name": "A_code: BM25, code-preserving tokenizer",
+      "role": "post-hoc",
+      "metrics": {
+        "ndcg_at_5": 0.4052109220140389,
+        "recall_at_5": 0.4577777777777778,
+        "recall_at_10": 0.5333333333333333,
+        "ndcg_at_10": 0.42968711986176145,
+        "mrr_at_10": 0.39775485008818345
+      },
+      "ndcg_at_5_ci95": [
+        0.3453926248067127,
+        0.4647469272163232
+      ]
+    },
+    "B": {
+      "name": "B: ColPali v1.3",
+      "role": "baseline",
+      "metrics": {
+        "ndcg_at_5": 0.5698845531501103,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5788816778359264,
+        "mrr_at_10": 0.5459365079365079
+      },
+      "ndcg_at_5_ci95": [
+        0.5104222964046498,
+        0.6274600432665112
+      ]
+    },
+    "C": {
+      "name": "C: RRF(BM25, ColPali) k=1",
+      "role": "reference (main run)",
+      "metrics": {
+        "ndcg_at_5": 0.5161824330359406,
+        "recall_at_5": 0.6177777777777778,
+        "recall_at_10": 0.6666666666666666,
+        "ndcg_at_10": 0.532439404117414,
+        "mrr_at_10": 0.48948500881834217
+      },
+      "ndcg_at_5_ci95": [
+        0.4574161380621114,
+        0.573976730142814
+      ]
+    },
+    "C_code": {
+      "name": "C_code: RRF(A_code, ColPali) k=1",
+      "role": "post-hoc",
+      "metrics": {
+        "ndcg_at_5": 0.5253003925075876,
+        "recall_at_5": 0.6133333333333333,
+        "recall_at_10": 0.6755555555555556,
+        "ndcg_at_10": 0.5459442272308931,
+        "mrr_at_10": 0.5049047619047619
+      },
+      "ndcg_at_5_ci95": [
+        0.46662147947639065,
+        0.5844690312918862
+      ]
+    },
+    "C_cc": {
+      "name": "C_cc: CC(BM25, ColPali)",
+      "role": "post-hoc",
+      "metrics": {
+        "ndcg_at_5": 0.5698845531501103,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5788816778359264,
+        "mrr_at_10": 0.5459365079365079
+      },
+      "ndcg_at_5_ci95": [
+        0.5104222964046498,
+        0.6274600432665112
+      ]
+    },
+    "D_cc": {
+      "name": "D_cc: CC(BGE-M3, ColPali)",
+      "role": "post-hoc control",
+      "metrics": {
+        "ndcg_at_5": 0.5698845531501103,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5788816778359264,
+        "mrr_at_10": 0.5459365079365079
+      },
+      "ndcg_at_5_ci95": [
+        0.5104222964046498,
+        0.6274600432665112
+      ]
+    }
+  },
+  "vs_baseline": {
+    "C_cc": {
+      "delta": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "p_permutation": 1.0,
+      "wins": 0,
+      "ties": 225,
+      "losses": 0,
+      "n": 225,
+      "p_holm": 1.0
+    },
+    "D_cc": {
+      "delta": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "p_permutation": 1.0,
+      "wins": 0,
+      "ties": 225,
+      "losses": 0,
+      "n": 225,
+      "p_holm": 1.0
+    },
+    "C_code": {
+      "delta": -0.0445841606425226,
+      "delta_ci95": [
+        -0.06575909867272217,
+        -0.02358604236284959
+      ],
+      "p_permutation": 9.999000099990002e-05,
+      "wins": 9,
+      "ties": 171,
+      "losses": 45,
+      "n": 225,
+      "p_holm": 0.00029997000299970003
+    }
+  },
+  "pairs": {
+    "C_cc vs D_cc": {
+      "delta": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "p_permutation": 1.0,
+      "wins": 0,
+      "ties": 225,
+      "losses": 0,
+      "n": 225
+    },
+    "A_code vs A": {
+      "delta": 0.023394075482570373,
+      "delta_ci95": [
+        0.0038705676571731628,
+        0.04554569593848994
+      ],
+      "p_permutation": 0.0273972602739726,
+      "wins": 14,
+      "ties": 206,
+      "losses": 5,
+      "n": 225
+    },
+    "C_code vs C": {
+      "delta": 0.009117959471647145,
+      "delta_ci95": [
+        -0.0008533693499770612,
+        0.020200455981386506
+      ],
+      "p_permutation": 0.09069093090690931,
+      "wins": 12,
+      "ties": 207,
+      "losses": 6,
+      "n": 225
+    }
+  },
+  "by_type": {
+    "exact": {
+      "n": 93,
+      "systems": {
+        "A": {
+          "mean": 0.6166999407195691,
+          "ci95": [
+            0.520669086027844,
+            0.7082289835625135
+          ]
+        },
+        "A_code": {
+          "mean": 0.667029940266775,
+          "ci95": [
+            0.5743318431640516,
+            0.754289934947748
+          ]
+        },
+        "B": {
+          "mean": 0.8334165941373893,
+          "ci95": [
+            0.7648675107577976,
+            0.8951186253652829
+          ]
+        },
+        "C": {
+          "mean": 0.7740026189644027,
+          "ci95": [
+            0.6974332208259283,
+            0.8442337393833412
+          ]
+        },
+        "C_code": {
+          "mean": 0.7889979946366211,
+          "ci95": [
+            0.7123803830130702,
+            0.8591458541961571
+          ]
+        },
+        "C_cc": {
+          "mean": 0.8334165941373893,
+          "ci95": [
+            0.7648675107577976,
+            0.8951186253652829
+          ]
+        },
+        "D_cc": {
+          "mean": 0.8334165941373893,
+          "ci95": [
+            0.7648675107577976,
+            0.8951186253652829
+          ]
+        }
+      },
+      "vs_baseline": {
+        "C_cc": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 93,
+          "losses": 0,
+          "n": 93
+        },
+        "D_cc": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 93,
+          "losses": 0,
+          "n": 93
+        },
+        "C_code": {
+          "delta": -0.04441859950076836,
+          "delta_ci95": [
+            -0.07401408418469703,
+            -0.017295389159507058
+          ],
+          "p_permutation": 0.0021997800219978004,
+          "wins": 2,
+          "ties": 75,
+          "losses": 16,
+          "n": 93
+        }
+      }
+    },
+    "general": {
+      "n": 115,
+      "systems": {
+        "A": {
+          "mean": 0.23091909550139553,
+          "ci95": [
+            0.16483654237962275,
+            0.29834680762123206
+          ]
+        },
+        "A_code": {
+          "mean": 0.23598846094216244,
+          "ci95": [
+            0.16689111313758812,
+            0.3068468288932707
+          ]
+        },
+        "B": {
+          "mean": 0.39090801475525816,
+          "ci95": [
+            0.3126633545313733,
+            0.46754768142554776
+          ]
+        },
+        "C": {
+          "mean": 0.34485916408171446,
+          "ci95": [
+            0.2707444592746331,
+            0.4162177220460444
+          ]
+        },
+        "C_code": {
+          "mean": 0.34943343529939147,
+          "ci95": [
+            0.2733582136698134,
+            0.42279786281449033
+          ]
+        },
+        "C_cc": {
+          "mean": 0.39090801475525816,
+          "ci95": [
+            0.3126633545313733,
+            0.46754768142554776
+          ]
+        },
+        "D_cc": {
+          "mean": 0.39090801475525816,
+          "ci95": [
+            0.3126633545313733,
+            0.46754768142554776
+          ]
+        }
+      },
+      "vs_baseline": {
+        "C_cc": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 115,
+          "losses": 0,
+          "n": 115
+        },
+        "D_cc": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 115,
+          "losses": 0,
+          "n": 115
+        },
+        "C_code": {
+          "delta": -0.0414745794558667,
+          "delta_ci95": [
+            -0.074624360044706,
+            -0.009276476570400944
+          ],
+          "p_permutation": 0.012798720127987202,
+          "wins": 7,
+          "ties": 83,
+          "losses": 25,
+          "n": 115
+        }
+      }
+    },
+    "visual": {
+      "n": 17,
+      "systems": {
+        "A": {
+          "mean": 0.11764705882352941,
+          "ci95": [
+            0.0,
+            0.29411764705882354
+          ]
+        },
+        "A_code": {
+          "mean": 0.11764705882352941,
+          "ci95": [
+            0.0,
+            0.29411764705882354
+          ]
+        },
+        "B": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.14705882352941177,
+            0.5448152651260538
+          ]
+        },
+        "C": {
+          "mean": 0.2647058823529412,
+          "ci95": [
+            0.08823529411764706,
+            0.47058823529411764
+          ]
+        },
+        "C_code": {
+          "mean": 0.2724076325630269,
+          "ci95": [
+            0.0959370443277328,
+            0.47058823529411764
+          ]
+        },
+        "C_cc": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.14705882352941177,
+            0.5448152651260538
+          ]
+        },
+        "D_cc": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.14705882352941177,
+            0.5448152651260538
+          ]
+        }
+      },
+      "vs_baseline": {
+        "C_cc": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 17,
+          "losses": 0,
+          "n": 17
+        },
+        "D_cc": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 17,
+          "losses": 0,
+          "n": 17
+        },
+        "C_code": {
+          "delta": -0.06652527962185044,
+          "delta_ci95": [
+            -0.1407523094537866,
+            -0.007701750210085737
+          ],
+          "p_permutation": 0.12808719128087193,
+          "wins": 0,
+          "ties": 13,
+          "losses": 4,
+          "n": 17
+        }
+      }
+    }
+  },
+  "posthoc_without_duplicated_queries": {
+    "n": 212,
+    "systems": {
+      "A": 0.4022540599811744,
+      "A_code": 0.427082677828242,
+      "B": 0.5976709523489095,
+      "C": 0.5416203682442391,
+      "C_code": 0.5509704505045881,
+      "C_cc": 0.5976709523489095,
+      "D_cc": 0.5976709523489095
+    },
+    "vs_baseline": {
+      "C_cc": {
+        "delta": 0.0,
+        "delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "p_permutation": 1.0,
+        "wins": 0,
+        "ties": 212,
+        "losses": 0,
+        "n": 212
+      },
+      "D_cc": {
+        "delta": 0.0,
+        "delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "p_permutation": 1.0,
+        "wins": 0,
+        "ties": 212,
+        "losses": 0,
+        "n": 212
+      },
+      "C_code": {
+        "delta": -0.04670050184432136,
+        "delta_ci95": [
+          -0.06950275898939569,
+          -0.024208044217539908
+        ],
+        "p_permutation": 0.00019998000199980003,
+        "wins": 8,
+        "ties": 161,
+        "losses": 43,
+        "n": 212
+      }
+    }
+  },
+  "resources": {
+    "components": {
+      "A": {
+        "device": "cpu",
+        "index_time_s": 0.3473937500093598,
+        "index_size_mb": 0.6288890838623047,
+        "query_latency_median_ms": 0.12400001287460327,
+        "peak_memory_mb": 921.953125,
+        "peak_memory_kind": "peak_process_rss_mb"
+      },
+      "A_code": {
+        "device": "cpu",
+        "index_time_s": 0.03766050000558607,
+        "index_size_mb": 0.7793731689453125,
+        "query_latency_median_ms": 0.08629199874121696,
+        "peak_memory_mb": 784.625,
+        "peak_memory_kind": "peak_process_rss_mb"
+      },
+      "B": {
+        "device": "cuda (NVIDIA L4)",
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_median_ms": 51.29878100001406,
+        "peak_memory_mb": 16188.8076171875,
+        "peak_memory_kind": "peak_allocated_mb"
+      },
+      "BGE": {
+        "device": "mps",
+        "index_time_s": 21.09505387500394,
+        "index_size_mb": 1.953125,
+        "query_latency_median_ms": 29.042874986771494,
+        "peak_memory_mb": 2139.984375,
+        "peak_memory_kind": "peak_driver_allocated_mb"
+      }
+    },
+    "systems": {
+      "A": {
+        "components": [
+          "A"
+        ],
+        "index_time_s": 0.3473937500093598,
+        "index_size_mb": 0.6288890838623047,
+        "query_latency_sequential_ms": 0.12400001287460327,
+        "query_latency_parallel_ms": 0.12400001287460327,
+        "fusion_overhead_ms": 0.0
+      },
+      "A_code": {
+        "components": [
+          "A_code"
+        ],
+        "index_time_s": 0.03766050000558607,
+        "index_size_mb": 0.7793731689453125,
+        "query_latency_sequential_ms": 0.08629199874121696,
+        "query_latency_parallel_ms": 0.08629199874121696,
+        "fusion_overhead_ms": 0.0
+      },
+      "B": {
+        "components": [
+          "B"
+        ],
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_sequential_ms": 51.29878100001406,
+        "query_latency_parallel_ms": 51.29878100001406,
+        "fusion_overhead_ms": 0.0
+      },
+      "C": {
+        "components": [
+          "A",
+          "B"
+        ],
+        "index_time_s": 112.04253123900935,
+        "index_size_mb": 126.4833812713623,
+        "query_latency_sequential_ms": 51.55769801081078,
+        "query_latency_parallel_ms": 51.43369799793618,
+        "fusion_overhead_ms": 0.13491699792211875
+      },
+      "C_code": {
+        "components": [
+          "A_code",
+          "B"
+        ],
+        "index_time_s": 111.73279798900558,
+        "index_size_mb": 126.63386535644531,
+        "query_latency_sequential_ms": 51.519864500960466,
+        "query_latency_parallel_ms": 51.43357250221925,
+        "fusion_overhead_ms": 0.13479150220518932
+      },
+      "C_cc": {
+        "components": [
+          "B",
+          "A"
+        ],
+        "index_time_s": 112.04253123900935,
+        "index_size_mb": 126.4833812713623,
+        "query_latency_sequential_ms": 51.43007301035141,
+        "query_latency_parallel_ms": 51.306072997476804,
+        "fusion_overhead_ms": 0.007291997462743893
+      },
+      "D_cc": {
+        "components": [
+          "B",
+          "BGE"
+        ],
+        "index_time_s": 132.79019136400393,
+        "index_size_mb": 127.8076171875,
+        "query_latency_sequential_ms": 80.34890599105893,
+        "query_latency_parallel_ms": 51.30603100428743,
+        "fusion_overhead_ms": 0.007250004273373634
+      }
+    },
+    "note": "Component latencies were measured on different devices (ColPali: L4 GPU; BGE-M3: Mac MPS; BM25 and fusion: Mac CPU). Sequential = sum of components + fusion; parallel = slowest component + fusion."
+  },
+  "headroom_at_5": {
+    "A vs B": {
+      "all": {
+        "n": 225,
+        "A_hit": 100,
+        "B_hit": 147,
+        "A_only": 3,
+        "B_only": 50
+      },
+      "exact": {
+        "n": 93,
+        "A_hit": 62,
+        "B_hit": 84,
+        "A_only": 0,
+        "B_only": 22
+      },
+      "general": {
+        "n": 115,
+        "A_hit": 36,
+        "B_hit": 56,
+        "A_only": 3,
+        "B_only": 23
+      },
+      "visual": {
+        "n": 17,
+        "A_hit": 2,
+        "B_hit": 7,
+        "A_only": 0,
+        "B_only": 5
+      }
+    },
+    "A_code vs B": {
+      "all": {
+        "n": 225,
+        "A_code_hit": 103,
+        "B_hit": 147,
+        "A_code_only": 3,
+        "B_only": 47
+      },
+      "exact": {
+        "n": 93,
+        "A_code_hit": 67,
+        "B_hit": 84,
+        "A_code_only": 0,
+        "B_only": 17
+      },
+      "general": {
+        "n": 115,
+        "A_code_hit": 34,
+        "B_hit": 56,
+        "A_code_only": 3,
+        "B_only": 25
+      },
+      "visual": {
+        "n": 17,
+        "A_code_hit": 2,
+        "B_hit": 7,
+        "A_code_only": 0,
+        "B_only": 5
+      }
+    }
+  }
+}
