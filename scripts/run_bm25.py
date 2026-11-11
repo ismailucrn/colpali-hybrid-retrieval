@@ -59,7 +59,7 @@ def main() -> None:
     print(f"{len(task.queries)} queries, {len(task.page_ids)} pages, "
           f"{sum(not t.strip() for t in task.page_texts)} pages with empty OCR text")
 
-    tokenizer = Tokenizer()
+    tokenizer = Tokenizer(config.get("tokenizer", "official"))  # "codes" = post-hoc variant A_code
     start = time.perf_counter()
     index = BM25Index(task.page_texts, tokenizer)
     timings["index_pages_s"] = time.perf_counter() - start
@@ -87,7 +87,8 @@ def main() -> None:
     split = json.loads((REPO_ROOT / config["splits"]).read_text())
     metrics_dev, _ = evaluate(*subset(task.qrels, run, split["dev"]))
 
-    print(f"\nfull set: nDCG@5 = {metrics['ndcg_at_5']:.4f}  (paper, BM25 on Unstructured + OCR: 0.368)")
+    print(f"\nfull set: nDCG@5 = {metrics['ndcg_at_5']:.4f}  (paper, BM25 on Unstructured + OCR: 0.368; "
+          f"tokenizer: {tokenizer.mode})")
     print(f"Recall@5 = {metrics['recall_at_5']:.4f}  Recall@10 = {metrics['recall_at_10']:.4f}  "
           f"nDCG@10 = {metrics['ndcg_at_10']:.4f}  MRR@10 = {metrics['mrr_at_10']:.4f}")
     print(f"dev ({metrics_dev['n_queries']} queries): nDCG@5 = {metrics_dev['ndcg_at_5']:.4f}")
@@ -106,7 +107,8 @@ def main() -> None:
 
     record = collect_metadata(config, args.config, "cpu", config["seed"])
     record.update({
-        "system": "A: BM25",
+        "system": config.get("system_name", "A: BM25"),
+        "tokenizer": tokenizer.mode,
         "resolved": {
             "dataset_sha": hub_revision(dcfg["dataset"], dcfg["revision"], "dataset"),
             "text_dataset_sha": hub_revision(dcfg["text_dataset"], dcfg["text_revision"], "dataset"),

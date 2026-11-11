@@ -56,3 +56,20 @@ def test_weighted_rrf_full_weight_reproduces_one_system():
     a, b = rng.normal(size=(4, 15)), rng.normal(size=(4, 15))
     fused = weighted_rrf([a, b], [1.0, 0.0], pages, k=1)
     assert (ranks_from_scores(fused, pages) == ranks_from_scores(a, pages)).all()
+
+
+def test_minmax_and_convex_combination():
+    from src.fusion import convex_combination, minmax_per_query
+
+    s = np.array([[2.0, 4.0, 3.0], [1.0, 1.0, 1.0]])
+    assert minmax_per_query(s).tolist() == [[0.0, 1.0, 0.5], [0.0, 0.0, 0.0]]
+    colpali = np.array([[10.0, 30.0, 20.0]])
+    text = np.array([[5.0, 0.0, 1.0]])
+    pages = ["p1", "p2", "p3"]
+    # alpha = 1 reproduces ColPali's ranking exactly
+    assert ranks_from_scores(convex_combination(colpali, text, 1.0), pages).tolist() == \
+        ranks_from_scores(colpali, pages).tolist()
+    fused = convex_combination(colpali, text, 0.5)
+    assert fused[0].tolist() == pytest.approx([0.5 * 0.0 + 0.5 * 1.0, 0.5 * 1.0 + 0.0, 0.5 * 0.5 + 0.5 * 0.2])
+    with pytest.raises(ValueError):
+        convex_combination(colpali, text, 1.5)

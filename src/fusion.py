@@ -1,4 +1,4 @@
-"""Rank fusion for systems C and D (and the ablation E).
+"""Rank fusion for systems C and D (and the ablation E), plus score-level convex combination (post-hoc).
 
 RRF (Cormack et al., 2009): fused(d) = sum over systems s of 1 / (k + rank_s(d)), rank 1-based.
 Ranks use the same order as the evaluator (score descending, ties broken by page id descending), so a tie
@@ -40,3 +40,20 @@ def weighted_rrf(score_matrices: list[np.ndarray], weights: list[float], page_id
     for scores, w in zip(score_matrices, weights):
         fused += w / (k + ranks_from_scores(scores, page_ids))
     return fused
+
+
+def minmax_per_query(scores: np.ndarray) -> np.ndarray:
+    """Min-max normalise each query's scores over all pages to [0, 1]; a constant row becomes all zeros."""
+    lo = scores.min(axis=1, keepdims=True)
+    span = scores.max(axis=1, keepdims=True) - lo
+    return np.where(span > 0, (scores - lo) / np.where(span > 0, span, 1.0), 0.0)
+
+
+def convex_combination(colpali: np.ndarray, text: np.ndarray, alpha: float) -> np.ndarray:
+    """Score-level fusion (post-hoc, after Bruch et al. 2024): alpha * mm(ColPali) + (1 - alpha) * mm(text).
+
+    alpha = 1 keeps ColPali's ranking exactly (min-max is order-preserving; ties are broken by page id as usual).
+    """
+    if not 0.0 <= alpha <= 1.0:
+        raise ValueError("alpha must be in [0, 1]")
+    return alpha * minmax_per_query(colpali) + (1.0 - alpha) * minmax_per_query(text)

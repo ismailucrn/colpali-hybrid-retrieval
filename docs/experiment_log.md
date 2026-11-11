@@ -198,3 +198,41 @@ Chronological record of every run and decision. One entry per run or decision; n
   - The paper's contamination check covers multi-page PDFs only.
   - Wording corrected; test-page overlap with the training set was not checked.
 - Verified and filled in: Bruch et al. venue (ACM TOIS 42(1), 2024, Crossref); DocVQA licensing (ViDoRe copy tagged MIT on HF, `_tesseract` copy none, original DocVQA pages none; images from the UCSF Industry Documents Library); the authors' hardware statements (L4 for latency/indexing, 8 GPUs of unstated type for training). ColPali and slide-study venues could not be verified (dblp/OpenReview blocked, no Crossref record) and are cited as arXiv.
+
+### 2026-11-11 — Pre-registration of two POST-HOC extensions (written before running either)
+- Type: decision (approved by the user 2026-11-11). Both extensions come **after** the single main test run of 2026-11-04. They are labelled post-hoc and exploratory everywhere, and they change nothing in the main result or its verdicts.
+
+**1. Score-level convex combination (C_cc, D_cc)**
+- Why: our own literature (Bruch et al., ACM TOIS 2024) finds tuned convex combination better than RRF for lexical + dense text retrieval. The report lists "rank fusion only" as a limitation.
+- Method: `alpha·minmax(ColPali) + (1 − alpha)·minmax(text)`, min-max per query over all 500 pages.
+- Selection: on dev, alpha ∈ {0, 0.05, …, 1.0}, maximise nDCG@5; ties go to the alpha closest to 0.5.
+- Matched conditions: same grid and rule for BM25 (C_cc) and BGE-M3 (D_cc); alpha = 1 (ColPali alone) is allowed.
+- Code and config: `src/fusion.py`, `scripts/run_cc_fusion_dev.py`, `configs/fusion_cc_docvqa.yaml`.
+- *Hypothesis (before running):*
+  - the selected alpha is high (≥ 0.8);
+  - on test, |Δ C_cc vs B| < 1 nDCG@5 point and not significant;
+  - C_cc ≈ D_cc.
+  - The per-query selection oracle (+1.8 pt) suggests little room.
+  - **What would change our conclusion:** C_cc significantly > B. That would mean the negative result is specific to rank fusion.
+
+**2. Code-preserving BM25 tokenizer (A_code, C_code)**
+- Why: the failure analysis attributes BM25 misses partly to the official preprocessing, which drops "no" and non-alphanumeric codes such as "2-26".
+- Method (`src/bm25.py`, mode `codes`):
+  - lowercase, then split into alphanumeric runs joined by `- . / &`;
+  - keep each joined code whole *and* as its parts;
+  - NLTK stopwords minus "no".
+- Same BM25 parameters and the same OCR text as System A; no tuning.
+- C_code = RRF(A_code, ColPali) with C's frozen k = 1 (no new selection).
+- Config: `configs/bm25_codes_docvqa.yaml`.
+- *Hypothesis (before running):*
+  - A_code ≥ A on test nDCG@5, with the gain mostly on `exact` queries;
+  - the number of test queries where BM25 has the gold page in its top 5 and ColPali does not ("A only") rises from 3, but stays small (< 10);
+  - C_code is still significantly below B, because equal-weight RRF still imports BM25's misses.
+  - **What would change our conclusion:** a large rise in "A only", i.e. if the tokenizer were the main bottleneck.
+
+**Test protocol**
+- `configs/posthoc_test_evaluation.yaml` → `scripts/run_test_evaluation.py` (frozen_check `posthoc`: refuses alpha/k that differ from the committed dev selections).
+- Test is evaluated once for these systems.
+- Holm correction over C_cc, D_cc and C_code vs B.
+- Pairs: C_cc vs D_cc, A_code vs A, C_code vs C.
+- Top-5 headroom for A and A_code vs B.

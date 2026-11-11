@@ -1,0 +1,24 @@
+# POST-HOC (pre-registered 2026-11-11, after the single test run): A_code = BM25 with a code-preserving tokenizer.
+# Same data, same BM25 parameters (rank_bm25 defaults) and same scoring as System A; only the tokenizer differs
+# (src/bm25.py, mode "codes"): keeps "-", ".", "/", "&"-joined codes whole and as parts, and keeps "no".
+# Purpose: test the failure-analysis mechanism (official preprocessing drops anchors such as "No." and "2-26").
+# Like run_bm25.py for System A, this prints only full-set and dev metrics; test is evaluated once, later.
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  text_dataset: vidore/docvqa_test_subsampled_tesseract
+  text_revision: 9a183a7237d678eaaf68dc0f640a42f46016802f
+  split: test
+
+tokenizer: codes
+system_name: "A_code: BM25, code-preserving tokenizer (post-hoc)"
+
+splits: results/splits/docvqa_split.json
+
+latency:
+  n_queries: 451
+  warmup: 5
+
+seed: 0
+output_dir: results/bm25_codes_docvqa

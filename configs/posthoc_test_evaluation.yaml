@@ -1,0 +1,55 @@
+# POST-HOC test evaluation (pre-registered 2026-11-11, AFTER the single main test run of 2026-11-04).
+# Two extensions, both labelled post-hoc and exploratory in every output:
+#   1. Score-level convex combination (C_cc, D_cc), alpha selected on dev (results/posthoc_extensions/dev_selection_cc.json).
+#   2. Code-preserving BM25 tokenizer (A_code), and C_code = RRF(A_code, ColPali) with C's frozen k = 1 (no new tuning).
+# The test split is evaluated once more for these systems only; nothing of the main result is re-selected.
+# The script refuses to run if alpha / k differ from the committed dev selections (frozen_check: posthoc).
+
+title: "POST-HOC test-split results (exploratory; main test run was 2026-11-04)"
+frozen_check: posthoc
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  split: test
+
+splits: results/splits/docvqa_split.json
+tags: results/splits/docvqa_query_tags.csv
+
+scores:
+  A: results/bm25_docvqa/scores.npz
+  A_code: results/bm25_codes_docvqa/scores.npz
+  B: results/colpali_v1.3_docvqa/scores.npz
+  BGE: results/bge_m3_docvqa/scores.npz
+
+component_metrics:
+  A: results/bm25_docvqa/metrics.json
+  A_code: results/bm25_codes_docvqa/metrics.json
+  B: results/colpali_v1.3_docvqa/metrics.json
+  BGE: results/bge_m3_docvqa/metrics.json
+
+# Inputs of cc systems are [ColPali, text]; alpha is the weight on ColPali.
+systems:
+  A:      {name: "A: BM25 (official tokenizer)",           kind: single, scores: A, role: "reference"}
+  A_code: {name: "A_code: BM25, code-preserving tokenizer", kind: single, scores: A_code, role: "post-hoc"}
+  B:      {name: "B: ColPali v1.3",                        kind: single, scores: B, role: "baseline"}
+  C:      {name: "C: RRF(BM25, ColPali) k=1",              kind: rrf, inputs: [A, B], k: 1, role: "reference (main run)"}
+  C_code: {name: "C_code: RRF(A_code, ColPali) k=1",       kind: rrf, inputs: [A_code, B], k: 1, role: "post-hoc"}
+  C_cc:   {name: "C_cc: CC(BM25, ColPali)",                kind: cc, inputs: [B, A], alpha: null, role: "post-hoc"}
+  D_cc:   {name: "D_cc: CC(BGE-M3, ColPali)",              kind: cc, inputs: [B, BGE], alpha: null, role: "post-hoc control"}
+
+baseline: B
+compare_to_baseline: [C_cc, D_cc, C_code]          # Holm over these three
+extra_pairs: [[C_cc, D_cc], [A_code, A], [C_code, C]]
+pairs_title: "Pairs (post-hoc): lexical vs dense under CC; tokenizer effect alone and inside RRF"
+headroom_pairs: [[A, B], [A_code, B]]
+
+statistics:
+  metric: ndcg_at_5
+  bootstrap_resamples: 10000
+  permutations: 10000
+  alpha: 0.05
+  seed: 0
+  multiple_comparisons: holm
+
+output_dir: results/posthoc_extensions

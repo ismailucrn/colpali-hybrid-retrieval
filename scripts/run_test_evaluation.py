@@ -24,7 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from scripts.run_fusion_dev import load_scores  # noqa: E402
 from src.data import load_task  # noqa: E402
 from src.evaluation import evaluate, scores_to_run, subset  # noqa: E402
-from src.fusion import rrf, weighted_rrf  # noqa: E402
+from src.fusion import convex_combination, rrf, weighted_rrf  # noqa: E402
 from src.runinfo import REPO_ROOT, collect_metadata  # noqa: E402
 from src.stats import bootstrap_ci, holm, paired_bootstrap_ci, paired_permutation_test  # noqa: E402
 
@@ -32,8 +32,22 @@ REPORT_METRICS = ["ndcg_at_5", "recall_at_5", "recall_at_10", "ndcg_at_10", "mrr
 TAGS = ["exact", "general", "visual"]
 
 
-def check_frozen_settings(systems: dict) -> None:
+DEFAULT_COMPONENTS = {"A": "results/bm25_docvqa/metrics.json", "B": "results/colpali_v1.3_docvqa/metrics.json",
+                      "BGE": "results/bge_m3_docvqa/metrics.json"}
+
+
+def check_frozen_settings(systems: dict, mode: str = "main") -> None:
     """Fail loudly if the config differs from what was selected on dev."""
+    if mode == "posthoc":
+        cc = json.loads((REPO_ROOT / "results/posthoc_extensions/dev_selection_cc.json").read_text())["systems"]
+        plain = json.loads((REPO_ROOT / "results/fusion_docvqa/dev_selection.json").read_text())["systems"]
+        for sid in ("C_cc", "D_cc"):
+            if systems[sid]["alpha"] != cc[sid]["selected_alpha"]:
+                raise SystemExit(f"{sid}: config alpha {systems[sid]['alpha']} != dev selection {cc[sid]['selected_alpha']}")
+        for sid in ("C", "C_code"):  # C_code reuses C's frozen k (no new tuning)
+            if systems[sid]["k"] != plain["C"]["selected_k"]:
+                raise SystemExit(f"{sid}: k {systems[sid]['k']} != C's dev selection {plain['C']['selected_k']}")
+        return
     plain = json.loads((REPO_ROOT / "results/fusion_docvqa/dev_selection.json").read_text())["systems"]
     weighted = json.loads((REPO_ROOT / "results/fusion_docvqa/dev_selection_weighted.json").read_text())["systems"]
     expected = {"C": (None, plain["C"]["selected_k"]), "D": (None, plain["D"]["selected_k"]),
@@ -53,8 +67,14 @@ def build_scores(systems: dict, base: dict[str, np.ndarray], page_ids: list[str]
             scores[sid] = base[cfg["scores"]]
             continue
         inputs = [base[i] for i in cfg["inputs"]]
-        fuse = (lambda x, c=cfg: rrf(x, page_ids, k=c["k"])) if cfg["kind"] == "rrf" else \
-               (lambda x, c=cfg: weighted_rrf(x, c["weights"], page_ids, k=c["k"]))
+        if cfg["kind"] == "rrf":
+            fuse = lambda x, c=cfg: rrf(x, page_ids, k=c["k"])  # noqa: E731
+        elif cfg["kind"] == "wrrf":
+            fuse = lambda x, c=cfg: weighted_rrf(x, c["weights"], page_ids, k=c["k"])  # noqa: E731
+        elif cfg["kind"] == "cc":  # inputs = [ColPali, text]
+            fuse = lambda x, c=cfg: convex_combination(x[0], x[1], c["alpha"])  # noqa: E731
+        else:
+            raise SystemExit(f"{sid}: unknown kind {cfg['kind']}")
         scores[sid] = fuse(inputs)
         # Fusion cost for one query (ranking both 500-page lists + combining), median of 200 repeats.
         one = [x[:1] for x in inputs]
@@ -67,10 +87,9 @@ def build_scores(systems: dict, base: dict[str, np.ndarray], page_ids: list[str]
     return scores, fusion_ms
 
 
-def resource_table(fusion_ms: dict, systems: dict) -> dict:
+def resource_table(fusion_ms: dict, systems: dict, components: dict | None = None) -> dict:
     comp = {}
-    for key, path in {"A": "results/bm25_docvqa/metrics.json", "B": "results/colpali_v1.3_docvqa/metrics.json",
-                      "BGE": "results/bge_m3_docvqa/metrics.json"}.items():
+    for key, path in (components or DEFAULT_COMPONENTS).items():
         m = json.loads((REPO_ROOT / path).read_text())
         lat = m["latency"]["total"]["median_ms"] if "total" in m["latency"] else m["latency"]["median_ms"]
         mem = m["peak_memory"]
@@ -106,7 +125,7 @@ def main() -> None:
     args = parser.parse_args()
     config = yaml.safe_load(Path(args.config).read_text())
     dcfg, scfg, systems = config["data"], config["statistics"], config["systems"]
-    check_frozen_settings(systems)
+    check_frozen_settings(systems, config.get("frozen_check", "main"))
 
     task = load_task(dcfg["dataset"], dcfg["revision"], dcfg["split"])
     test = json.loads((REPO_ROOT / config["splits"]).read_text())["test"]
@@ -160,7 +179,17 @@ def main() -> None:
     posthoc = {"n": int(len(clean_idx)), "systems": {sid: float(vec[sid][clean_idx].mean()) for sid in scores},
                "vs_baseline": {sid: compare(sid, bl, clean_idx) for sid in config["compare_to_baseline"]}}
 
-    resources = resource_table(fusion_ms, systems)
+    resources = resource_table(fusion_ms, systems, config.get("component_metrics"))
+
+    # Optional: top-5 headroom between two single systems (who finds the gold page that the other misses).
+    headroom = {}
+    for a, b in config.get("headroom_pairs", []):
+        ra = {q: perq[a][q]["gold_rank"] for q in test}
+        rb = {q: perq[b][q]["gold_rank"] for q in test}
+        headroom[f"{a} vs {b}"] = {
+            group: {"n": len(qs), f"{a}_hit": sum(ra[q] <= 5 for q in qs), f"{b}_hit": sum(rb[q] <= 5 for q in qs),
+                    f"{a}_only": sum(ra[q] <= 5 < rb[q] for q in qs), f"{b}_only": sum(rb[q] <= 5 < ra[q] for q in qs)}
+            for group, qs in {"all": test, **{t: [q for q in test if tags[q] == t] for t in TAGS}}.items()}
 
     # Outputs.
     out_dir = REPO_ROOT / config["output_dir"]
@@ -176,9 +205,11 @@ def main() -> None:
     record = collect_metadata(config, args.config, "cpu", scfg["seed"])
     record.update({"n_test_queries": len(test), "results": results, "vs_baseline": vs_baseline, "pairs": extra,
                    "by_type": by_type, "posthoc_without_duplicated_queries": posthoc, "resources": resources})
+    if headroom:
+        record["headroom_at_5"] = headroom
     (out_dir / "metrics.json").write_text(json.dumps(record, indent=2))
 
-    lines = [f"# Test-split results (n = {len(test)} queries), nDCG@5 unless stated\n",
+    lines = [f"# {config.get('title', 'Test-split results')} (n = {len(test)} queries), nDCG@5 unless stated\n",
              "| System | Role | nDCG@5 [95% CI] | Recall@5 | Recall@10 | nDCG@10 | MRR@10 | Δ vs B [95% CI] | p (perm.) | p (Holm) | W/T/L vs B |",
              "|---|---|---|---|---|---|---|---|---|---|---|"]
     for sid in scores:
@@ -189,7 +220,7 @@ def main() -> None:
                  f"{cmp_['p_holm']:.4f} | {cmp_['wins']}/{cmp_['ties']}/{cmp_['losses']}") if cmp_ else "– | – | – | –"
         lines.append(f"| {r['name']} | {r['role'] or 'baseline'} | {m[metric]:.4f} [{lo:.4f}, {hi:.4f}] | {m['recall_at_5']:.4f} | "
                      f"{m['recall_at_10']:.4f} | {m['ndcg_at_10']:.4f} | {m['mrr_at_10']:.4f} | {cells} |")
-    lines += ["", "## Pairs (P3: lexical signal vs any second retriever)", "", "| Pair | Δ [95% CI] | p (perm.) | W/T/L |", "|---|---|---|---|"]
+    lines += ["", "## " + config.get("pairs_title", "Pairs (P3: lexical signal vs any second retriever)"), "", "| Pair | Δ [95% CI] | p (perm.) | W/T/L |", "|---|---|---|---|"]
     for name, c in extra.items():
         lines.append(f"| {name} | {c['delta']:+.4f} [{c['delta_ci95'][0]:+.4f}, {c['delta_ci95'][1]:+.4f}] | {c['p_permutation']:.4f} | {c['wins']}/{c['ties']}/{c['losses']} |")
     lines += ["", "## By query type (exploratory, uncorrected)", "",
@@ -214,6 +245,11 @@ def main() -> None:
         lines.append(f"| {systems[sid]['name']} | {r['index_time_s']:.2f} | {r['index_size_mb']:.2f} | "
                      f"{r['query_latency_sequential_ms']:.2f} | {r['query_latency_parallel_ms']:.2f} | {r['fusion_overhead_ms']:.3f} |")
     lines += ["", resources["note"]]
+    for name, h in headroom.items():
+        lines += ["", f"## Top-5 headroom: {name}", "", "| Group | " + " | ".join(k for k in h["all"] if k != "n") + " |",
+                  "|---|" + "---|" * (len(h["all"]) - 1)]
+        for group, row in h.items():
+            lines.append(f"| {group} (n={row['n']}) | " + " | ".join(str(v) for k, v in row.items() if k != "n") + " |")
     (out_dir / "summary.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
 
