@@ -32,7 +32,8 @@ TEXT_FILES = [
 ]
 # keys that legitimately change between runs (anywhere in the JSON tree)
 VOLATILE = {"timestamp_utc", "git_commit", "git_dirty", "python", "packages", "hardware", "command", "timings",
-            "latency", "peak_memory", "resources", "config_path"}
+            "latency", "peak_memory", "resources", "config_path",
+            "tokenizer"}  # run metadata added 2026-11-11 (records which BM25 tokenizer a run used; official = default)
 # report macros/tables that hold timings
 VOLATILE_MACROS = ("latA", "latB", "latBGE", "fusionOverhead", "idxB", "peakGPU")
 
