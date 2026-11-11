@@ -29,6 +29,9 @@ run scripts/run_fusion_dev.py --config configs/fusion_docvqa.yaml
 run scripts/run_weighted_fusion_dev.py --config configs/fusion_weighted_docvqa.yaml
 run scripts/run_test_evaluation.py --config configs/test_evaluation.yaml
 run scripts/failure_analysis.py
+run scripts/run_bm25.py --config configs/bm25_codes_docvqa.yaml                 # post-hoc A_code
+run scripts/run_cc_fusion_dev.py --config configs/fusion_cc_docvqa.yaml         # post-hoc CC, dev
+run scripts/run_test_evaluation.py --config configs/posthoc_test_evaluation.yaml # post-hoc test
 run scripts/make_figures.py
 run scripts/make_report_tables.py
 run -m pytest -q tests

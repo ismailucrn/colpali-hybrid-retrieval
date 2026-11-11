@@ -1,6 +1,6 @@
 # Speaker notes
 
-These notes go with `slides/slides.pdf` (17 main slides + 3 backup slides). Planned length is about 12–15 minutes, i.e. about 1 minute per main slide. Every number on the slides comes from `report/generated/numbers.tex`, which is written from `results/`.
+These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Planned length is about 12–15 minutes, i.e. about 1 minute per main slide. Every number on the slides comes from `report/generated/numbers.tex`, which is written from `results/`.
 
 ## Slide by slide
 
@@ -61,18 +61,24 @@ These notes go with `slides/slides.pdf` (17 main slides + 3 backup slides). Plan
 - Show one favourable example ("name of the laboratory").
 - Mention that the "bullet points" rescue is probably luck. This is honest reporting of favourable cases.
 
-**14 · Cost.**
+**14 · Post-hoc checks.**
+- We asked: what if the problem was the fusion function, or the tokenizer? We pre-registered two checks after the main test run, and they are labelled exploratory.
+- Score-level fusion: dev picks ColPali alone, for both text retrievers.
+- A better tokenizer makes BM25 better on its own (+2.3 points), but only on queries ColPali already solves. BM25-only hits stay at 3.
+- Both alternative explanations are therefore ruled out on this task.
+
+**15 · Cost.**
 - Fusion is almost free: a fraction of a millisecond and a sub-MB index. So the obstacle is quality, not cost.
 - Caveat: the components were measured on different devices.
 
-**15 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
+**16 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
 
-**16 · Conclusions.**
+**17 · Conclusions.**
 - The reproduction holds. Fusion hurts, and the control shows it is not specific to BM25.
 - The literature is consistent with this: fusion fails with unequal inputs and helped where the text was clean and equally strong.
 - Open question: would better text extraction change this?
 
-**17 · Reproducibility and AI use.**
+**18 · Reproducibility and AI use.**
 - Everything is re-runnable on a laptop from the committed score matrices, and a fresh clone reproduces all outputs exactly.
 - State plainly what the AI did and what you did and verified.
 
@@ -82,8 +88,8 @@ These notes go with `slides/slides.pdf` (17 main slides + 3 backup slides). Plan
   v1.0 is marked unsupported in the current colpali-engine. Making it run would mean old library versions and an unknown time cost. We reproduce the authors' own reported v1.3 number with the same protocol. The paper's 54.4 is shown as context only.
 - **Is −0.94 points a failed reproduction?**
   No. It is within the ±2 tolerance fixed before the run. Likely sources are library versions and bf16 ties, but we did not isolate the cause (stated as a limitation).
-- **Why RRF?**
-  It is the standard, training-free fusion and needs no score calibration between very different scorers. Bruch et al. show that score-level convex combination can be better; we list that as untested. The per-query oracle (+1.8 points) and the weighted-RRF confidence interval suggest the upside is small.
+- **Why RRF? Bruch et al. say convex combination is better.**
+  RRF is the standard, training-free fusion and needs no score calibration between very different scorers. We also tested convex combination post-hoc (slide 14): on dev, every α < 1 is below ColPali, so it selects ColPali alone.
 - **k = 1 is at the edge of the grid. Isn't the grid too narrow?**
   Smaller k only moves further toward "each system's top ranks dominate". The weighted ablation explores the same direction in a better way, and it still only ties with ColPali.
 - **Did you tune on the test set?**
@@ -95,6 +101,6 @@ These notes go with `slides/slides.pdf` (17 main slides + 3 backup slides). Plan
 - **Is ColPali advantaged on DocVQA?**
   Yes, possibly. DocVQA is in its training data (the split is not stated by the authors), while BM25 and BGE-M3 are zero-shot. This is listed as a limitation. It is a reason the result may not transfer to other corpora.
 - **Would better OCR change the result?**
-  Possibly. That is our main open hypothesis. IRPAPERS saw gains with clean LLM transcriptions where text and image retrieval were about equally strong.
+  Possibly. That is our main open hypothesis. A better *tokenizer* alone did not help (slide 14), which points to the OCR text itself. IRPAPERS saw gains with clean LLM transcriptions where text and image retrieval were about equally strong.
 - **What did the AI do?**
-  See slide 17 and `docs/ai_usage.md`: code, Colab driving, literature extraction and drafting. You made the design decisions, approved every run and verified *(fill in what you checked)*.
+  See slide 18 and `docs/ai_usage.md`: code, Colab driving, literature extraction and drafting. You made the design decisions, approved every run and verified *(fill in what you checked)*.

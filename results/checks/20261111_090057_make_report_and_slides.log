@@ -1,0 +1,29 @@
+# 2026-11-11T09:00:57Z commit 3ee4eb9 (+ uncommitted post-hoc report/slide edits)
+wrote 152 macros and 8 tables to report/generated
+exit 0
+note: Running TeX ...
+warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
+warning: main.tex:268: Underfull \hbox (badness 10000) in paragraph at lines 267--268
+warning: main.tex:270: Underfull \hbox (badness 1194) in paragraph at lines 269--270
+warning: main.tex:553: Overfull \hbox (5.92386pt too wide) in paragraph at lines 552--553
+note: Rerunning TeX because "main.aux" changed ...
+warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
+warning: main.tex:268: Underfull \hbox (badness 10000) in paragraph at lines 267--268
+warning: main.tex:270: Underfull \hbox (badness 1194) in paragraph at lines 269--270
+warning: main.tex:553: Overfull \hbox (5.92386pt too wide) in paragraph at lines 552--553
+warning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.
+note: Running xdvipdfmx ...
+note: Writing `main.pdf` (307.203125 KiB)
+note: Skipped writing 2 intermediate files (use --keep-intermediates to keep them)
+Pages:           21
+note: Running TeX ...
+warning: slides.tex:118: Underfull \hbox (badness 1303) in paragraph at lines 118--118
+warning: slides.tex:263: Overfull \hbox (3.34949pt too wide) in paragraph at lines 263--263
+note: Rerunning TeX because "slides.nav" changed ...
+warning: slides.tex:118: Underfull \hbox (badness 1303) in paragraph at lines 118--118
+warning: slides.tex:263: Overfull \hbox (3.34949pt too wide) in paragraph at lines 263--263
+warning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.
+note: Running xdvipdfmx ...
+note: Writing `slides.pdf` (220.1044921875 KiB)
+note: Skipped writing 5 intermediate files (use --keep-intermediates to keep them)
+Pages:           21

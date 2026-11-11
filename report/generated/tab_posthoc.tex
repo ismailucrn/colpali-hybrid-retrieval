@@ -1,0 +1,16 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{llll}
+\toprule
+System (post-hoc) & nDCG@5 [95\% CI] & $\Delta$ vs B [95\% CI] & $p_\mathrm{Holm}$ \\
+\midrule
+A: BM25, official tokenizer & 0.382 [0.323, 0.441] & -- & -- \\
+A$_\text{code}$: BM25, code-preserving tokenizer & 0.405 [0.345, 0.465] & -- & -- \\
+B: ColPali v1.3 & 0.570 [0.510, 0.627] & -- & -- \\
+C: RRF(A, B), $k{=}1$ (main run) & 0.516 [0.457, 0.574] & -- & -- \\
+C$_\text{code}$: RRF(A$_\text{code}$, B), $k{=}1$ & 0.525 [0.467, 0.584] & $-$0.045 [$-$0.066, $-$0.024] & $<$0.001 \\
+C$_\text{cc}$: CC(BM25, B), $\alpha{=}1.0$ & 0.570 [0.510, 0.627] & +0.000 [+0.000, +0.000] & 1.000 \\
+D$_\text{cc}$: CC(BGE-M3, B), $\alpha{=}1.0$ & 0.570 [0.510, 0.627] & +0.000 [+0.000, +0.000] & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Test split, 225 queries; post-hoc analyses pre-registered after the main test run. Holm correction over C$_\text{code}$, C$_\text{cc}$, D$_\text{cc}$ vs B. $\alpha$ was selected on dev; $\alpha{=}1$ means ColPali alone.}

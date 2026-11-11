@@ -20,6 +20,9 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
   | Dev-tuned weighted RRF | 0.571 | +0.001 | 0.94 |
 
 - **Why it fails.** On only 3 of 225 test queries does BM25 find the gold page when ColPali misses it. BM25 works only when the query's words survive OCR (`results/failure_analysis/`).
+- **Post-hoc checks** (exploratory, `results/posthoc_extensions/summary.md`):
+  - Score-level convex combination selects ColPali alone (α = 1) on dev.
+  - A code-preserving BM25 tokenizer improves BM25 (0.382 → 0.405) but still adds only 3 queries that ColPali misses.
 
 ## Systems
 
@@ -30,6 +33,7 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
 | C | RRF(BM25, ColPali), `k` chosen on dev | Proposed improvement |
 | D | RRF(BGE-M3 dense vectors over the same OCR text, ColPali) | Control: lexical signal vs. any second retriever |
 | E | RRF `k` sweep on dev, plus weighted RRF (C_w, D_w), dev-informed | Ablation |
+| post-hoc | Score-level convex combination (C_cc, D_cc); code-preserving BM25 tokenizer (A_code, C_code) | Exploratory checks of two alternative explanations, pre-registered after the main test run |
 
 - **Primary metric:** nDCG@5. We also report Recall@5/10, nDCG@10, MRR@10 and resource cost (indexing time, index size, query latency, peak memory).
 - **Pre-registered predictions and protocol:** `CLAUDE.md` and `docs/experiment_log.md`.
@@ -118,6 +122,9 @@ python scripts/run_fusion_dev.py --config configs/fusion_docvqa.yaml            
 python scripts/run_weighted_fusion_dev.py --config configs/fusion_weighted_docvqa.yaml # ablation E on dev
 python scripts/run_test_evaluation.py --config configs/test_evaluation.yaml            # the single test run
 python scripts/failure_analysis.py                                                     # test, post-hoc, descriptive
+python scripts/run_bm25.py --config configs/bm25_codes_docvqa.yaml                     # post-hoc: A_code
+python scripts/run_cc_fusion_dev.py --config configs/fusion_cc_docvqa.yaml             # post-hoc: CC alpha on dev
+python scripts/run_test_evaluation.py --config configs/posthoc_test_evaluation.yaml    # post-hoc: test, once
 python scripts/make_figures.py                                                         # results/figures/
 python scripts/make_report_tables.py                                                   # report/generated/
 (cd report && tectonic main.tex)                                                       # report/main.pdf
@@ -133,6 +140,7 @@ python scripts/make_report_tables.py                                            
 | Table: dev selection; report Figure 1 (k sweep, weighted grid) | `run_fusion_dev.py`, `run_weighted_fusion_dev.py` | `results/fusion_docvqa/` |
 | Tables: test results, by query type, resources; report Figures 2–3 | `run_test_evaluation.py` | `results/test_evaluation/` |
 | Table: headroom; report Figure 4; examples | `failure_analysis.py` | `results/failure_analysis/` |
+| Table: post-hoc extensions (report §7.6) | `run_bm25.py` (codes), `run_cc_fusion_dev.py`, `run_test_evaluation.py` (post-hoc config) | `results/bm25_codes_docvqa/`, `results/posthoc_extensions/` |
 
 Figure files (`results/figures/`, made by `make_figures.py`):
 
@@ -148,7 +156,7 @@ Figure files (`results/figures/`, made by `make_figures.py`):
 ## Tests and checks
 
 ```bash
-python -m pytest -q tests                              # 29 unit tests, CPU, under a second, no torch
+python -m pytest -q tests                              # 31 unit tests, CPU, under a second, no torch
 bash scripts/checks/reproduce_cpu_pipeline.sh          # fresh clone, run Step 2, compare with committed results
 ```
 

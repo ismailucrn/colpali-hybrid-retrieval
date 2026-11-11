@@ -131,6 +131,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 - **All experiments done and committed** (3–6 Nov): B reproduced (nDCG@5 0.5752 vs model card 0.5845, −0.94 pt; the exact gap is −0.935, an earlier note said −0.93), A 0.3907, BGE-M3 0.2486 (full set); single test run: fusion does not beat ColPali (C −5.4 pt, p_Holm 0.0006; C ≈ D; C_w +0.08 pt, n.s.); failure analysis and figures.
 - **Literature matrix** (6 Nov) and **report draft** (7 Nov, `report/main.pdf`) written.
 - **Audit 11 Nov:** a fresh clone reproduces every quality metric and figure exactly (`scripts/checks/reproduce_cpu_pipeline.sh`). Fixed: README rewritten; torch no longer needed by the CPU scripts (`requirements-cpu.txt`); two over-strong report claims corrected (DocVQA split in ColPali's training data is not stated; the headroom bound applies to per-query selection, not to every fusion — selection-oracle nDCG@5 added to the failure analysis); verifiable report TODOs resolved (Bruch et al. venue, DocVQA licensing, paper hardware).
+- **Post-hoc extensions (11 Nov, pre-registered in `cb332b7` after the main test run, exploratory):** score-level convex combination selects alpha = 1 (ColPali alone) on dev for both text retrievers; code-preserving BM25 tokenizer improves BM25 on test (0.382 → 0.405, p 0.027) but BM25-only top-5 hits stay at 3; C_code = RRF(A_code, B) still −4.5 pt (p_Holm 0.0003). Report §7.6, slide 14.
 - **Open:** report/slide TODOs that need the user (name/ID, presentation date, ±2 tolerance confirmation, literature cell checks, App. A.3 count, AI-use self-verification, tag hash); `v1.0-submission` tag after the final edits.
 
 ## Timeline (compressed, from 3 November)
@@ -200,7 +201,8 @@ docs/         experiment_log.md, run_registry.md, deviations.md, literature_matr
 14. ~~Report draft~~ — 7 November: `report/main.tex` → `report/main.pdf` (19 pp.). Every number comes from `report/generated/` (`scripts/make_report_tables.py`). Red TODOs: last name/ID, ±2 tolerance confirmation, DocVQA license, paper hardware, venues, AI-use self-verification, tag hash.
 15. ~~README cleanup + audit~~ — 11 November (see Current status).
 16. ~~Presentation~~ — 11 November: `slides/slides.tex` → `slides/slides.pdf` (Beamer, 17 + 3 backup slides, numbers from `report/generated/`), `slides/speaker_notes.md`. TODOs: name, date, AI-use self-verification.
-17. Next: user resolves report/slide TODOs; rename PDF to `<LastName>_YZM5110_Research.pdf`; tag `v1.0-submission` on the final commit.
+17. ~~Post-hoc extensions~~ — 11 November (convex combination; code-preserving tokenizer), see Current status.
+18. Next: user resolves report/slide TODOs; rename PDF to `<LastName>_YZM5110_Research.pdf`; tag `v1.0-submission` on the final commit.
 
 ### Implementation notes
 

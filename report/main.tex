@@ -55,6 +55,7 @@ We reproduce ColPali (checkpoint v1.3) on ViDoRe DocVQA: nDCG@5 \fullB{} measure
 We then test reciprocal rank fusion (RRF) of ColPali with BM25 over the benchmark's OCR text, against a control that fuses ColPali with a dense text retriever (BGE-M3) instead. Fusion settings are chosen on a development split, and the test split is used once.
 The result is negative. Equal-weight RRF lowers test nDCG@5 from \testB{} to \testC{} ($\Delta$ \deltaC{}, 95\% CI \deltaCCI{}, Holm-corrected $p$ \pHolmC{}), and the dense control behaves the same ($\Delta$ C$-$D \deltaCvsD{}, $p$ = \pCvsD{}). A dev-tuned weighted RRF only matches ColPali (\deltaCw{}, $p$ = \pCw{}).
 Failure analysis explains why. BM25 finds the gold page that ColPali misses on only \headallAnotB{} of \nTest{} test queries, and ColPali is already strongest on the exact-match queries where we expected BM25 to help. BM25 succeeds only when the query's words survive OCR, so fusion mostly imports its errors.
+Two post-hoc checks, pre-registered after the main test run, support this reading. A score-level convex combination selects ColPali alone on dev. A code-preserving BM25 tokenizer improves BM25 by \deltaAcodeA{} nDCG@5, but it adds no query that ColPali misses.
 \end{abstract}
 
 \paragraph{How to read this report.} The assignment asks to keep four kinds of statements apart. We label them where it matters: \Pub{} = reported by the cited authors; \Mea{} = obtained by us (every such number is generated from a committed file in \file{results/} by \file{scripts/make\_report\_tables.py}); \Int{} = our reading of a paper or result; \Hyp{} = expected but not tested.
@@ -84,7 +85,7 @@ Deliberately narrow:
 \begin{enumerate}
   \item A traceable reproduction of ColPali v1.3 on DocVQA with the official evaluation protocol. The metric code is checked against MTEB, every run (including failed ones) is logged, and outputs are saved (Section~\ref{sec:repro}).
   \item A pre-registered, controlled test of BM25 + ColPali fusion. It has a dense-text control, a frozen dev/test split, frozen query-type tags, paired significance tests with multiple-comparison correction, and resource measurements (Sections~\ref{sec:improve}--\ref{sec:results}).
-  \item A negative result with a mechanism. The failure analysis shows the lexical signal has almost no headroom on this task, and why: lexical overlap after OCR (Section~\ref{sec:failure}).
+  \item A negative result with a mechanism. The failure analysis shows the lexical signal has almost no headroom on this task, and why: lexical overlap after OCR (Section~\ref{sec:failure}). Two pre-registered post-hoc checks (score-level fusion, a code-preserving tokenizer) rule out the two most obvious alternative explanations (Section~\ref{sec:posthoc}).
   \item A literature matrix of eight papers. It shows that text + visual fusion has been tried only recently, with mixed and uncontrolled results (Section~\ref{sec:lit}).
 \end{enumerate}
 
@@ -486,7 +487,32 @@ Even a per-query oracle that always picked the better of the two systems would r
 \end{itemize}
 \Int{} The second rescue is likely lucky: the query's words are generic, not a lexical anchor.
 
-\paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali.
+\FloatBarrier
+\subsection{Post-hoc extensions (exploratory)}
+\label{sec:posthoc}
+After the main test run we tested two alternative explanations of the negative result:
+\begin{itemize}
+  \item the \emph{fusion function} was the problem: score-level fusion instead of rank fusion~\cite{bruch};
+  \item the \emph{tokenizer} was the problem: the official BM25 preprocessing drops anchors such as ``No.'' and ``2-26'' (Section~\ref{sec:failure}).
+\end{itemize}
+Both analyses, their selection rules and our expectations were committed before either was run (\texttt{cb332b7}). Settings were chosen on dev; the test split was evaluated once more, for these systems only. Because they come after the main test run, they are exploratory and change none of the verdicts above.
+
+\paragraph{Convex combination (C$_\text{cc}$, D$_\text{cc}$).} The fused score is $\alpha \cdot \mathrm{mm}(\text{ColPali}) + (1-\alpha) \cdot \mathrm{mm}(\text{text})$, with per-query min-max normalisation and $\alpha \in \{0, 0.05, \dots, 1\}$ chosen on dev.
+\Mea{} On dev, every $\alpha < 1$ is below ColPali for both text retrievers: the best are \devBestBelowOneCcc{} (BM25, $\alpha$ = \devBestBelowOneAlphaCcc{}) and \devBestBelowOneDcc{} (BGE-M3, $\alpha$ = \devBestBelowOneAlphaDcc{}), vs ColPali's \devB{}. The pre-registered rule therefore selects $\alpha = 1$, i.e.\ no fusion, and both systems equal ColPali on test.
+\Int{} The negative result is not specific to rank fusion.
+
+\paragraph{Code-preserving tokenizer (A$_\text{code}$, C$_\text{code}$).} Joined codes are kept whole and as their parts, and ``no'' is kept; everything else is identical to System~A.
+\Mea{} BM25 improves on test from \testA{} to \testAcode{} ($\Delta$ \deltaAcodeA{}, CI \deltaAcodeACI{}, $p$ = \pAcodeA{}, uncorrected), mostly on exact-match queries (\typeexactA{} $\rightarrow$ \typeexactAcode{}).
+\Mea{} The headroom does \emph{not} change. A$_\text{code}$ finds the gold page that ColPali misses on \headAcodeOnly{} queries, as before, and its extra top-5 hits fall on queries ColPali already solves.
+\Mea{} RRF with ColPali still hurts: C$_\text{code}$ \testCcode{}, $\Delta$ vs B \deltaCcode{} (CI \deltaCcodeCI{}, $p_\text{Holm}$ \pHolmCcode{}). Compared with C, the difference is \deltaCcodevsC{} ($p$ = \pCcodevsC{}).
+\Int{} Better lexical matching makes BM25 better \emph{on its own}, but only where ColPali is already right. The lexical signal stays redundant on this task.
+
+\begin{table}[!htbp]\centering\small
+\input{generated/tab_posthoc.tex}
+\caption{\Mea{} Post-hoc extensions on the test split (\file{results/posthoc\_extensions/metrics.json}).}\label{tab:posthoc}
+\end{table}
+
+\paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali. Post-hoc, neither score-level fusion nor a better BM25 tokenizer changes this.
 
 % =====================================================================================================
 \section{Limitations, conclusions and open questions}
@@ -496,8 +522,8 @@ Even a per-query oracle that always picked the better of the two systems would r
 \begin{itemize}
   \item \textbf{One task, one OCR, one checkpoint.} All conclusions are about ViDoRe~v1 DocVQA with the benchmark's Tesseract text and ColPali~v1.3. \Pub{} DocVQA is one of the academic datasets in ColPali's training data~\cite[\S4.2, App.~A.3]{colpali} \todo{verify in App.~A.3 / Table~3 (39,463 DocVQA pairs, read only from an extracted summary)}. The paper does not say which DocVQA split was used, and its contamination check covers multi-page PDFs only~\cite[\S4.2]{colpali}. \Int{} Training on DocVQA data favours ColPali against the zero-shot text baselines on this task. We did not check whether any test page also appears in the training set.
   \item \textbf{Small test set.} 225 queries; 17 visual queries. Per-type results are exploratory, and the confidence intervals are wide (about $\pm$0.06 nDCG@5 per system).
-  \item \textbf{Rank fusion only.} We did not try score-level convex combination with normalisation, which Bruch et al.\ found better than RRF~\cite{bruch}. \Int{} Per-query selection between the two rankings could gain at most \oracleGainPts{} nDCG@5 points (Section~\ref{sec:failure}). A score-level fusion is not bound by this and could in principle do better. The weighted RRF, which mostly reorders near-ties, has a test CI of \deltaCwCI{}, which rules out gains above about half a point for that variant. Whether score-level fusion behaves differently remains untested.
-  \item \textbf{Official BM25 preprocessing.} It drops stopwords such as ``no'' and non-alphanumeric tokens such as ``2-26''. We kept it for comparability with the paper. A code-preserving tokenizer is a separate, untested change.
+  \item \textbf{Fusion functions.} Our main analysis used rank fusion. Score-level convex combination and a code-preserving tokenizer were tested only post-hoc (Section~\ref{sec:posthoc}), with one normalisation (min-max) and one tokenizer design. Other score normalisations, learned fusion and query-dependent weights remain untested.
+  \item \textbf{Official BM25 preprocessing in the main run.} It drops stopwords such as ``no'' and non-alphanumeric tokens such as ``2-26''. We kept it for comparability with the paper; its effect was checked post-hoc (Section~\ref{sec:posthoc}).
   \item \textbf{Coarse query tags.} The rule-based tags miss rare lowercase terms and count generic capitalised labels as anchors.
   \item \textbf{Mixed hardware.} Resource numbers were measured on different devices (L4 GPU, M5 MPS, M5 CPU), so cross-system latency sums are indicative only.
   \item \textbf{Reproduction gap not isolated.} The \gapCardPts{}-point gap was not traced to a cause. We reproduced v1.3, not the paper's v1.0.
@@ -507,13 +533,13 @@ Even a per-query oracle that always picked the better of the two systems would r
 \paragraph{Conclusions.}
 \begin{itemize}
   \item \Mea{} ColPali's DocVQA result is reproducible with the authors' code and checkpoint (\fullB{} vs \pubCard{}).
-  \item \Mea{} Adding BM25 through RRF significantly \emph{hurts} it (\deltaC{} nDCG@5 on test). A dense-text control hurts equally. The best dev-tuned weighting only ties.
+  \item \Mea{} Adding BM25 through RRF significantly \emph{hurts} it (\deltaC{} nDCG@5 on test). A dense-text control hurts equally. The best dev-tuned weighting only ties. Post-hoc, score-level fusion selects ColPali alone on dev, and a better BM25 tokenizer improves BM25 but adds no query that ColPali misses.
   \item \Int{} On this task ColPali already reads the lexical anchors that BM25 depends on, and reads them better than Tesseract OCR does. Equal-weight rank fusion with a much weaker second ranking therefore mostly imports that ranking's errors. This is consistent with the conditions under which fusion is reported to fail in text IR~\cite{bruch}, and with the cases where text + visual fusion did help having clean text and comparably strong inputs~\cite{irpapers}.
 \end{itemize}
 
 \paragraph{Open questions.}
 \begin{itemize}
-  \item \Hyp{} A lexical signal should start to help when the page text improves (layout-aware or LLM-based OCR, a tokenizer that keeps codes), or on text-dense corpora where text retrieval is close to visual retrieval. Testing this needs a task where the headroom (``A only'' in Table~\ref{tab:headroom}) is large.
+  \item \Hyp{} A lexical signal should start to help when the page \emph{text} improves (layout-aware or LLM-based OCR), or on text-dense corpora. Improving the tokenizer alone did not create headroom (Section~\ref{sec:posthoc}), which points to the OCR text itself as the bottleneck. Either way, text retrieval would have to come close to visual retrieval. Testing this needs a task where the headroom (``A only'' in Table~\ref{tab:headroom}) is large.
   \item \Hyp{} On ViDoRe~V2, which reduces query--page lexical overlap by design~\cite{vidorev2}, fusion should help even less.
   \item Open: why does ColPali v1.3 use about \peakGPU{}\,GiB of GPU memory to encode pages?
 \end{itemize}

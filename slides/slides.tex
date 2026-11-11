@@ -263,6 +263,30 @@ query & ColPali & BM25 & C & why\\
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
+\begin{frame}{Post-hoc checks: is it the fusion function, or the tokenizer?}
+\small Pre-registered after the main test run (\texttt{cb332b7}); chosen on dev, test evaluated once --- \textbf{exploratory}.\\[6pt]
+\begin{columns}[T]
+\column{0.48\linewidth}
+\textbf{Score-level fusion} (Bruch et al.)\\[2pt]
+$\alpha\,\mathrm{mm}(\text{ColPali}) + (1-\alpha)\,\mathrm{mm}(\text{text})$
+\begin{itemize}
+  \item \Mea{} dev: every $\alpha<1$ below ColPali (best \devBestBelowOneCcc{} vs \devB{})
+  \item rule selects $\alpha = 1$ = ColPali alone, for BM25 \emph{and} BGE-M3
+  \item \Int{} not specific to rank fusion
+\end{itemize}
+\column{0.48\linewidth}
+\textbf{Code-preserving BM25 tokenizer}\\[2pt]
+keeps ``no'' and ``2-26''-style codes
+\begin{itemize}
+  \item \Mea{} BM25 \testA{} $\rightarrow$ \testAcode{} ($\Delta$ \deltaAcodeA{}, $p$ \pAcodeA{}); exact \typeexactA{} $\rightarrow$ \typeexactAcode{}
+  \item but BM25-only hits stay at \headAcodeOnly{}
+  \item RRF still hurts: $\Delta$ \deltaCcode{}, $p_\text{Holm}$ \pHolmCcode{}
+  \item \Int{} better BM25 only where ColPali is already right
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
 \begin{frame}{Cost: fusion is cheap --- quality is the obstacle}
 \centering
 {\scriptsize\input{../report/generated/tab_resources.tex}}
@@ -282,8 +306,8 @@ query & ColPali & BM25 & C & why\\
   \item One task (DocVQA), one OCR (Tesseract), one checkpoint (v1.3)
   \item \Pub{} DocVQA is in ColPali's training data (split not stated) --- favours ColPali vs zero-shot text baselines
   \item Test set: \nTest{} queries, only \nvisual{} visual --- wide CIs, per-type results exploratory
-  \item Rank fusion only; score-level convex combination untested (C$_w$ CI rules out gains $>$ 0.5 pt for weighted RRF)
-  \item Official BM25 preprocessing kept (drops ``no'', ``2-26'') for comparability
+  \item Score-level fusion and tokenizer tested only post-hoc, one design each (min-max; one tokenizer)
+  \item Main run keeps the official BM25 preprocessing (drops ``no'', ``2-26'') for comparability
   \item Resource numbers from three devices (L4, M5 MPS, M5 CPU)
   \item Reproduction gap (\gapCardPts{} pt) not traced to a cause
 \end{itemize}
@@ -293,14 +317,14 @@ query & ColPali & BM25 & C & why\\
 \begin{frame}{Conclusions and open questions}
 \begin{itemize}
   \item \Mea{} ColPali's DocVQA result reproduces with the authors' code and checkpoint.
-  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties.
+  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties; post-hoc, score-level fusion picks ColPali alone and a better tokenizer adds no headroom.
   \item \Int{} On DocVQA, ColPali already reads the lexical anchors BM25 needs --- better than Tesseract OCR does. Fusion with a much weaker ranking imports its errors.
   \item \Int{} Consistent with when fusion fails in text IR (unequal inputs) and when text + visual fusion helped (clean text, equal strength).
 \end{itemize}
 \vspace{0.4em}
 \textbf{Open} \Hyp{}
 \begin{itemize}
-  \item Fusion should help once the text channel improves (layout-aware / LLM OCR, code-preserving tokenizer) or on text-dense corpora.
+  \item Fusion should help once the OCR text itself improves (layout-aware / LLM OCR) or on text-dense corpora --- the tokenizer alone was not enough.
   \item On ViDoRe V2 (less lexical overlap by design), even less.
 \end{itemize}
 \end{frame}
