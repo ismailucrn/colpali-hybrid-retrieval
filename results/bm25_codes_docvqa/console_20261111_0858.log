@@ -1,0 +1,11 @@
+451 queries, 500 pages, 4 pages with empty OCR text
+
+full set: nDCG@5 = 0.4020  (paper, BM25 on Unstructured + OCR: 0.368; tokenizer: codes)
+Recall@5 = 0.4545  Recall@10 = 0.5144  nDCG@10 = 0.4215  MRR@10 = 0.3924
+dev (226 queries): nDCG@5 = 0.3989
+post-hoc, without 22 duplicated query texts: nDCG@5 = 0.4212
+queries with no tokens left after preprocessing: 0
+timings: {"data_load_s": 3.154, "index_pages_s": 0.038, "index_per_page_s": 0.0, "score_all_s": 0.05}
+latency per query (median): 0.09 ms; index: {'n_pages': 500, 'total_tokens': 73206, 'vocabulary_size': 18719, 'pickled_size_mb': 0.7793731689453125, 'note': 'pickled BM25Okapi object (term frequencies + idf) as a proxy for index size'}
+
+wrote /Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval/results/bm25_codes_docvqa/{scores.npz, metrics.json, per_query.csv}

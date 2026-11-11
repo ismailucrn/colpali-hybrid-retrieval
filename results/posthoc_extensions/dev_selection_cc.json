@@ -1,0 +1,132 @@
+{
+  "timestamp_utc": "2026-11-11T08:58:23+00:00",
+  "config_path": "configs/fusion_cc_docvqa.yaml",
+  "config": {
+    "colpali_scores": "results/colpali_v1.3_docvqa/scores.npz",
+    "systems": {
+      "C_cc": {
+        "name": "CC(BM25, ColPali)",
+        "text_scores": "results/bm25_docvqa/scores.npz"
+      },
+      "D_cc": {
+        "name": "CC(BGE-M3, ColPali)",
+        "text_scores": "results/bge_m3_docvqa/scores.npz"
+      }
+    },
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "convex_combination": {
+      "alpha_grid": [
+        0.0,
+        0.05,
+        0.1,
+        0.15,
+        0.2,
+        0.25,
+        0.3,
+        0.35,
+        0.4,
+        0.45,
+        0.5,
+        0.55,
+        0.6,
+        0.65,
+        0.7,
+        0.75,
+        0.8,
+        0.85,
+        0.9,
+        0.95,
+        1.0
+      ],
+      "normalization": "minmax_per_query",
+      "selection_metric": "ndcg_at_5",
+      "tie_break": "closest_to_half"
+    },
+    "output_dir": "results/posthoc_extensions"
+  },
+  "seed": 0,
+  "git_commit": "f23539fae9401ec1015cc378ae7de9cacb08026c",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": null,
+    "torch": null,
+    "transformers": null,
+    "peft": null,
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_cc_fusion_dev.py --config configs/fusion_cc_docvqa.yaml",
+  "dev_n_queries": 226,
+  "B_ColPali_dev": 0.5804297695980011,
+  "systems": {
+    "C_cc": {
+      "name": "CC(BM25, ColPali)",
+      "selected_alpha": 1.0,
+      "dev_ndcg_at_5": 0.5804297695980011,
+      "dev_curve": {
+        "0.0": 0.39952797246108834,
+        "0.05": 0.40959101278592985,
+        "0.1": 0.4152531458299516,
+        "0.15": 0.42217078737175145,
+        "0.2": 0.4261553289248317,
+        "0.25": 0.4338462160613675,
+        "0.3": 0.4444599280726981,
+        "0.35": 0.4499305467278094,
+        "0.4": 0.46036074203357213,
+        "0.45": 0.4758371925833641,
+        "0.5": 0.48593437950237256,
+        "0.55": 0.506532447941173,
+        "0.6": 0.529141116257669,
+        "0.65": 0.548342185188184,
+        "0.7": 0.5637502269545291,
+        "0.75": 0.569480653186885,
+        "0.8": 0.5716930425674159,
+        "0.85": 0.5740993423498888,
+        "0.9": 0.5713680318640045,
+        "0.95": 0.5753366966328486,
+        "1.0": 0.5804297695980011
+      }
+    },
+    "D_cc": {
+      "name": "CC(BGE-M3, ColPali)",
+      "selected_alpha": 1.0,
+      "dev_ndcg_at_5": 0.5804297695980011,
+      "dev_curve": {
+        "0.0": 0.23513474783191407,
+        "0.05": 0.2692694747266253,
+        "0.1": 0.299980722463783,
+        "0.15": 0.32354376005488783,
+        "0.2": 0.37665937499756225,
+        "0.25": 0.40585040202585815,
+        "0.3": 0.43958691442031184,
+        "0.35": 0.48161682956253826,
+        "0.4": 0.5235131298078145,
+        "0.45": 0.535196556180773,
+        "0.5": 0.5441534611065736,
+        "0.55": 0.5558995760102186,
+        "0.6": 0.5642930195401248,
+        "0.65": 0.5681123141975681,
+        "0.7": 0.5713784225730419,
+        "0.75": 0.5689983902838428,
+        "0.8": 0.5729225177494823,
+        "0.85": 0.5758818852314755,
+        "0.9": 0.5740103833385923,
+        "0.95": 0.5736249585477401,
+        "1.0": 0.5804297695980011
+      }
+    }
+  }
+}

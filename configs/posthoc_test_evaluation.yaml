@@ -35,8 +35,8 @@ systems:
   B:      {name: "B: ColPali v1.3",                        kind: single, scores: B, role: "baseline"}
   C:      {name: "C: RRF(BM25, ColPali) k=1",              kind: rrf, inputs: [A, B], k: 1, role: "reference (main run)"}
   C_code: {name: "C_code: RRF(A_code, ColPali) k=1",       kind: rrf, inputs: [A_code, B], k: 1, role: "post-hoc"}
-  C_cc:   {name: "C_cc: CC(BM25, ColPali)",                kind: cc, inputs: [B, A], alpha: null, role: "post-hoc"}
-  D_cc:   {name: "D_cc: CC(BGE-M3, ColPali)",              kind: cc, inputs: [B, BGE], alpha: null, role: "post-hoc control"}
+  C_cc:   {name: "C_cc: CC(BM25, ColPali)",                kind: cc, inputs: [B, A], alpha: 1.0, role: "post-hoc"}
+  D_cc:   {name: "D_cc: CC(BGE-M3, ColPali)",              kind: cc, inputs: [B, BGE], alpha: 1.0, role: "post-hoc control"}
 
 baseline: B
 compare_to_baseline: [C_cc, D_cc, C_code]          # Holm over these three

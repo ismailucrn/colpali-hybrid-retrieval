@@ -1,0 +1,49 @@
+
+C_cc CC(BM25, ColPali) — dev ndcg_at_5 by alpha (weight on ColPali)
+  alpha=0.0   0.3995
+  alpha=0.05  0.4096
+  alpha=0.1   0.4153
+  alpha=0.15  0.4222
+  alpha=0.2   0.4262
+  alpha=0.25  0.4338
+  alpha=0.3   0.4445
+  alpha=0.35  0.4499
+  alpha=0.4   0.4604
+  alpha=0.45  0.4758
+  alpha=0.5   0.4859
+  alpha=0.55  0.5065
+  alpha=0.6   0.5291
+  alpha=0.65  0.5483
+  alpha=0.7   0.5638
+  alpha=0.75  0.5695
+  alpha=0.8   0.5717
+  alpha=0.85  0.5741
+  alpha=0.9   0.5714
+  alpha=0.95  0.5753
+  alpha=1.0   0.5804   <- selected
+
+D_cc CC(BGE-M3, ColPali) — dev ndcg_at_5 by alpha (weight on ColPali)
+  alpha=0.0   0.2351
+  alpha=0.05  0.2693
+  alpha=0.1   0.3000
+  alpha=0.15  0.3235
+  alpha=0.2   0.3767
+  alpha=0.25  0.4059
+  alpha=0.3   0.4396
+  alpha=0.35  0.4816
+  alpha=0.4   0.5235
+  alpha=0.45  0.5352
+  alpha=0.5   0.5442
+  alpha=0.55  0.5559
+  alpha=0.6   0.5643
+  alpha=0.65  0.5681
+  alpha=0.7   0.5714
+  alpha=0.75  0.5690
+  alpha=0.8   0.5729
+  alpha=0.85  0.5759
+  alpha=0.9   0.5740
+  alpha=0.95  0.5736
+  alpha=1.0   0.5804   <- selected
+
+B ColPali dev ndcg_at_5: 0.5804
+wrote /Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval/results/posthoc_extensions/dev_selection_cc.json

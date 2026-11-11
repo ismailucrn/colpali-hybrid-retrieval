@@ -236,3 +236,17 @@ Chronological record of every run and decision. One entry per run or decision; n
 - Holm correction over C_cc, D_cc and C_code vs B.
 - Pairs: C_cc vs D_cc, A_code vs A, C_code vs C.
 - Top-5 headroom for A and A_code vs B.
+
+### 2026-11-11 — Post-hoc extensions on dev (test not touched)
+- Type: run (registry rows 33–34). Grid and rule as pre-registered in `cb332b7`.
+- **A_code** (code-preserving tokenizer, measured):
+  - full set nDCG@5 **0.4020**, vs A's 0.3907;
+  - dev 0.3989, vs A's 0.3995;
+  - no query is left without tokens (A: 2).
+  - Index: 18,719 terms, vs 14,573 for A.
+- **Convex combination on dev** (measured, B = 0.5804):
+  - Every alpha < 1 is below ColPali, for both text retrievers.
+  - Best alpha < 1: C_cc 0.5753 (alpha 0.95), D_cc 0.5759 (alpha 0.85).
+  - The rule selects **alpha = 1.0 (ColPali alone) for both**.
+  - The pre-registered hypothesis (alpha ≥ 0.8) holds in its strongest form: dev concludes "no fusion".
+- **Frozen for the post-hoc test run:** C_cc alpha = 1.0, D_cc alpha = 1.0 (both therefore identical to B on test by construction); C_code = RRF(A_code, B), k = 1.
