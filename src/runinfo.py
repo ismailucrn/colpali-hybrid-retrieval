@@ -1,4 +1,8 @@
-"""Device selection, timing/memory measurement and run metadata shared by all scripts."""
+"""Device selection, timing/memory measurement and run metadata shared by all scripts.
+
+torch is imported lazily, so the CPU-only scripts (BM25, fusion, statistics, analysis, figures)
+run without it; only the model scripts (ColPali, BGE-M3, smoke test) need torch.
+"""
 
 from __future__ import annotations
 
@@ -10,8 +14,10 @@ import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import torch
+if TYPE_CHECKING:
+    import torch
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
@@ -27,9 +33,16 @@ TRACKED_PACKAGES = [
 ]
 
 
+def _torch():
+    import torch
+
+    return torch
+
+
 def get_device(requested: str = "auto") -> str:
     if requested != "auto":
         return requested
+    torch = _torch()
     if torch.cuda.is_available():
         return "cuda"
     if torch.backends.mps.is_available():
@@ -39,6 +52,7 @@ def get_device(requested: str = "auto") -> str:
 
 def resolve_dtype(requested: str, device: str) -> torch.dtype:
     """bfloat16 is what the authors use; fall back to float16 on GPUs without native bf16 (e.g. T4, P100)."""
+    torch = _torch()
     if requested != "auto":
         return getattr(torch, requested)
     if device == "cuda":
@@ -51,9 +65,9 @@ def resolve_dtype(requested: str, device: str) -> torch.dtype:
 
 def synchronize(device: str) -> None:
     if device == "cuda":
-        torch.cuda.synchronize()
+        _torch().cuda.synchronize()
     elif device == "mps":
-        torch.mps.synchronize()
+        _torch().mps.synchronize()
 
 
 class Timer:
@@ -84,15 +98,16 @@ class MemoryTracker:
         self.device = device
         self._mps_peak = 0
         if device == "cuda":
-            torch.cuda.reset_peak_memory_stats()
+            _torch().cuda.reset_peak_memory_stats()
 
     def sample(self) -> None:
         if self.device == "mps":
-            self._mps_peak = max(self._mps_peak, torch.mps.driver_allocated_memory())
+            self._mps_peak = max(self._mps_peak, _torch().mps.driver_allocated_memory())
 
     def report(self) -> dict:
         mb = 1024**2
         if self.device == "cuda":
+            torch = _torch()
             return {
                 "peak_allocated_mb": torch.cuda.max_memory_allocated() / mb,
                 "peak_reserved_mb": torch.cuda.max_memory_reserved() / mb,
@@ -127,6 +142,7 @@ def _package_versions() -> dict:
 def _hardware(device: str) -> dict:
     info = {"device": device, "platform": platform.platform(), "processor": platform.processor()}
     if device == "cuda":
+        torch = _torch()
         info["gpu_name"] = torch.cuda.get_device_name(0)
         info["gpu_total_memory_mb"] = torch.cuda.get_device_properties(0).total_memory / 1024**2
         info["cuda_version"] = torch.version.cuda

@@ -242,6 +242,9 @@ def main() -> None:
     table("tab_headroom", "lrrrrrr",
           r"Tag ($n$) & B hit & A hit & A only & B only & neither & A or B", rows,
           "Test split; hit = gold page in the top 5. ``A only'' bounds what any fusion of A and B could gain at cut-off 5.")
+    SO = fa["selection_oracle_ndcg_at_5"]["all"]
+    N.update({"oracleNDCG": f3(SO["oracle_max_A_B_ndcg_at_5"]), "oracleGainPts": f"{100 * SO['gain']:+.1f}",
+              "oracleAbetter": str(SO["queries_A_better_than_B"])})
     C = fa["C_vs_B"]
     N.update({"cWins": str(C["wins"]), "cLosses": str(C["losses"]),
               "cLossBMmissed": str(C["loss_mechanism"]["BM25 missed (gold > 5)"]),

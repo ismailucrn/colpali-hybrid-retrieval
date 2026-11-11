@@ -1,0 +1,36 @@
+# 2026-11-11T07:10:13Z commit 2f8338b (+ uncommitted audit fixes)
+$ python scripts/make_report_tables.py  (torch-free venv)
+wrote 129 macros and 7 tables to report/generated
+exit 0
+$ cd report && tectonic main.tex
+note: Running TeX ...
+warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
+warning: main.tex:267: Underfull \hbox (badness 10000) in paragraph at lines 266--267
+warning: main.tex:269: Underfull \hbox (badness 1194) in paragraph at lines 268--269
+warning: main.tex:527: Overfull \hbox (5.92386pt too wide) in paragraph at lines 526--527
+note: Rerunning TeX because "main.aux" changed ...
+warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
+warning: main.tex:267: Underfull \hbox (badness 10000) in paragraph at lines 266--267
+warning: main.tex:269: Underfull \hbox (badness 1194) in paragraph at lines 268--269
+warning: main.tex:527: Overfull \hbox (5.92386pt too wide) in paragraph at lines 526--527
+warning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.
+note: Running xdvipdfmx ...
+note: Writing `main.pdf` (297.0966796875 KiB)
+note: Skipped writing 2 intermediate files (use --keep-intermediates to keep them)
+Pages:           18
+$ rebuild after replacing § with \S (glyph bug)
+note: Running TeX ...
+warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
+warning: main.tex:267: Underfull \hbox (badness 10000) in paragraph at lines 266--267
+warning: main.tex:269: Underfull \hbox (badness 1194) in paragraph at lines 268--269
+warning: main.tex:527: Overfull \hbox (5.92386pt too wide) in paragraph at lines 526--527
+note: Rerunning TeX because "main.out" changed ...
+warning: lineno.sty:296: Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
+warning: main.tex:267: Underfull \hbox (badness 10000) in paragraph at lines 266--267
+warning: main.tex:269: Underfull \hbox (badness 1194) in paragraph at lines 268--269
+warning: main.tex:527: Overfull \hbox (5.92386pt too wide) in paragraph at lines 526--527
+warning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.
+note: Running xdvipdfmx ...
+note: Writing `main.pdf` (297.1953125 KiB)
+note: Skipped writing 2 intermediate files (use --keep-intermediates to keep them)
+Pages:           18

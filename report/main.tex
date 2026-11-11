@@ -213,7 +213,7 @@ Single RTX 3090; ColPali 12.9\,GB vs BM25 0.04\,GB. &
 \section{Technical explanation of the method}
 \label{sec:method}
 
-\paragraph{ColPali encoding.} \Pub{}~\cite[§2.2, §4.1]{colpali}
+\paragraph{ColPali encoding.} \Pub{}~\cite[\S2.2, \S4.1]{colpali}
 \begin{itemize}
   \item A page image is resized to 448$\times$448 and split into patches by the SigLIP vision encoder. The patch embeddings are fed, together with a short text prompt, through the Gemma-2B language model of PaliGemma-3B.
   \item Every output token is projected to $D = 128$ and L2-normalised, so a page becomes a matrix $E_d \in \mathbb{R}^{n_d \times 128}$. \Mea{} With checkpoint v1.3 we measured $n_d = 1031$ vectors per page: 515,500 vectors and \sizeB{}\,MB in bf16 for the corpus.
@@ -288,7 +288,7 @@ BM25 (\fullA{} vs \pubBMtwentyfive{}) and BGE-M3 (\fullBGE{} vs \pubBGE{}) are c
   \item \textbf{Checkpoint.} v1.3 instead of v1.0. The reproduction is checked against the v1.3 model card. The paper's 54.4 is context only.
   \item \textbf{Scope.} One of the ten ViDoRe~v1 tasks; no claim about the others.
   \item \textbf{Page text for BM25/BGE-M3.} The paper used the Unstructured pipeline with Tesseract OCR and chunking, with a page's score taken as the max over its chunks. We use the OCR text the authors released with the benchmark (\texttt{\_tesseract} variant@\texttt{9a183a7}), one ``chunk'' per page. Whether this is the same text is unverified.
-  \item \textbf{Hardware and libraries.} NVIDIA L4, bf16, current library versions. The authors' evaluation hardware is \todo{verify in the paper}. BGE-M3 ran on an Apple M5 (MPS, fp16) with passage length set explicitly to 8192 tokens; FlagEmbedding's default changed from 8192 to 512 between versions.
+  \item \textbf{Hardware and libraries.} NVIDIA L4, bf16, current library versions. \Pub{} The authors report their latency and indexing measurements on an NVIDIA L4~\cite[\S3.2, \S5.2]{colpali} and trained on 8 GPUs of unstated type~\cite[\S4.2]{colpali}; the hardware behind the reported nDCG values is not stated. BGE-M3 ran on an Apple M5 (MPS, fp16) with passage length set explicitly to 8192 tokens; FlagEmbedding's default changed from 8192 to 512 between versions.
   \item \textbf{Query set.} The reproduction uses the full set. The fusion experiments use a dev/test split (Section~\ref{sec:design}), so their confidence intervals are wider.
 \end{itemize}
 \Int{} The published-vs-measured comparison holds for System~B, with the caveats above. All fusion comparisons (A--E) are run by us under identical conditions, so they do not depend on matching the published environment.
@@ -327,7 +327,7 @@ D replaces BM25 with BGE-M3 dense vectors over \emph{the same} OCR text and corp
 
 \paragraph{Data.}
 ViDoRe~v1 DocVQA (\texttt{vidore/docvqa\_test\_subsampled}@\texttt{49bf8f1}): \nPages{} scanned document pages and \nQueries{} unique questions, official protocol (Section~\ref{sec:repro}). Page text comes from the \texttt{\_tesseract} variant@\texttt{9a183a7}. \Mea{} 4 pages have empty OCR text; the median page has 134 words.
-The DocVQA license is \todo{check the dataset terms}. The repository contains no data; scripts download it from the Hugging Face Hub at pinned revisions.
+Licensing (checked 11~Nov 2026): \texttt{vidore/docvqa\_test\_subsampled} is tagged MIT on its Hugging Face card; the \texttt{\_tesseract} variant states no license; the original DocVQA pages state no license and say the images come from the UCSF Industry Documents Library. Users should respect those sources' terms. The repository contains no data; scripts download it from the Hugging Face Hub at pinned revisions.
 
 \paragraph{Query types (frozen before any fusion run).}
 Tags are assigned automatically from the query text only (\file{src/query\_types.py}, \file{docs/query\_tagging.md}), in order of precedence:
@@ -452,7 +452,7 @@ All analyses on the test split are post-hoc and descriptive (\file{scripts/failu
 \end{table}
 
 \paragraph{Headroom.} \Mea{} ColPali has the gold page in its top 5 for \hitB{} test queries and BM25 for \hitA{}. BM25 succeeds where ColPali fails on only \headallAnotB{} queries, none of them exact-match. The reverse happens on \headallBnotA{} (Table~\ref{tab:headroom}, Figure~\ref{fig:fail}, top).
-Even an oracle that always picked the right system would reach \oracle{} hits instead of \hitB{}.
+Even a per-query oracle that always picked the better of the two systems would reach \oracle{} top-5 hits instead of \hitB{}, and nDCG@5 \oracleNDCG{} instead of \testB{} (\oracleGainPts{} points; BM25 has the higher nDCG@5 on only \oracleAbetter{} queries). These bounds apply to choosing one system per query. They do not bound every fusion function: a fusion can in principle rank the gold page higher than either input does.
 \Int{} BM25's successes are almost a subset of ColPali's, so fusion has almost nothing to gain and a lot to lose. This explains P1 and P3.
 
 \paragraph{How C loses.} \Mea{} In \cLossBMmissed{} of C's \cLosses{} losses, BM25 had missed the gold page. Its wrong top pages were pulled above ColPali's correct one, typically moving the gold page from rank~1 to rank~2--5.
@@ -494,9 +494,9 @@ Even an oracle that always picked the right system would reach \oracle{} hits in
 
 \paragraph{Limitations.}
 \begin{itemize}
-  \item \textbf{One task, one OCR, one checkpoint.} All conclusions are about ViDoRe~v1 DocVQA with the benchmark's Tesseract text and ColPali~v1.3. \Int{} DocVQA's training split is part of ColPali's training data, which favours ColPali against zero-shot text baselines on this task~\cite[§4.2]{colpali}.
+  \item \textbf{One task, one OCR, one checkpoint.} All conclusions are about ViDoRe~v1 DocVQA with the benchmark's Tesseract text and ColPali~v1.3. \Pub{} DocVQA is one of the academic datasets in ColPali's training data~\cite[\S4.2, App.~A.3]{colpali} \todo{verify in App.~A.3 / Table~3 (39,463 DocVQA pairs, read only from an extracted summary)}. The paper does not say which DocVQA split was used, and its contamination check covers multi-page PDFs only~\cite[\S4.2]{colpali}. \Int{} Training on DocVQA data favours ColPali against the zero-shot text baselines on this task. We did not check whether any test page also appears in the training set.
   \item \textbf{Small test set.} 225 queries; 17 visual queries. Per-type results are exploratory, and the confidence intervals are wide (about $\pm$0.06 nDCG@5 per system).
-  \item \textbf{Rank fusion only.} We did not try score-level convex combination with normalisation, which Bruch et al.\ found better than RRF~\cite{bruch}. \Int{} The headroom analysis bounds any fusion of these two rankings at cut-off 5, at \headallAnotB{} extra hits, so a better fusion function cannot change the conclusion much.
+  \item \textbf{Rank fusion only.} We did not try score-level convex combination with normalisation, which Bruch et al.\ found better than RRF~\cite{bruch}. \Int{} Per-query selection between the two rankings could gain at most \oracleGainPts{} nDCG@5 points (Section~\ref{sec:failure}). A score-level fusion is not bound by this and could in principle do better. The weighted RRF, which mostly reorders near-ties, has a test CI of \deltaCwCI{}, which rules out gains above about half a point for that variant. Whether score-level fusion behaves differently remains untested.
   \item \textbf{Official BM25 preprocessing.} It drops stopwords such as ``no'' and non-alphanumeric tokens such as ``2-26''. We kept it for comparability with the paper. A code-preserving tokenizer is a separate, untested change.
   \item \textbf{Coarse query tags.} The rule-based tags miss rare lowercase terms and count generic capitalised labels as anchors.
   \item \textbf{Mixed hardware.} Resource numbers were measured on different devices (L4 GPU, M5 MPS, M5 CPU), so cross-system latency sums are indicative only.
@@ -567,14 +567,14 @@ The author chose the topic, task, checkpoint, control model and every pre-regist
 
 % =====================================================================================================
 \begin{thebibliography}{99}\small
-\bibitem{colpali} M.~Faysse, H.~Sibille, T.~Wu, B.~Omrani, G.~Viaud, C.~Hudelot, P.~Colombo. ColPali: Efficient Document Retrieval with Vision Language Models. arXiv:2407.01449v6, 2025. \todo{verify venue (ICLR 2025?)}
+\bibitem{colpali} M.~Faysse, H.~Sibille, T.~Wu, B.~Omrani, G.~Viaud, C.~Hudelot, P.~Colombo. ColPali: Efficient Document Retrieval with Vision Language Models. arXiv:2407.01449v6, 2025.
 \bibitem{colbert} O.~Khattab, M.~Zaharia. ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT. SIGIR 2020. doi:10.1145/3397271.3401075.
 \bibitem{dse} X.~Ma, S.-C.~Lin, M.~Li, W.~Chen, J.~Lin. Unifying Multimodal Retrieval via Document Screenshot Embedding. EMNLP 2024 (arXiv:2406.11251v2).
 \bibitem{vidorev2} Q.~Macé, A.~Loison, M.~Faysse. ViDoRe Benchmark V2: Raising the Bar for Visual Retrieval. arXiv:2505.17166v2, 2025.
 \bibitem{cormack} G.~V.~Cormack, C.~L.~A.~Clarke, S.~Büttcher. Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods. SIGIR 2009. doi:10.1145/1571941.1572114.
-\bibitem{bruch} S.~Bruch, S.~Gai, A.~Ingber. An Analysis of Fusion Functions for Hybrid Retrieval. arXiv:2210.11934v2, 2023 (related DOI 10.1145/3596512). \todo{verify venue}
+\bibitem{bruch} S.~Bruch, S.~Gai, A.~Ingber. An Analysis of Fusion Functions for Hybrid Retrieval. ACM Transactions on Information Systems 42(1):1--35, 2024. doi:10.1145/3596512 (arXiv:2210.11934v2).
 \bibitem{irpapers} C.~Shorten, A.~Skaburskas, D.~M.~Jones, C.~Pierse, R.~Esposito, J.~Trengrove, E.~Dilocker, B.~van~Luijt. irpapers: A Visual Document Benchmark for Scientific Retrieval and Question Answering. arXiv:2602.17687v1, 2026.
-\bibitem{slides} P.~S.~Giouroukis, D.~Dimitriadis, D.~Papadopoulos, Z.~Shao, G.~Tsoumakas. What's the Best Way to Retrieve Slides? A Comparative Study of Multimodal, Caption-Based, and Hybrid Retrieval Techniques. arXiv:2509.15211v1, 2025. \todo{verify venue}
+\bibitem{slides} P.~S.~Giouroukis, D.~Dimitriadis, D.~Papadopoulos, Z.~Shao, G.~Tsoumakas. What's the Best Way to Retrieve Slides? A Comparative Study of Multimodal, Caption-Based, and Hybrid Retrieval Techniques. arXiv:2509.15211v1, 2025.
 \bibitem{lostocr} A.~Most, J.~Winjum, A.~Biswas, S.~Jones, N.~R.~Ranasinghe, D.~O'Malley, M.~Bhattarai. Lost in OCR Translation? Vision-Based Approaches to Robust Document Retrieval. ACM DocEng 2025 (arXiv:2505.05666v1).
 \bibitem{beir} N.~Thakur, N.~Reimers, A.~Rücklé, A.~Srivastava, I.~Gurevych. BEIR: A Heterogenous Benchmark for Zero-shot Evaluation of Information Retrieval Models. NeurIPS 2021 Datasets and Benchmarks.
 \bibitem{visrag} S.~Yu, C.~Tang, B.~Xu, J.~Cui, J.~Ran, Y.~Yan, Z.~Liu, S.~Wang, X.~Han, Z.~Liu, M.~Sun. VisRAG: Vision-based Retrieval-augmented Generation on Multi-modality Documents. arXiv:2410.10594v2, 2025.

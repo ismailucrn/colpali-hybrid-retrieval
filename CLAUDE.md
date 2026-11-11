@@ -126,15 +126,12 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 - `vidore/docvqa_test_subsampled`: 500 (query, page) rows; `_beir` variant: 500 corpus pages, 451 queries, qrels.
 - GPU environment: Google Colab (free T4) chosen first; user's Mac (Apple M5, 16 GB) is a possible MPS alternative, untested.
 
-## Current status (as of 3 November 2026)
+## Current status (as of 11 November 2026)
 
-- GitHub repo connected; skeleton (folders, README, MIT LICENSE, docs templates) pushed on 3 November. The assignment PDF is kept local only (gitignored).
-- Smoke test passed on Colab L4 (3 November). Task chosen: **ViDoRe v1 DocVQA** (3 November).
-- **Test run done (4 November):** fusion does not beat ColPali; equal-weight RRF hurts significantly. See `docs/experiment_log.md`.
-- **BGE-M3 measured (4 November):** nDCG@5 = 0.2486 (full set).
-- **System A measured (4 November):** BM25 nDCG@5 = 0.3907 (full set).
-- **System B reproduced (3 November):** ColPali v1.3 nDCG@5 = 0.5752 measured vs 0.5845 model card (−0.93 pt); scores saved in `results/colpali_v1.3_docvqa/scores.npz`.
-- About 2 weeks left → plan compressed: ablation E reduced to RRF `k` sensitivity; control D is kept (main source of rigor).
+- **All experiments done and committed** (3–6 Nov): B reproduced (nDCG@5 0.5752 vs model card 0.5845, −0.94 pt; the exact gap is −0.935, an earlier note said −0.93), A 0.3907, BGE-M3 0.2486 (full set); single test run: fusion does not beat ColPali (C −5.4 pt, p_Holm 0.0006; C ≈ D; C_w +0.08 pt, n.s.); failure analysis and figures.
+- **Literature matrix** (6 Nov) and **report draft** (7 Nov, `report/main.pdf`) written.
+- **Audit 11 Nov:** a fresh clone reproduces every quality metric and figure exactly (`scripts/checks/reproduce_cpu_pipeline.sh`). Fixed: README rewritten; torch no longer needed by the CPU scripts (`requirements-cpu.txt`); two over-strong report claims corrected (DocVQA split in ColPali's training data is not stated; the headroom bound applies to per-query selection, not to every fusion — selection-oracle nDCG@5 added to the failure analysis); verifiable report TODOs resolved (Bruch et al. venue, DocVQA licensing, paper hardware).
+- **Open:** report TODOs that need the user (name/ID, ±2 tolerance confirmation, literature cell checks, App. A.3 count, AI-use self-verification, tag hash); presentation; `v1.0-submission` tag after the final edits.
 
 ## Timeline (compressed, from 3 November)
 

@@ -2,7 +2,8 @@
 
 Questions:
   1. Headroom: how often does BM25 find the gold page when ColPali misses it (an upper bound on what
-     fusion could gain), and how often is it the other way round (what fusion can lose)?
+     per-query selection between the two could gain at cut-off 5), and how often is it the other way
+     round (what fusion can lose)? Plus the selection-oracle nDCG@5 (better of A and B per query).
   2. Rank transitions: where do the gold pages move when ColPali is fused with BM25 (C, C_w)?
   3. Mechanism: does lexical overlap between query and gold-page OCR text explain when BM25 succeeds?
   4. Concrete examples: every query where C or C_w differs from B, with ranks from each system.
@@ -86,6 +87,17 @@ def main() -> None:
             "oracle_A_or_B_hit": sum(hit("A", q) or hit("B", q) for q in qs),
         }
 
+    # 1b. Selection oracle on nDCG@5 (added 2026-11-11, post-hoc): per query, take the better of A and B.
+    # The headroom counts above only bound which pages enter the top 5; nDCG@5 can also change by
+    # reordering inside the top 5, so this is the matching bound for per-query system selection.
+    # It is NOT a bound on every fusion function (a fusion can in principle beat both inputs on a query).
+    selection_oracle = {}
+    for group, qs in {"all": test, **{t: [q for q in test if tags[q] == t] for t in TAGS}}.items():
+        b = float(np.mean([ndcg["B"][q] for q in qs]))
+        o = float(np.mean([max(ndcg["A"][q], ndcg["B"][q]) for q in qs]))
+        selection_oracle[group] = {"n": len(qs), "B_ndcg_at_5": b, "oracle_max_A_B_ndcg_at_5": o, "gain": o - b,
+                                   "queries_A_better_than_B": sum(ndcg["A"][q] > ndcg["B"][q] for q in qs)}
+
     # 2. Rank transitions B -> C and B -> C_w.
     transitions = {}
     for s in ("C", "C_w", "D"):
@@ -154,14 +166,15 @@ def main() -> None:
     (out / "examples.md").write_text("\n".join(md) + "\n")
 
     record = collect_metadata({}, "none", "cpu", 0)
-    record.update({"n_test": len(test), "headroom_at_5": headroom, "rank_transitions": transitions,
+    record.update({"n_test": len(test), "headroom_at_5": headroom, "selection_oracle_ndcg_at_5": selection_oracle,
+                   "rank_transitions": transitions,
                    "lexical_overlap": overlap_stats, "hit_rate_by_overlap": by_overlap,
                    "C_vs_B": {"wins": len(c_wins), "losses": len(c_losses), "loss_tags": dict(loss_types),
                               "loss_mechanism": dict(loss_mech)},
                    "C_w_changed_queries": len(cw_changed)})
     (out / "analysis.json").write_text(json.dumps(record, indent=2, ensure_ascii=False))
 
-    print(json.dumps({k: record[k] for k in ("headroom_at_5", "rank_transitions", "lexical_overlap",
+    print(json.dumps({k: record[k] for k in ("headroom_at_5", "selection_oracle_ndcg_at_5", "rank_transitions", "lexical_overlap",
                                               "hit_rate_by_overlap", "C_vs_B", "C_w_changed_queries")}, indent=1))
     print(f"wrote {out}/{{analysis.json, changed_queries.csv, examples.md}}")
 

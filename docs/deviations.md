@@ -7,9 +7,9 @@ Every difference between our setup and the ColPali paper (arXiv 2407.01449), and
 | 1 | Checkpoint | `vidore/colpali` (v1.0): DocVQA nDCG@5 54.4 (Table 2, arXiv v6) | `vidore/colpali-v1.3` @ `b5c6dd6` (model-card DocVQA nDCG@5 0.5845) | v1.0 is marked not supported in colpali-engine 0.3.18 | reproduction is checked against the v1.3 model-card score (authors' self-reported, not peer-reviewed); the paper's 54.4 is context only |
 | 2 | Task / subset | ViDoRe v1, 10 tasks | DocVQA only (`vidore/docvqa_test_subsampled`, 500 pages, 451 unique queries) | scope: one task done well | no claim about the other tasks |
 | 3 | Query set | full task query set (451 deduplicated queries) | full set for reproduction; dev/test split for fusion experiments | tuning requires a held-out dev set | reproduction comparable; fusion results are on a subset (wider CIs) |
-| 4 | Hardware / precision | *(to verify)* | NVIDIA L4 (Colab Pro), bf16 | available GPU | precision matches the authors' README examples (bf16); hardware differs |
+| 4 | Hardware / precision | latency and indexing measured on an NVIDIA L4 (§3.2, §5.2); training on 8 GPUs, type not stated (§4.2); hardware for the reported nDCG not stated (checked 2026-11-11) | NVIDIA L4 (Colab Pro), bf16 | available GPU | precision matches the authors' README examples (bf16); hardware differs |
 | 5 | Page text for BM25 | Unstructured (layout detection + Tesseract OCR); BM25 nDCG@5 36.8 | `vidore/docvqa_test_subsampled_tesseract` `text_description` *(whether identical to the paper's pipeline: unverified)* | released by the authors; no own OCR needed | measured 0.3907 vs 36.8: comparable in kind (same BM25 code and parameters as the benchmark), not in input text |
-| 6 | Library versions | *(to verify)* | colpali-engine 0.3.18, transformers 5.22.0, torch 2.11.0 | latest release; the paper predates these | small numerical differences possible; to check against published scores |
+| 6 | Library versions | not stated in §1–7 (appendices not checked) | colpali-engine 0.3.18, transformers 5.22.0, torch 2.11.0 | latest release; the paper predates these | small numerical differences possible; to check against published scores |
 
 ## Which comparisons still hold
 

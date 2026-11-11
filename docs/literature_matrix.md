@@ -90,7 +90,8 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
 - **Data and protocol.**
   - [P, §4.2] Training: 118,695 query–page pairs, 63 % from academic datasets and 37 % synthetic (Claude-3 Sonnet questions on web-crawled PDFs). The authors checked that no multi-page PDF appears in both ViDoRe and the training set.
   - [P, §3.1, Table 1] ViDoRe V1 has five academic tasks (DocVQA 500/500, InfoVQA, TAT-DQA, arXivQA, TabFQuAD) and five practical tasks (100 queries / 1000 pages each). Main metric: nDCG@5.
-  - [I] The overlap check covers *multi-page PDFs*. It does not obviously cover the single-page academic sets such as DocVQA, whose *train* split is part of the training data. This is train/test from the same distribution, not a leak, but it favours ColPali on DocVQA relative to zero-shot text baselines.
+  - [I] The overlap check covers *multi-page PDFs*. It does not obviously cover the single-page academic sets such as DocVQA. DocVQA is one of the academic training datasets (App. A.3, Table 3: 39,463 pairs (unverified: read only from an extracted summary)); **which DocVQA split was used is not stated** (paper and the `vidore/colpali_train_set` card, checked 2026-11-11). Training on DocVQA data favours ColPali on DocVQA relative to zero-shot text baselines; test-page overlap was not checked.
+  - *Correction 2026-11-11:* an earlier version of this cell said DocVQA's *train* split is used; that was not verified and has been replaced.
 - **Baselines and evidence.**
   - [P, §3.2] Text pipelines are built with "Unstructured" (text-only, + OCR, + captioning) and embedded with BM25 or BGE-M3. A page's score is the max over its chunks.
   - [P, Table 2] DocVQA column (nDCG@5):
@@ -241,7 +242,7 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
 
 ### 3.6 Fusion functions for hybrid retrieval — Bruch, Gai, Ingber
 
-*Citation:* "An Analysis of Fusion Functions for Hybrid Retrieval", arXiv 2210.11934v2 (4 May 2023). Related DOI 10.1145/3596512 (ACM TOIS is (unverified)).
+*Citation:* "An Analysis of Fusion Functions for Hybrid Retrieval", arXiv 2210.11934v2 (4 May 2023). Published in ACM Transactions on Information Systems 42(1):1–35, 2024, doi:10.1145/3596512 (Crossref record checked 2026-11-11).
 *Read:* https://arxiv.org/abs/2210.11934 and the HTML v2 (§1–4.1 and §4.2–7 verbatim). Appendices B–D were not read.
 
 - **Question and contribution.** [P, §1]
@@ -421,4 +422,6 @@ Our experiment fills this gap for one task (ViDoRe V1 DocVQA). It uses:
 - On ViDoRe V2, which reduces query–page lexical overlap by design, fusion should help even less.
 
 ### Items to verify before citing
-ColPali venue and App. B.4 latency numbers; Bruch et al. venue (TOIS?); DSE App. A.2 fusion method and setting; slide-study venue; IRPAPERS §4–5 (fusion table, k, significance); VisRAG Table 2.
+ColPali venue (dblp/OpenReview blocked on 2026-11-11; cited as arXiv v6) and App. A.3 Table 3 (DocVQA pair count, split) and App. B.4 latency numbers; DSE App. A.2 fusion method and setting; slide-study venue (no Crossref record found on 2026-11-11; cited as arXiv); IRPAPERS §4–5 (fusion table, k, significance); VisRAG Table 2.
+
+*Resolved 2026-11-11:* Bruch et al. — ACM TOIS 42(1):1–35, 2024 (Crossref, doi:10.1145/3596512). DocVQA licensing — see `README.md` (Data access).

@@ -1,24 +1,24 @@
 {
-  "timestamp_utc": "2026-11-06T07:14:13+00:00",
+  "timestamp_utc": "2026-11-11T07:06:20+00:00",
   "config_path": "none",
   "config": {},
   "seed": 0,
-  "git_commit": "658dbd112edf60157e82758bce82a9247c7a0f4c",
+  "git_commit": "2f8338b5b138ad1cce8875aca329fcba60af8139",
   "git_dirty": true,
   "python": "3.11.16",
   "packages": {
-    "colpali-engine": "0.3.18",
-    "torch": "2.13.0",
-    "transformers": "5.22.1",
-    "peft": "0.20.0",
-    "datasets": "5.1.0",
-    "huggingface-hub": "2.4.0",
-    "pillow": "13.0.0",
+    "colpali-engine": null,
+    "torch": null,
+    "transformers": null,
+    "peft": null,
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
     "numpy": "2.4.6"
   },
   "hardware": {
     "device": "cpu",
-    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "platform": "macOS-27.2-arm64-arm-64bit",
     "processor": "arm"
   },
   "command": "scripts/failure_analysis.py",
@@ -59,6 +59,36 @@
       "B_hit_A_miss (risk)": 5,
       "both_miss": 10,
       "oracle_A_or_B_hit": 7
+    }
+  },
+  "selection_oracle_ndcg_at_5": {
+    "all": {
+      "n": 225,
+      "B_ndcg_at_5": 0.5698845531501103,
+      "oracle_max_A_B_ndcg_at_5": 0.5877516853125682,
+      "gain": 0.017867132162457833,
+      "queries_A_better_than_B": 10
+    },
+    "exact": {
+      "n": 93,
+      "B_ndcg_at_5": 0.8334165941373893,
+      "oracle_max_A_B_ndcg_at_5": 0.8413535886842399,
+      "gain": 0.007936994546850595,
+      "queries_A_better_than_B": 2
+    },
+    "general": {
+      "n": 115,
+      "B_ndcg_at_5": 0.39090801475525816,
+      "oracle_max_A_B_ndcg_at_5": 0.4194468342656576,
+      "gain": 0.028538819510399438,
+      "queries_A_better_than_B": 8
+    },
+    "visual": {
+      "n": 17,
+      "B_ndcg_at_5": 0.33893291218487737,
+      "oracle_max_A_B_ndcg_at_5": 0.33893291218487737,
+      "gain": 0.0,
+      "queries_A_better_than_B": 0
     }
   },
   "rank_transitions": {

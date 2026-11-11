@@ -1,0 +1,14 @@
+# CPU-only subset of requirements.txt: enough for BM25, the split, fusion, the test evaluation,
+# failure analysis, figures, report tables and the tests. No torch, no model download.
+# Tested 2026-11-11 on macOS (Apple M5), Python 3.11.16, in a fresh venv without torch
+# (results/checks/20261111_070626_pytest_no_torch.log).
+datasets==4.8.5
+huggingface-hub==1.33.0
+numpy==2.4.6
+pillow==11.3.0
+pyyaml==6.0.3
+pytrec-eval-terrier==0.5.11
+pytest==8.4.2
+rank-bm25==0.2.2
+nltk==3.10.4
+matplotlib==3.11.2

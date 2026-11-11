@@ -184,3 +184,17 @@ Chronological record of every run and decision. One entry per run or decision; n
 - **Favourable examples (C vs B, all 9):** mostly small corrections from ColPali rank 2 to rank 1 when BM25 is also right ("Who is from Indiana?", "what is the project number?", "When is the remittance due?"); two larger rescues: "What is the name of the laboratory?" (ColPali 14 → C 4) and "How many bullet points are there?" (ColPali 136 → C 4, BM25 2).
 - C_w (weighted) changes only 5 queries relative to ColPali (2 better, 3 worse) — with w = 0.95 BM25 can only break near-ties.
 - *Interpretation for the report:* the pre-registered hypothesis assumed ColPali is weak on lexical-match queries; on DocVQA the opposite holds — ColPali is strongest there, and the lexical signal is weakest exactly where OCR and tokenisation damage the anchors (codes with hyphens, "No.", OCR misreads, empty OCR). Open question (untested): a better text channel (layout-aware OCR, a tokenizer that keeps codes) might raise BM25's headroom above 3 queries.
+
+### 2026-11-11 — Audit before submission; selection-oracle bound; two report claims corrected
+- Type: analysis + fix (registry rows 24–27)
+- **Fresh-clone reproduction (measured):** cloning the repository and running the CPU pipeline in a new environment reproduces every quality metric, split, dev selection, test result and failure-analysis number exactly. All six figures are pixel-identical. Only timings and run metadata differ, e.g. BM25 latency 0.12 → 0.13 ms. The check is now a committed script: `scripts/checks/reproduce_cpu_pipeline.sh`.
+- **Fix:** `src/runinfo.py` imported torch at module level, so the "CPU-only" scripts needed torch. The import is now lazy, and `requirements-cpu.txt` lists the torch-free environment. Tests pass without torch.
+- **Selection oracle (post-hoc, descriptive, test split; added to `scripts/failure_analysis.py`):**
+  - Taking the better of BM25 and ColPali per query gives nDCG@5 **0.5878** vs ColPali 0.5699 (+1.8 pt).
+  - BM25 has the higher nDCG@5 on 10 queries: 2 exact, 8 general, 0 visual.
+  - *Interpretation:* the earlier headroom counts (3 extra top-5 hits) bound only *which* pages a per-query selection could bring into the top 5; nDCG@5 can also rise by reordering inside the top 5. Neither number bounds every possible fusion function. The report previously said the headroom "bounds any fusion"; that was too strong and is corrected.
+- **Correction (literature):** the report and matrix said DocVQA's *train* split is in ColPali's training data.
+  - Checked against the paper (§4.2) and the `vidore/colpali_train_set` card: DocVQA is among the academic training sources (App. A.3 / Table 3 count read only from an extracted summary), but **the split is not stated**.
+  - The paper's contamination check covers multi-page PDFs only.
+  - Wording corrected; test-page overlap with the training set was not checked.
+- Verified and filled in: Bruch et al. venue (ACM TOIS 42(1), 2024, Crossref); DocVQA licensing (ViDoRe copy tagged MIT on HF, `_tesseract` copy none, original DocVQA pages none; images from the UCSF Industry Documents Library); the authors' hardware statements (L4 for latency/indexing, 8 GPUs of unstated type for training). ColPali and slide-study venues could not be verified (dblp/OpenReview blocked, no Crossref record) and are cited as arXiv.
