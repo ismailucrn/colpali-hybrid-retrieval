@@ -1,0 +1,49 @@
+# 2026-11-11T09:01:30Z incl. post-hoc extensions
+repo:   /Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval @ 086a22e
+python: Python 3.11.16 (/private/tmp/claude-501/-Users-ismail-Desktop-master-multimodal-colpali-hybrid-retrieval/c9756712-b893-4f94-81b4-e332a41b9619/scratchpad/venv_cpu/bin/python)
+clone:  /var/folders/nh/6rr8fmbx7gs01rbm1n984w6h0000gn/T/tmp.3jtmnE2P3f/repo
+== scripts/run_bm25.py --config configs/bm25_docvqa.yaml
+== scripts/make_split.py --seed 0 --dev-fraction 0.5
+== scripts/run_fusion_dev.py --config configs/fusion_docvqa.yaml
+== scripts/run_weighted_fusion_dev.py --config configs/fusion_weighted_docvqa.yaml
+== scripts/run_test_evaluation.py --config configs/test_evaluation.yaml
+== scripts/failure_analysis.py
+== scripts/run_bm25.py --config configs/bm25_codes_docvqa.yaml
+== scripts/run_cc_fusion_dev.py --config configs/fusion_cc_docvqa.yaml
+== scripts/run_test_evaluation.py --config configs/posthoc_test_evaluation.yaml
+== scripts/make_figures.py
+== scripts/make_report_tables.py
+== -m pytest -q tests
+== compare with committed outputs
+OK   results/bm25_docvqa/metrics.json
+OK   results/splits/docvqa_split.json
+OK   results/fusion_docvqa/dev_selection.json
+OK   results/fusion_docvqa/dev_selection_weighted.json
+OK   results/test_evaluation/metrics.json
+OK   results/failure_analysis/analysis.json
+OK   results/bm25_codes_docvqa/metrics.json
+OK   results/posthoc_extensions/dev_selection_cc.json
+OK   results/posthoc_extensions/metrics.json
+OK   results/bm25_docvqa/per_query.csv
+OK   results/splits/docvqa_query_tags.csv
+OK   results/test_evaluation/per_query.csv
+OK   results/failure_analysis/changed_queries.csv
+OK   results/failure_analysis/examples.md
+OK   results/bm25_codes_docvqa/per_query.csv
+OK   results/posthoc_extensions/per_query.csv
+OK   report/generated/numbers.tex (timing macros ignored)
+OK   report/generated/tab_dev.tex
+OK   report/generated/tab_headroom.tex
+OK   report/generated/tab_posthoc.tex
+OK   report/generated/tab_reproduction.tex
+OK   report/generated/tab_test.tex
+OK   report/generated/tab_type.tex
+OK   report/generated/tab_wtl.tex
+OK   results/figures/fig1_test_ndcg5.png (pixels)
+OK   results/figures/fig2_dev_k_sweep.png (pixels)
+OK   results/figures/fig3_dev_weighted_rrf.png (pixels)
+OK   results/figures/fig4_test_by_type.png (pixels)
+OK   results/figures/fig5_headroom.png (pixels)
+OK   results/figures/fig6_overlap.png (pixels)
+RESULT: all quality outputs reproduced exactly
+exit 0
