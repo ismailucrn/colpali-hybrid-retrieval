@@ -1,0 +1,345 @@
+% YZM5110 Research Project -- presentation slides
+% Build:  python scripts/make_report_tables.py && cd slides && tectonic slides.tex
+% All measured numbers are macros from ../report/generated/numbers.tex (written from results/ by a script).
+% Published numbers are typed by hand and cited on the slide.
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs,amsmath,adjustbox,array}
+\usepackage{xcolor}
+\input{../report/generated/numbers.tex}
+\graphicspath{{../results/figures/}}
+
+% ---- look: plain, readable, palette shared with the figures ------------------------------------------
+\definecolor{cpBlue}{HTML}{2a78d6}\definecolor{bmOrange}{HTML}{eb6834}\definecolor{bgAqua}{HTML}{1b7a55}
+\definecolor{ink}{HTML}{1f1f1d}\definecolor{muted}{HTML}{6b6a66}\definecolor{tagI}{HTML}{8a6d00}\definecolor{tagH}{HTML}{9b3d8a}
+\usetheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{frametitle}{fg=cpBlue}
+\setbeamercolor{title}{fg=cpBlue}
+\setbeamercolor{structure}{fg=cpBlue}
+\setbeamercolor{normal text}{fg=ink}
+\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+\setbeamertemplate{itemize items}{\textbullet}
+\setbeamertemplate{footline}{\hfill\textcolor{muted}{\scriptsize\insertframenumber\,/\,\inserttotalframenumber}\hspace{1em}\vspace{0.6em}}
+\newcommand{\lbl}[2]{\textsf{\scriptsize\textcolor{#1}{[#2]}}}
+\newcommand{\Pub}{\lbl{cpBlue}{Published}}
+\newcommand{\Mea}{\lbl{bgAqua}{Measured}}
+\newcommand{\Int}{\lbl{tagI}{Interpretation}}
+\newcommand{\Hyp}{\lbl{tagH}{Hypothesis}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+\title{Does a Lexical Signal Still Help a Visual Retriever?}
+\subtitle{Reproducing ColPali on ViDoRe DocVQA and testing BM25 fusion}
+\author{\todo{First name LAST NAME}}
+\institute{YZM5110 Multimodal Learning --- Research Project}
+\date{\todo{presentation date}}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\centering\footnotesize\texttt{github.com/ismailucrn/colpali-hybrid-retrieval}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Motivation: two ways to search PDF pages}
+\begin{columns}[T]
+\column{0.48\linewidth}
+\textbf{Text pipeline}\\[2pt]
+page $\rightarrow$ OCR / layout $\rightarrow$ chunks $\rightarrow$ BM25 or dense embedding\\[4pt]
+\small\textcolor{muted}{slow ingestion; loses layout, figures; OCR errors}
+\column{0.48\linewidth}
+\textbf{ColPali} (Faysse et al.)\\[2pt]
+page \emph{image} $\rightarrow$ vision--language model $\rightarrow$ patch vectors; text query $\rightarrow$ token vectors; late interaction\\[4pt]
+\small\textcolor{muted}{no OCR at all}
+\end{columns}
+\vspace{1em}
+\begin{itemize}
+  \item \Pub{} ColPali beats every text pipeline on ViDoRe (avg nDCG@5 81.3 vs 67.0).
+  \item \Pub{} In \emph{text} retrieval, fusing lexical (BM25) and dense rankings is a cheap, well-known gain --- but not unconditional (Bruch et al., TOIS 2024).
+  \item \Int{} Neural retrievers are often said to struggle with exact strings (numbers, codes, names) --- exactly what BM25 matches.
+\end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Research question and pre-registered predictions}
+\begin{block}{Question}
+Does fusing BM25 (over page text) with ColPali improve page retrieval over ColPali alone --- and for which query types? Is a gain due to the \emph{lexical} signal, or to ensembling with any second retriever?
+\end{block}
+\vspace{0.4em}
+Written \textbf{before} any fusion run (git commits \texttt{162441e}, \texttt{55fa350}, \texttt{2dfcf31}):
+\begin{itemize}
+  \item \textbf{P1} \; C = RRF(BM25, ColPali) $>$ ColPali on test nDCG@5
+  \item \textbf{P2} \; gain concentrated on \emph{exact-match} queries, little on visual ones
+  \item \textbf{P3} \; C $>$ D = RRF(\emph{dense} text retriever, ColPali) \quad (control)
+\end{itemize}
+\small\textcolor{muted}{What would weaken it: no gain; gain spread evenly or on visual queries; D $\ge$ C.}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{How ColPali scores a page}
+\begin{columns}[c]
+\column{0.55\linewidth}
+\begin{itemize}
+  \item \Pub{} PaliGemma-3B encodes the page image; every output vector projected to 128-d.
+  \item \Mea{} 1031 vectors per page; \sizeB{}\,MB for \nPages{} pages (bf16).
+  \item Query: tokens + 5 augmentation tokens.
+  \item \textbf{Late interaction (MaxSim)}, from ColBERT:
+\end{itemize}
+\[
+s(q,d)=\sum_{i \in q}\;\max_{j \in d}\;\langle E_q^{(i)},E_d^{(j)}\rangle
+\]
+\column{0.42\linewidth}
+\small
+\Int{} Each query token finds the patch where its word is \emph{printed} --- a kind of ``visual lexical matching'' without OCR.\\[6pt]
+We use the authors' checkpoint (v1.3), \textbf{inference only}.
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Literature: what is known about text + visual fusion}
+\small
+\begin{tabular}{@{}p{3.2cm}p{9.6cm}@{}}
+\toprule
+RRF (Cormack 2009) & \Pub{} beats single runs when fusing \emph{many} runs of similar quality; $k{=}60$\\
+Bruch et al.\ (TOIS 2024) & \Pub{} default RRF falls \emph{below} the better input on 4/9 datasets\\
+DSE (EMNLP 2024) & \Pub{} screenshot + text hybrid: ``minimal improvement''\\
+IRPAPERS (2026) & \Pub{} fusion helps (R@1 49 vs 43) --- clean LLM transcriptions, text $\approx$ image\\
+Slide study (2025) & \Pub{} RRF[ColPali, text] 81.0 vs ColPali 82.7 nDCG@10\\
+ViDoRe V1/V2 & \Pub{} visual retrievers evaluated \emph{against} or \emph{without} text, never combined\\
+\bottomrule
+\end{tabular}
+\vspace{0.8em}
+\begin{block}{Gap \Int{}}
+Mixed, uncontrolled results: no significance tests, no ``any second retriever'' control, no per-query-type analysis, none on a ViDoRe task with the benchmark's OCR.
+\end{block}
+\footnotesize\textcolor{muted}{8 papers in the matrix (\texttt{docs/literature\_matrix.md}); gap narrowed after a targeted search on 6 Nov --- stated in the report.}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Reproduction: ColPali on ViDoRe DocVQA}
+\small Claim tested: the authors' DocVQA nDCG@5. Tolerance fixed before the run: $\pm$2 points.\\[4pt]
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lrlrr}
+\toprule
+System & Published & source & Measured & $\Delta$\\
+\midrule
+\textbf{ColPali v1.3} & \pubCard & model card & \textbf{\fullB} & \gapCardPts{} pt\\
+BM25 (OCR text) & \pubBMtwentyfive & paper Tab.~2 & \fullA & \textcolor{muted}{different OCR}\\
+BGE-M3 (OCR text) & \pubBGE & paper Tab.~2 & \fullBGE & \textcolor{muted}{different OCR}\\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\vspace{0.6em}
+\begin{itemize}
+  \item \Mea{} \textbf{Reproduced} within tolerance (\nQueries{} queries, \nPages{} pages, official protocol).
+  \item Authors' code (\texttt{colpali-engine}), pinned model + data revisions, Colab L4, bf16.
+  \item Our evaluator matches MTEB exactly (max $|\Delta|$ = 0); scores re-evaluated on CPU.
+  \item Deviation: v1.3 instead of the paper's v1.0 (\pubPaper) --- v1.0 unsupported in current code.
+\end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Experimental design}
+\begin{columns}[T]
+\column{0.5\linewidth}
+\textbf{Systems}\\[2pt]
+\small
+\begin{tabular}{@{}ll@{}}
+A & BM25 on Tesseract OCR text\\
+B & ColPali v1.3\\
+C & RRF(A, B) \hfill\textcolor{muted}{proposed}\\
+D & RRF(BGE-M3, B) \hfill\textcolor{muted}{control}\\
+E & $k$ sweep; weighted RRF \hfill\textcolor{muted}{ablation}\\
+\end{tabular}\\[6pt]
+D reads the \emph{same} OCR text, same corpus, same RRF, same tuning budget.
+\column{0.48\linewidth}
+\small
+\begin{itemize}
+  \item Query tags from text only, frozen: exact / general / visual
+  \item Split 50/50 stratified: dev \nDev{} / test \nTest{}
+  \item $k$ and weights chosen on \textbf{dev}; test run \textbf{once} (script refuses changed settings)
+  \item Bootstrap 95\% CIs, paired permutation test, Holm correction
+  \item Resource cost: index time/size, latency, memory
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Dev: fusion is below ColPali at every $k$}
+\begin{columns}[c]
+\column{0.56\linewidth}
+\includegraphics[width=\linewidth]{fig2_dev_k_sweep.pdf}
+\column{0.42\linewidth}
+\small
+\begin{itemize}
+  \item \Mea{} ColPali \devB{}; best C \devCkone{}, best D \devDkone{} (both at $k{=}1$)
+  \item default $k{=}60$: C \devCksixty{}
+  \item Weighted RRF (added after this, labelled \emph{dev-informed}): only $w \ge 0.9$ avoids harm; best C$_w$ \devCwGainPts{} pt on dev
+  \item \Int{} the best fusion is the one that changes ColPali least
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Test (run once): fusion does not help}
+\begin{columns}[c]
+\column{0.58\linewidth}
+\includegraphics[width=\linewidth]{fig1_test_ndcg5.pdf}
+\column{0.40\linewidth}
+\small \Mea{} nDCG@5, $n$ = \nTest{}\\[4pt]
+ColPali \textbf{\testB{}}\\
+C \testC{} \quad $\Delta$ \textbf{\deltaC{}}, $p_\text{Holm}$ \pHolmC{}\\
+D \testD{} \quad $\Delta$ \deltaD{}\\
+C$_w$ \testCw{} \quad $\Delta$ \deltaCw{}, $p$ \pCw{}\\[6pt]
+\begin{itemize}
+  \item \textbf{P1 rejected} --- significant harm
+  \item \textbf{P3 not supported} --- C$-$D \deltaCvsD{}, $p$ \pCvsD{}
+  \item dev gain of C$_w$ was selection noise
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{By query type: the premise of P2 is reversed}
+\centering
+\includegraphics[width=0.78\linewidth]{fig4_test_by_type.pdf}\\[2pt]
+\small\raggedright
+\Mea{} ColPali is strongest on \emph{exact} queries (\typeexactB{} vs BM25 \typeexactA{}); fusion loses there too (C \typeexactC{}). Visual: $n$ = \nvisual{}, wide CIs. \textbf{P2 not supported.}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Why: BM25 finds almost nothing ColPali misses}
+\begin{columns}[c]
+\column{0.58\linewidth}
+\includegraphics[width=\linewidth]{fig5_headroom.pdf}
+\column{0.40\linewidth}
+\small \Mea{} gold page in top 5 (test):
+\begin{itemize}
+  \item BM25 only: \textbf{\headallAnotB{}} queries (0 exact)
+  \item ColPali only: \headallBnotA{}
+  \item per-query oracle: nDCG@5 \oracleNDCG{} vs \testB{} (\oracleGainPts{} pt)
+  \item C's \cLosses{} losses: \cLossBMmissed{} are queries where BM25 had missed
+\end{itemize}
+\Int{} little to gain, much to lose --- explains P1 and P3
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Mechanism: BM25 needs the query's words in the OCR text}
+\begin{columns}[c]
+\column{0.56\linewidth}
+\includegraphics[width=\linewidth]{fig6_overlap.pdf}
+\column{0.42\linewidth}
+\small \Mea{} overlap = share of query tokens found in the gold page's OCR
+\begin{itemize}
+  \item zero overlap (\ovZeroN{} q.): BM25 \ovZeroA{}\%, ColPali \ovZeroB{}\%
+  \item full overlap (\ovOneN{} q.): BM25 \ovOneA{}\%, ColPali \ovOneB{}\%
+\end{itemize}
+\Int{} ColPali reads the page image and still matches when OCR or tokenisation lost the words.
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Examples (rank of the gold page)}
+\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{5.6cm}rrrl@{}}
+\toprule
+query & ColPali & BM25 & C & why\\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{Unfavourable} --- C worse than ColPali (\cLosses{} of \nTest{})}\\
+``What is No.~2-26 of subheading H?'' & 1 & 342 & 3 & ``No'' stopword, ``2-26'' dropped\\
+``What is the VO.~NO.?'' & 1 & 137 & 3 & OCR reads ``YO.~NO.''\\
+``\dots\ postal stamp at top left?'' & 3 & 252 & 7 & page has \emph{empty} OCR\\
+\midrule
+\multicolumn{5}{@{}l}{\textbf{Favourable} --- C better than ColPali (\cWins{} of \nTest{})}\\
+``What is the name of the laboratory?'' & 14 & 3 & 4 & real lexical rescue\\
+``How many bullet points are there?'' & 136 & 2 & 4 & \Int{} probably lucky\\
+``Who is from Indiana?'' & 2 & 1 & 1 & typical case: rank 2 $\rightarrow$ 1\\
+\bottomrule
+\end{tabular}\\[6pt]
+\footnotesize\textcolor{muted}{\Mea{} all cases: \texttt{results/failure\_analysis/examples.md}}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Cost: fusion is cheap --- quality is the obstacle}
+\centering
+{\scriptsize\input{../report/generated/tab_resources.tex}}
+\vspace{0.2em}
+\raggedright
+\small
+\begin{itemize}
+  \item \Mea{} fusion itself \fusionOverhead{}\,ms/query; BM25 index 0.6\,MB vs ColPali \sizeB{}\,MB
+  \item parallel retrieval: latency set by ColPali (\latB{}\,ms on L4)
+  \item ColPali peak GPU memory \peakGPU{}\,GiB \Hyp{} full-vocabulary logits --- not investigated
+\end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Limitations}
+\begin{itemize}
+  \item One task (DocVQA), one OCR (Tesseract), one checkpoint (v1.3)
+  \item \Pub{} DocVQA is in ColPali's training data (split not stated) --- favours ColPali vs zero-shot text baselines
+  \item Test set: \nTest{} queries, only \nvisual{} visual --- wide CIs, per-type results exploratory
+  \item Rank fusion only; score-level convex combination untested (C$_w$ CI rules out gains $>$ 0.5 pt for weighted RRF)
+  \item Official BM25 preprocessing kept (drops ``no'', ``2-26'') for comparability
+  \item Resource numbers from three devices (L4, M5 MPS, M5 CPU)
+  \item Reproduction gap (\gapCardPts{} pt) not traced to a cause
+\end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Conclusions and open questions}
+\begin{itemize}
+  \item \Mea{} ColPali's DocVQA result reproduces with the authors' code and checkpoint.
+  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties.
+  \item \Int{} On DocVQA, ColPali already reads the lexical anchors BM25 needs --- better than Tesseract OCR does. Fusion with a much weaker ranking imports its errors.
+  \item \Int{} Consistent with when fusion fails in text IR (unequal inputs) and when text + visual fusion helped (clean text, equal strength).
+\end{itemize}
+\vspace{0.4em}
+\textbf{Open} \Hyp{}
+\begin{itemize}
+  \item Fusion should help once the text channel improves (layout-aware / LLM OCR, code-preserving tokenizer) or on text-dense corpora.
+  \item On ViDoRe V2 (less lexical overlap by design), even less.
+\end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Reproducibility and AI use}
+\small
+\begin{itemize}
+  \item Public repo: configs, pinned dependencies and revisions, committed score matrices, every console log, run registry with failed runs
+  \item Every number in report and slides is generated from \texttt{results/} by a script
+  \item \Mea{} Fresh-clone check (11 Nov): CPU pipeline re-run without torch --- all 24 outputs identical, figures pixel-identical
+  \item Pre-registration is checkable in git history (split, control, ablation committed before the test run)
+\end{itemize}
+\vspace{0.4em}
+\textbf{AI use (disclosed, \texttt{docs/ai\_usage.md})}: Claude Code wrote most code, drove Colab, extracted literature details and drafted documents; the author chose task, checkpoint, control and every pre-registration, approved each run, and verified \todo{what you checked}.\\[6pt]
+\centering\texttt{github.com/ismailucrn/colpali-hybrid-retrieval} \quad tag \texttt{v1.0-submission}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\appendix
+\begin{frame}{Backup: weighted RRF grid on dev}
+\centering
+\includegraphics[height=0.72\textheight]{fig3_dev_weighted_rrf.pdf}\\
+\small \Mea{} $\Delta$nDCG@5 vs ColPali; only $w \ge 0.9$ (ColPali weight) avoids harm.
+\end{frame}
+
+\begin{frame}{Backup: full test table}
+\centering
+\footnotesize
+\input{../report/generated/tab_test.tex}
+\vspace{0.5em}
+\raggedright
+\Mea{} Post-hoc without the \nDup{} duplicated query texts ($n$ = \nNoDup{}): ColPali \noDupB{}, C $\Delta$ \noDupDeltaC{}, C$_w$ $\Delta$ \noDupDeltaCw{} --- same picture.
+\end{frame}
+
+\begin{frame}{Backup: by query type with tests}
+\centering
+\footnotesize
+\input{../report/generated/tab_type.tex}
+\end{frame}
+
+\end{document}

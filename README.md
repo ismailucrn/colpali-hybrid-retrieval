@@ -44,6 +44,7 @@ src/        reusable code (data loading and official protocol, evaluation, BM25,
 notebooks/  Colab notebooks (thin wrappers around scripts/)
 results/    committed outputs: score matrices (scores.npz), metrics, per-query CSVs, splits, figures, console logs
 report/     LaTeX source of the report; generated/ holds every number and table, written by a script
+slides/     Beamer slides (same generated numbers) and speaker notes
 docs/       experiment log, run registry, deviations, literature matrix, query tagging rules, AI-use disclosure
 data/       local cache (gitignored)
 ```
@@ -120,6 +121,7 @@ python scripts/failure_analysis.py                                              
 python scripts/make_figures.py                                                         # results/figures/
 python scripts/make_report_tables.py                                                   # report/generated/
 (cd report && tectonic main.tex)                                                       # report/main.pdf
+(cd slides && tectonic slides.tex)                                                     # slides/slides.pdf
 ```
 
 - The test evaluation refuses to run if the fusion settings differ from the committed dev selections. Re-running it reproduces the committed numbers; it does not re-tune anything.
