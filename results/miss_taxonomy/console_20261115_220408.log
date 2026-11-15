@@ -1,0 +1,229 @@
+{
+ "dev": {
+  "n": 226,
+  "B_hits": 146,
+  "B_misses": 80,
+  "flag_rate": {
+   "duplicate_text": {
+    "misses": 9,
+    "hits": 0
+   },
+   "alt_page_in_top5": {
+    "misses": 0,
+    "hits": 0
+   },
+   "gold_ocr_short": {
+    "misses": 5,
+    "hits": 8
+   },
+   "generic_query": {
+    "misses": 10,
+    "hits": 3
+   },
+   "no_overlap": {
+    "misses": 52,
+    "hits": 26
+   },
+   "near_miss": {
+    "misses": 12,
+    "hits": 0
+   },
+   "text_finds_it": {
+    "misses": 8,
+    "hits": 121
+   }
+  },
+  "primary_category": {
+   "duplicate_text": {
+    "n": 9,
+    "by_tag": {
+     "visual": 2,
+     "general": 5,
+     "exact": 2
+    },
+    "text_finds_it": 1,
+    "near_miss": 0,
+    "alt_page_in_top5": 0
+   },
+   "gold_ocr_short": {
+    "n": 4,
+    "by_tag": {
+     "general": 4
+    },
+    "text_finds_it": 0,
+    "near_miss": 0,
+    "alt_page_in_top5": 0
+   },
+   "generic_query": {
+    "n": 9,
+    "by_tag": {
+     "general": 7,
+     "exact": 2
+    },
+    "text_finds_it": 1,
+    "near_miss": 1,
+    "alt_page_in_top5": 0
+   },
+   "no_overlap": {
+    "n": 34,
+    "by_tag": {
+     "visual": 7,
+     "general": 23,
+     "exact": 4
+    },
+    "text_finds_it": 0,
+    "near_miss": 5,
+    "alt_page_in_top5": 0
+   },
+   "other": {
+    "n": 24,
+    "by_tag": {
+     "exact": 4,
+     "general": 19,
+     "visual": 1
+    },
+    "text_finds_it": 6,
+    "near_miss": 6,
+    "alt_page_in_top5": 0
+   }
+  },
+  "generic_sensitivity": {
+   "10": {
+    "misses": 25,
+    "hits": 20
+   },
+   "25": {
+    "misses": 10,
+    "hits": 3
+   },
+   "50": {
+    "misses": 8,
+    "hits": 1
+   }
+  },
+  "misses_by_tag": {
+   "visual": 10,
+   "general": 58,
+   "exact": 12
+  },
+  "gold_rank_of_misses": {
+   "6-10": 12,
+   "11-50": 18,
+   ">50": 50
+  }
+ },
+ "test": {
+  "n": 225,
+  "B_hits": 147,
+  "B_misses": 78,
+  "flag_rate": {
+   "duplicate_text": {
+    "misses": 10,
+    "hits": 3
+   },
+   "alt_page_in_top5": {
+    "misses": 2,
+    "hits": 3
+   },
+   "gold_ocr_short": {
+    "misses": 7,
+    "hits": 5
+   },
+   "generic_query": {
+    "misses": 12,
+    "hits": 13
+   },
+   "no_overlap": {
+    "misses": 58,
+    "hits": 19
+   },
+   "near_miss": {
+    "misses": 6,
+    "hits": 0
+   },
+   "text_finds_it": {
+    "misses": 11,
+    "hits": 113
+   }
+  },
+  "primary_category": {
+   "duplicate_text": {
+    "n": 10,
+    "by_tag": {
+     "general": 9,
+     "visual": 1
+    },
+    "text_finds_it": 0,
+    "near_miss": 0,
+    "alt_page_in_top5": 2
+   },
+   "gold_ocr_short": {
+    "n": 4,
+    "by_tag": {
+     "general": 4
+    },
+    "text_finds_it": 0,
+    "near_miss": 0,
+    "alt_page_in_top5": 0
+   },
+   "generic_query": {
+    "n": 8,
+    "by_tag": {
+     "exact": 1,
+     "general": 6,
+     "visual": 1
+    },
+    "text_finds_it": 1,
+    "near_miss": 1,
+    "alt_page_in_top5": 0
+   },
+   "no_overlap": {
+    "n": 39,
+    "by_tag": {
+     "exact": 4,
+     "visual": 7,
+     "general": 28
+    },
+    "text_finds_it": 1,
+    "near_miss": 1,
+    "alt_page_in_top5": 0
+   },
+   "other": {
+    "n": 17,
+    "by_tag": {
+     "exact": 4,
+     "general": 12,
+     "visual": 1
+    },
+    "text_finds_it": 9,
+    "near_miss": 4,
+    "alt_page_in_top5": 0
+   }
+  },
+  "generic_sensitivity": {
+   "10": {
+    "misses": 33,
+    "hits": 40
+   },
+   "25": {
+    "misses": 12,
+    "hits": 13
+   },
+   "50": {
+    "misses": 5,
+    "hits": 3
+   }
+  },
+  "misses_by_tag": {
+   "exact": 9,
+   "general": 59,
+   "visual": 10
+  },
+  "gold_rank_of_misses": {
+   "6-10": 6,
+   "11-50": 30,
+   ">50": 42
+  }
+ }
+}
+wrote results/miss_taxonomy/{taxonomy.json, misses.csv, examples.md}

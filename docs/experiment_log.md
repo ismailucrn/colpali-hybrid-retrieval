@@ -344,3 +344,16 @@ Chronological record of every run and decision. One entry per run or decision; n
   - F6 `text_finds_it`: BM25, BGE-M3 or T_rr has the gold page in its top 5.
 - Primary category for the count table, in this priority order: duplicate_text → gold_ocr_short → generic_query → no_overlap → `other` (specific query, gold page has text and shares a word with it, ColPali still misses).
 - *Expectation (hypothesis):* duplicate and generic queries are over-represented among misses compared with hits; `text_finds_it` is rare in every category.
+
+### 2026-11-16 — Results: taxonomy of ColPali's misses (descriptive)
+- Type: analysis (registry row 48), `scripts/miss_taxonomy.py` → `results/miss_taxonomy/`. Flags fixed in `fe3533b` before counting.
+- **Measured (misses vs hits, test n = 225: 78 misses / 147 hits; dev n = 226: 80 / 146):**
+  - `no_overlap` (no query word in the gold page's OCR): test 58 vs 19, dev 52 vs 26. The clearest difference between misses and hits on both splits.
+  - `duplicate_text`: test 10 vs 3, dev 9 vs 0. An alternative page with the same query text is in ColPali's top 5 for only 2 test misses.
+  - `generic_query` (≥ 25-page df): test 12 vs 13, dev 10 vs 3. Not a consistent difference; sensitive to the threshold (test 33/40 at 10 pages, 5/3 at 50).
+  - `gold_ocr_short`: test 7 vs 5, dev 5 vs 8. Not a driver.
+  - `near_miss` (rank 6–10): test 6, dev 12. Most misses are far: test 42 of 78 have the gold page below rank 50.
+  - `text_finds_it` (BM25, BGE-M3 or T_rr top 5): test 11 of 78 misses, dev 8 of 80. Most of them fall in `other`, 9 of 17 on test.
+  - Primary category, test / dev: duplicate 10 / 9, short OCR 4 / 4, generic 8 / 9, no overlap 39 / 34, other 17 / 24.
+- *Interpretation:* the typical miss is a question about **position or layout without a content word**, e.g. "What is the name of the company on the letter head?" or "What is the date of the letter?". The gold page's OCR is often readable but shares no word with the query, and many other pages (letters, memos) fit the question equally well. A text signal cannot help there, since there is nothing to match. These DocVQA questions were written by annotators looking at the page; as retrieval queries they are under-specified. The residual errors therefore look mostly like a property of the queries, not of the OCR. This predicts that cleaner OCR will help little, and that only a model which reads the page image against the question (a visual reranker) can address part of them.
+- *Hypothesis expectation from the plan:* duplicates are over-represented among misses (held, but small). Generic queries over-represented (not consistent). Text rarely finds a miss (held).

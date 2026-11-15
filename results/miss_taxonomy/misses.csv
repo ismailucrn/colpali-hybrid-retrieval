@@ -1,0 +1,159 @@
+split,query,tag,gold_page,primary_category,rank_B,rank_A,rank_BGE,rank_T_rr,duplicate_text,alt_page_in_top5,gold_ocr_short,generic_query,no_overlap,near_miss,text_finds_it
+dev,What is plotted along the x axis ?,visual,fxcv0079,duplicate_text,19,464,4,18,1,0,1,0,1,0,1
+dev,What is the second subheading?,general,jknf0227,gold_ocr_short,317,382,171,299,0,0,1,0,1,0,0
+dev,Which year's report was this?,general,ppjb0228,generic_query,86,259,399,380,0,0,0,1,1,0,0
+dev,What is the day and date of Meeting?,exact,jrgv0228,generic_query,280,407,40,90,0,0,0,1,1,0,0
+dev,What is the ‘title’ of the plot?,visual,pybv0228,no_overlap,18,204,168,229,0,0,0,0,1,0,0
+dev,What is written in red ink at the top?,general,yqgl0228,no_overlap,47,57,370,117,0,0,0,0,1,0,0
+dev,Who is the third person in CC,exact,fxxj0037,other,6,32,275,68,0,0,0,0,0,1,0
+dev,Who is this question addressed to?,general,tzbj0037,no_overlap,71,93,100,107,0,0,0,0,1,0,0
+dev,Who signed this?,general,qqbl0037,no_overlap,131,182,492,334,0,0,0,0,1,0,0
+dev,To whom the letter is addressed?,general,hjxj0037,no_overlap,54,421,207,347,0,0,0,0,1,0,0
+dev,What is the heading?,general,hldw0228,duplicate_text,422,414,305,424,1,0,0,0,1,0,0
+dev,What is the figure number?,visual,njpf0227,duplicate_text,67,268,78,136,1,0,0,0,1,0,0
+dev,What is the report on?,general,hqvw0217,generic_query,69,23,25,31,0,0,0,1,0,0,0
+dev,What type of report is this?,general,prvw0217,other,16,66,13,15,0,0,0,0,0,0,0
+dev,What is written at the bottom right end of the ‘page’?,exact,mlbw0217,no_overlap,188,307,205,304,0,0,0,0,1,0,0
+dev,what is the name of the university ?,general,hnnp0227,generic_query,36,24,30,38,0,0,0,1,0,0,0
+dev,What is the name of addressee in this letter?,general,mgpj0226,other,22,28,91,2,0,0,0,0,0,0,1
+dev,What is the text printed on the bottom right corner of the page?,general,fpcw0217,duplicate_text,479,476,172,311,1,0,0,0,1,0,0
+dev,Which company is mentioned in this document?,general,kkpj0226,other,198,33,175,61,0,0,0,0,0,0,0
+dev,Who sent this form?,general,phvd0227,other,110,51,73,64,0,0,0,0,0,0,0
+dev,By what statistical 'method' is the the data collected ?,exact,pmyc0227,other,6,4,38,32,0,0,0,0,0,1,1
+dev,What is the name of the company?,general,txpn0095,duplicate_text,17,36,149,59,1,0,0,1,0,0,0
+dev,What is the ‘heading’?,exact,fkmj0226,duplicate_text,489,487,338,464,1,0,0,0,1,0,0
+dev,What is the letter in the single initial monogram based on header?,visual,khbw0217,no_overlap,159,355,145,261,0,0,0,0,1,0,0
+dev,Which number is repeated several times on the page?,general,qyhw0228,no_overlap,11,243,484,397,0,0,0,0,1,0,0
+dev,where did this program happen?,general,mldg0227,other,59,7,5,10,0,0,0,0,0,0,1
+dev,What is the underlined text on the top right corner of the page?,general,lyfm0227,no_overlap,212,316,447,446,0,0,0,0,1,0,0
+dev,What is point number 1?,exact,kgww0217,other,135,143,356,242,0,0,0,0,0,0,0
+dev,What is the date at the top right corner of the page?,general,thym0227,no_overlap,350,212,438,337,0,0,0,0,1,0,0
+dev,What is the heading of the first Article?,exact,hfcl0079,other,20,47,320,93,0,0,0,0,0,0,0
+dev,What is the name of the person who has signed the letter?,general,nrcj0037,no_overlap,12,265,492,404,0,0,0,0,1,0,0
+dev,What is the page no.?,general,pycj0037,generic_query,171,228,242,293,0,0,0,1,1,0,0
+dev,Who is the client in the document?,general,flkk0079,no_overlap,142,484,377,476,0,0,0,0,1,0,0
+dev,What date is given on the top of the document?,general,rqjw0081,other,148,96,99,111,0,0,0,0,0,0,0
+dev,What is the Title of the document?,exact,klbm0227,duplicate_text,351,346,371,426,1,0,0,0,1,0,0
+dev,What number written at the bottom right end of the page?,general,jfgf0077,other,316,104,96,122,0,0,0,0,0,0,0
+dev,Which US city's name is given at the bottom?,exact,jpdd0228,no_overlap,54,404,98,187,0,0,0,0,1,0,0
+dev,what is the company's name on the letter head?,general,mljf0226,other,116,111,137,146,0,0,0,0,0,0,0
+dev,To Whom is this letter addressed to?,exact,zkbg0227,no_overlap,11,31,56,27,0,0,0,0,1,0,0
+dev,What time is the lunch?,general,nkhd0227,other,7,45,29,2,0,0,0,0,0,1,1
+dev,What is the underlined text?,general,ymkm0227,gold_ocr_short,128,46,354,101,0,0,1,0,1,0,0
+dev,What is the name of the company in the logo?,visual,lsgj0223,other,216,83,17,19,0,0,0,0,0,0,0
+dev,What type of communication is it?,general,fncv0228,no_overlap,351,478,480,496,0,0,0,0,1,0,0
+dev,What is the title of the article?,general,jlxn0226,no_overlap,75,383,469,476,0,0,0,0,1,0,0
+dev,What is written in the top right of the document ?,general,krlf0023,no_overlap,333,344,74,152,0,0,0,0,1,0,0
+dev,What is the heading in sl.no ‘V’?,exact,jzbn0226,no_overlap,179,355,346,421,0,0,0,0,1,0,0
+dev,Who is this letter sent to ?,general,jsjk0226,other,109,3,6,5,0,0,0,0,0,0,1
+dev,What is the P.O.Box Number?,exact,lhjh0227,generic_query,387,331,127,219,0,0,0,1,1,0,0
+dev,Which department is mentioned in this document?,general,lhfd0079,other,27,47,80,71,0,0,0,0,0,0,0
+dev,What is the date on which the letter has been filed?,general,ljmk0226,no_overlap,224,349,29,68,0,0,0,0,1,0,0
+dev,Who is the sender ?,general,hznv0228,gold_ocr_short,13,390,273,395,0,0,1,0,1,0,0
+dev,What is the date of sending on the letter?,general,tllk0226,other,69,40,172,78,0,0,0,0,0,0,0
+dev,What is written in top of the document ?,general,mkhg0227,no_overlap,271,289,133,232,0,0,0,0,1,0,0
+dev,What is given in the footer?,general,mzbx0227,no_overlap,90,251,237,308,0,0,0,0,1,0,0
+dev,What is the name of the financial company mentioned at the top?,general,pkck0226,no_overlap,27,271,316,350,0,0,0,0,1,0,0
+dev,What is the name of the originator ?,general,jfgv0079,other,9,12,44,1,0,0,0,0,0,1,1
+dev,What is the name of the excerpt/reprint?,general,nlgk0226,generic_query,8,251,58,114,0,0,0,1,1,1,0
+dev,Whose picture is on the page?,visual,pybl0226,no_overlap,206,233,176,242,0,0,0,0,1,0,0
+dev,What is the date of receipt stamped?,general,rlbl0226,no_overlap,8,222,92,141,0,0,0,0,1,1,0
+dev,what is the date mentioned in the given page ?,general,prbn0226,gold_ocr_short,26,292,47,97,0,0,1,0,1,0,0
+dev,Who is the letter from?,general,qfmw0227,duplicate_text,12,193,18,18,1,0,0,0,1,0,0
+dev,What is the telephone number mentioned at the beginning?,general,jjnl0052,other,9,31,152,60,0,0,0,0,0,1,0
+dev,What is the title of the chart on the right ?,visual,sphv0228,no_overlap,8,141,31,57,0,0,0,0,1,1,0
+dev,What is the heading of the form?,general,hkpv0001,other,268,19,94,33,0,0,0,0,0,0,0
+dev,What is written at the top right end of the page?,general,hmvx0227,no_overlap,436,426,303,435,0,0,0,0,1,0,0
+dev,What is plotted along the y axis ?,visual,qhxh0228,no_overlap,10,186,356,309,0,0,0,0,1,1,0
+dev,What is the name of the doctor?,general,mtvd0227,no_overlap,7,270,86,156,0,0,0,0,1,1,0
+dev,what is the heading mentioned in the given page ?,general,lqcg0227,no_overlap,289,331,245,353,0,0,0,0,1,0,0
+dev,what is the heading of the page ?,general,jnnf0227,other,375,41,71,56,0,0,0,0,0,0,0
+dev,What is the title in uppercase?,general,jgbg0227,no_overlap,434,390,57,125,0,0,0,0,1,0,0
+dev,Whose Logo is it?,visual,rqvg0227,no_overlap,230,150,483,299,0,0,0,0,1,0,0
+dev,What is the name of the publication given?,general,fybd0227,other,12,32,83,6,0,0,0,0,0,0,0
+dev,What is the document heading?,general,hjxn0226,duplicate_text,428,426,458,480,1,0,0,0,1,0,0
+dev,What is the meeting on?,general,gzlf0227,generic_query,460,442,67,121,0,0,0,1,1,0,0
+dev,"What type of communication is this, as mentioned on the top left corner of the page?",general,jrgn0226,no_overlap,332,394,47,105,0,0,0,0,1,0,0
+dev,What type of communication is this?,general,qtlc0228,no_overlap,238,182,354,305,0,0,0,0,1,0,0
+dev,What statement is this?,general,lkdv0228,other,17,6,40,20,0,0,0,0,0,0,0
+dev,What do the values in the y-axis depict ?,visual,zhlg0227,no_overlap,6,26,57,45,0,0,0,0,1,1,0
+dev,What is the name of the sugar company?,general,srhl0226,other,9,7,17,6,0,0,0,0,0,1,0
+dev,What is the name?,general,ygjd0228,generic_query,247,19,40,1,0,0,0,1,0,0,1
+test,What is the name of the person in the CC field ?,exact,lflm0081,other,6,11,337,17,0,0,0,0,0,1,0
+test,What is the table number?,general,flwg0227,duplicate_text,37,485,192,332,1,0,0,1,1,0,0
+test,"What is the date and time mentioned at the top of the page, outside of the Tabular representation?",exact,rnww0217,no_overlap,368,270,138,213,0,0,0,0,1,0,0
+test,What is the title of the document ?,general,fkkj0079,duplicate_text,492,490,183,335,1,0,0,0,1,0,0
+test,What are the letters in the monogram logo at the top right of the document?,visual,tnbx0223,no_overlap,354,131,241,207,0,0,0,0,1,0,0
+test,"What is the number in parentheses [ ], between the two Tables?",exact,hlvj0223,no_overlap,13,429,19,16,0,0,0,0,1,0,0
+test,To whom is the letter is addressed?,general,xhxj0037,no_overlap,16,85,169,128,0,0,0,0,1,0,0
+test,What is the name of the company on top of the document ?,general,jycw0217,no_overlap,334,392,128,220,0,0,0,0,1,0,0
+test,What is the heading of the document?,general,pnbx0223,duplicate_text,208,221,188,259,1,0,0,0,1,0,0
+test,What is the Page Number?,exact,fqvw0217,generic_query,15,477,457,491,0,0,0,1,1,0,0
+test,what is the title of this page ?,general,khxj0037,generic_query,256,365,471,470,0,0,0,1,1,0,0
+test,what is the subject of this letter?,general,prvl0037,other,27,32,265,68,0,0,0,0,0,0,0
+test,What is the name of the company on the letter head ?,general,fsdw0217,no_overlap,13,473,56,121,0,0,0,0,1,0,0
+test,Which is the first year on x-axis?,visual,tkyg0227,generic_query,7,161,61,108,0,0,0,1,1,1,0
+test,What is the page number?,general,lkwg0227,duplicate_text,217,347,259,358,1,1,0,1,1,0,0
+test,What type of letter is this?,general,nhlg0227,duplicate_text,32,252,99,164,1,0,1,0,1,0,0
+test,What is the phone number given at the top left end of the page?,general,qmhh0078,no_overlap,196,272,45,84,0,0,0,0,1,0,0
+test,What is the phone number given?,general,rgcw0217,no_overlap,111,218,343,327,0,0,0,0,1,0,0
+test,When was this meeting happened?,general,yzbd0227,other,18,37,17,5,0,0,0,0,0,0,1
+test,Who is the sender of this letter?,general,kgpj0226,no_overlap,83,349,192,309,0,0,0,0,1,0,0
+test,What is the name of the company mentioned at the top of the page?,general,tlgw0228,no_overlap,76,213,334,306,0,0,0,0,1,0,0
+test,What is the name of the Client given in the report?,exact,kkww0217,other,10,13,63,2,0,0,0,0,0,1,1
+test,What is the page no mentioned in this document?,general,yhpv0001,duplicate_text,40,125,47,86,1,0,0,0,1,0,0
+test,What is written at the top of the page in bold capital letters?,visual,lfyx0078,no_overlap,36,347,440,452,0,0,0,0,1,0,0
+test,What is the date mentioned at the top of the page?,general,hkvd0079,other,422,49,10,22,0,0,0,0,0,0,0
+test,What is the date of the document mentioned at the top?,general,hjyc0079,no_overlap,257,438,188,317,0,0,0,0,1,0,0
+test,What is the name of the laboratory?,general,hkbp0078,other,14,3,48,7,0,0,0,0,0,0,1
+test,What is the day and date of the program?,general,tzwm0227,generic_query,29,55,13,32,0,0,0,1,0,0,0
+test,What is the amount ?,general,frcy0227,generic_query,16,472,150,275,0,0,0,1,1,0,0
+test,What is the name of the meeting?,general,sxvw0217,generic_query,25,7,46,8,0,0,0,1,0,0,0
+test,What is the date of the letter ?,general,srjf0226,no_overlap,32,190,160,186,0,0,0,0,1,0,0
+test,What is the title of the document?,general,tqvc0228,no_overlap,162,127,106,133,0,0,0,0,1,0,0
+test,What is the title?,general,thcn0226,generic_query,17,122,116,132,0,0,0,1,1,0,0
+test,What is the name of chocolate brand?,general,pmwm0227,no_overlap,340,246,318,346,0,0,0,0,1,0,0
+test,What is the heading of the first column of the table?,general,rrgj0223,no_overlap,19,193,464,340,0,0,0,0,1,0,0
+test,Whose picture is given?,visual,lknp0227,duplicate_text,11,310,499,453,1,1,1,0,1,0,0
+test,What is the name of the company mentioned at the top of the table?,general,mhjb0228,no_overlap,37,328,463,449,0,0,0,0,1,0,0
+test,what type of communication is this?,general,lrgn0226,no_overlap,99,296,157,264,0,0,0,0,1,0,0
+test,Which department is mentioned in the document?,general,jycg0227,other,17,29,1,17,0,0,0,0,0,0,1
+test,What is the company's name on the letter head?,general,hlhp0053,no_overlap,86,435,250,378,0,0,0,0,1,0,0
+test,What is the subject?,general,xgmw0227,duplicate_text,266,117,42,68,1,0,1,1,1,0,0
+test,What type of document is this?,general,kldk0226,duplicate_text,342,346,58,114,1,0,0,0,1,0,0
+test,What is the name of the country mentioned at the top of the page?,general,nngv0228,other,161,44,239,90,0,0,0,0,0,0,0
+test,Who wrote the ‘letter’?,exact,zzfv0228,no_overlap,33,17,169,17,0,0,0,0,1,0,0
+test,what is the name of the company mentioned on the bottom left of the page ?,general,fkxn0226,no_overlap,318,490,489,500,0,0,0,0,1,0,0
+test,What is the Title of the document ?,exact,pyfg0227,other,210,34,5,10,0,0,0,0,0,0,1
+test,How many points are there under the title ‘distribution’?,exact,jxmk0226,other,7,16,6,1,0,0,0,0,0,1,1
+test,Who is shown in the picture/photo?,visual,sgwb0228,no_overlap,21,143,47,80,0,0,0,0,1,0,0
+test,What is written in bold letters?,visual,mzmk0226,no_overlap,307,250,480,403,0,0,0,0,1,0,0
+test,What is the name of the company on the letter head?,general,pzyy0078,other,147,30,10,6,0,0,0,0,0,0,0
+test,Which company’s memorandum is given?,general,jxjh0227,other,6,4,1,4,0,0,0,0,0,1,1
+test,Which meeting is this?,general,ghkw0228,generic_query,35,18,5,13,0,0,0,1,0,0,1
+test,Who is there in the first photo?,visual,fkbk0226,other,57,30,12,3,0,0,0,0,0,0,1
+test,What is the number printed at the top right of first slip?,general,jppp0227,no_overlap,65,402,131,231,0,0,0,0,1,0,0
+test,What is the y-axis of the plot?,visual,xkbw0217,no_overlap,12,69,370,145,0,0,0,0,1,0,0
+test,Who has written the note?,general,fjpk0226,no_overlap,37,491,325,450,0,0,0,0,1,0,0
+test,What is the first heading of the table?,general,mfmh0227,other,293,25,279,55,0,0,0,0,0,0,0
+test,What is the title of the page?,general,yqxd0227,gold_ocr_short,69,99,25,44,0,0,1,1,1,0,0
+test,What is the title of first plot?,visual,jyxg0226,no_overlap,6,369,267,381,0,0,0,0,1,1,0
+test,What is page number printed at the bottom of the page?,general,rrcw0217,other,70,86,407,163,0,0,0,0,0,0,0
+test,Whose photograph is shown at the top left side of the page ?,visual,smvd0227,no_overlap,11,191,163,214,0,0,0,0,1,0,0
+test,What is the document about?,general,xpww0217,no_overlap,83,83,250,152,0,0,0,0,1,0,0
+test,What form of communication is used?,general,ptdg0227,no_overlap,132,234,323,327,0,0,0,0,1,0,0
+test,Who is the note to?,general,qslg0227,gold_ocr_short,89,184,75,131,0,0,1,0,1,0,0
+test,What is the table number mentioned at the top centre of the page?,general,ggxn0226,other,38,78,443,161,0,0,0,0,0,0,0
+test,Who is the note from?,general,sjkg0227,duplicate_text,71,146,234,231,1,0,0,0,1,0,0
+test,What is the title given above the cartoon in right side of the page?,general,hffn0226,no_overlap,11,448,144,266,0,0,0,0,1,0,0
+test,What is the year mentioned at the top?,general,gmvg0227,no_overlap,44,453,9,29,0,0,0,0,1,0,0
+test,What is title given at the top of the page?,general,rjxn0226,no_overlap,483,223,445,370,0,0,0,0,1,0,0
+test,What is the Received date stamped?,exact,jhkp0227,no_overlap,40,408,117,204,0,0,0,0,1,0,0
+test,What is the last line on the page?,general,pzwd0228,no_overlap,190,238,299,316,0,0,0,0,1,0,0
+test,What is the number shown below the heading on top right corner?,general,rrlw0227,no_overlap,229,203,224,258,0,0,0,0,1,0,0
+test,What is the date given?,general,fphl0226,gold_ocr_short,445,478,9,27,0,0,1,0,1,0,0
+test,How many bullet points are there?,general,zpxl0226,other,136,2,116,13,0,0,0,0,0,0,1
+test,What is the name printed on the top of the page?,general,mrnl0226,gold_ocr_short,232,303,239,326,0,0,1,0,1,0,0
+test,What is the date mentioned at the bottom of the page?,general,rmjl0226,no_overlap,158,252,179,228,0,0,0,0,1,0,0
+test,What is the first name of the month mentioned at the top of the page?,general,kqnl0226,no_overlap,107,375,6,2,0,0,0,0,1,0,1
+test,What is the name of the city mentioned?,general,zhdw0228,no_overlap,59,91,42,61,0,0,0,0,1,0,0

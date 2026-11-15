@@ -1,0 +1,253 @@
+# ColPali's test misses by primary category (descriptive)
+
+Plan and flag definitions: `docs/experiment_log.md`, 2026-11-16 (`fe3533b`). Ranks are gold-page ranks.
+
+
+## duplicate_text (10)
+
+- **Whose picture is given?** — `visual`; rank B=11, A=310, BGE=499, T_rr=453; alt_page_in_top5
+  - gold `lknp0227`: “AMERICAN BALLET THEATRE Spring 1978 hee The Metropolitan Opera House”
+  - ColPali top-1 `yxpj0226`: “ASRS Hacked Emil So Coe-Cota Ain To Influence Hillary Clintom And The Media”
+- **What type of letter is this?** — `general`; rank B=32, A=252, BGE=99, T_rr=164
+  - gold `nhlg0227`: “Source: https:/Awww.industrydocuments.ucsf.edu”
+  - ColPali top-1 `zzfv0228`: “The University of Texas System Cancer Center M. D. Anderson Hospital and Tumor Institute Texas Medical Center + 6723 Bertner Avenue + Housto…”
+- **What is the table number?** — `general`; rank B=37, A=485, BGE=192, T_rr=332
+  - gold `flwg0227`: “fable. Cre PLASMA POTASSIUM VALUES IN 8 PATIENTS WITH RENAL INSUFFICIENCY AND HYPERKALEMIA FOLLOWING 500 ml OF INTRAVENOUS FAT EMULSION Duri…”
+  - ColPali top-1 `fqvw0217`: “VPSZZ0 ALIMYMQG Effective in Treating Hot Flushes vs Treatment Placebo m-andrenergic agonist compounds/ antidopaminergic agents/SSRIs Clonid…”
+- **What is the page no mentioned in this document?** — `general`; rank B=40, A=125, BGE=47, T_rr=86
+  - gold `yhpv0001`: “2125827424;# 7/7 8 \iZ- 7-95 8:45 AM 5 Tdlecar a e Tees! am Without. -. MIDDLE-AGED MAN, AT TABLE WITH OTHER SMOKERS: My wife loves the 90% …”
+  - ColPali top-1 `zfkf0226`: “obligations described itt oo 6 herein. (b) Institution represents and warrants to TGRD that: (i) the terms of this Agreement do not violate …”
+- **Who is the note from?** — `general`; rank B=71, A=146, BGE=234, T_rr=231
+  - gold `sjkg0227`: “I) Leseie hone Fa. Salita bu. con be 9 ; ~ op recched neph vwreok “hb De A. Melman : , ) : A 6i Runce Krad Wetfers fuld | Gun. ene qe Soph i…”
+  - ColPali top-1 `hznv0228`: “Source: https://www.industrydocuments.ucsf.edu/docs/hznv0228”
+- **What is the heading of the document?** — `general`; rank B=208, A=221, BGE=188, T_rr=259
+  - gold `pnbx0223`: “MEd 100 Inspiring Years 1910-2010. Schedules to the Consolidated Accounts Profit on Sale of Stock in Trade - Net Miscellaneous Income Doubtf…”
+  - ColPali top-1 `zfkf0226`: “obligations described itt oo 6 herein. (b) Institution represents and warrants to TGRD that: (i) the terms of this Agreement do not violate …”
+- **What is the page number?** — `general`; rank B=217, A=347, BGE=259, T_rr=358; alt_page_in_top5
+  - gold `lkwg0227`: “6. Intravenous Alimentation for the Sick and Wounded, Environmental Nutrition. a. Cold climates } Caloric requirements sufficiently similar …”
+  - ColPali top-1 `zfkf0226`: “obligations described itt oo 6 herein. (b) Institution represents and warrants to TGRD that: (i) the terms of this Agreement do not violate …”
+- **What is the subject?** — `general`; rank B=266, A=117, BGE=42, T_rr=68
+  - gold `xgmw0227`: “Re: Nutrition (Shank) Yes, I will submit a manuscript. No, I will not submit a manuscript. Signed:”
+  - ColPali top-1 `tllk0226`: “TO: ISRF Members DATE: October 8, 1976 SUBJECT: Recent Literature on Diabetes DIABETES ETIOLOGY * Please add to your loose-leaf folder the f…”
+- **What type of document is this?** — `general`; rank B=342, A=346, BGE=58, T_rr=114
+  - gold `kldk0226`: “CHEMI STRY BANA jLL= G FOR POSITION AS R T YOUR COMMENTS REG TER, STABILITY ENTHU WITH FELLOW WORKER Source: https://www.industrydocuments.u…”
+  - ColPali top-1 `hmwn0226`: “Bearing Risks What are your perceived risks with the bearing you are using today? In what circumstances is using an alternative bearing a sa…”
+- **What is the title of the document ?** — `general`; rank B=492, A=490, BGE=183, T_rr=335
+  - gold `fkkj0079`: “7/29/87 7/29/87 7/29/87 7/30-31/87 7/31-8/5/87 8/7/87 8/7/87 8/7/87 w/o 8/10/87 w/o 8/19/87 w/o 9/8/87 w/o 9/14/87 Schedule Models designed …”
+  - ColPali top-1 `tybx0223`: “NOTES ON THE FINANCIAL STATEMENTS VST Industries Limited includes purchase cost net of CENVAT credit availed and attributable expenses. Cons…”
+
+## gold_ocr_short (4)
+
+- **What is the title of the page?** — `general`; rank B=69, A=99, BGE=25, T_rr=44
+  - gold `yqxd0227`: “Contents Historical Note Trustees and Staff The President’s Statement Grants Awarded Financial Statements Information for Prospective Applic…”
+  - ColPali top-1 `hffn0226`: “C4 - Fourth Quarter 2005 * Charnley Chronicle Modular Fixed-Bearing Total Knee Arthroplasty with Retention of the Posterior Cruciate Ligamen…”
+- **Who is the note to?** — `general`; rank B=89, A=184, BGE=75, T_rr=131
+  - gold `qslg0227`: “! These ¢opies are for your files. a Diane Clark Accounting Dept. Source: https:/Awww.industrydocuments.ucsf.edu”
+  - ColPali top-1 `thwm0227`: “You are cordially invited to attend a reception honoring G. DONALD WHEDON, M.D. on the occasion of his resignation as Director National Inst…”
+- **What is the name printed on the top of the page?** — `general`; rank B=232, A=303, BGE=239, T_rr=326
+  - gold `mrnl0226`: “Mr. Anthony B. Kenkel Room 31,7 Tariff Commission Phone: NA.8~39)7 ext. 19 Source: https:// industrydocuments.ucsf.edu/docs/mrnl0226”
+  - ColPali top-1 `znbx0223`: “Inspired individuals share their story- what drove them to succeed against the odds and how they realized their goals. “The launch of three …”
+- **What is the date given?** — `general`; rank B=445, A=478, BGE=9, T_rr=27
+  - gold `fphl0226`: “Prepared by LAMBORN & COMPANY, Inc. (Not Copyrighted) New York _ December 31, 1943 Source: https://www.industrydocuments.ucsf.edu/docs/fphl0…”
+  - ColPali top-1 `ylwn0226`: “ee <—<———______ . acetabular cup Hip-Solutions = saes femoral stem Ceramic on Poly Metal-on-polyethylene = CORAIL® Total Hip System 5 Hi plm…”
+
+## generic_query (8)
+
+- **Which is the first year on x-axis?** — `visual`; rank B=7, A=161, BGE=61, T_rr=108; near_miss
+  - gold `tkyg0227`: “CHART 22.— PER CAPITA CONSUMPTION OF GRAIN PRODUCTS AND MISCELLANEOUS OTHER FOODS, FROM I879”* (Calories per day) Grain product: Miscellaneo…”
+  - ColPali top-1 `hjxn0226`: “23. Survival analysis Analysis was performed on all patients, and not only on the resident in Emilia-Romagna region. Anatomical prosthesis e…”
+- **What is the Page Number?** — `exact`; rank B=15, A=477, BGE=457, T_rr=491
+  - gold `fqvw0217`: “VPSZZ0 ALIMYMQG Effective in Treating Hot Flushes vs Treatment Placebo m-andrenergic agonist compounds/ antidopaminergic agents/SSRIs Clonid…”
+  - ColPali top-1 `zfkf0226`: “obligations described itt oo 6 herein. (b) Institution represents and warrants to TGRD that: (i) the terms of this Agreement do not violate …”
+- **What is the amount ?** — `general`; rank B=16, A=472, BGE=150, T_rr=275
+  - gold `frcy0227`: “CITIZENS COMMISSION ON SCIENCE LAW AND FOOD SUPPLY 1230 YORK AVENUE NEW YORK, N. Y. 10021 Pas ogpnt or__DELMONICO'S HOTEL ONE HUNDRED THIRTY…”
+  - ColPali top-1 `rjxn0226`: “CAMPBELL BILLING BREAKDOWN 2013 Date 7/24/2013 10-1011 $ 3,187.50 10/30/2013 10-1012 $ 9,375.00 TOTAL 2013 $ 12,562.50 2014 Date Invo: 2/17/…”
+- **What is the title?** — `general`; rank B=17, A=122, BGE=116, T_rr=132
+  - gold `thcn0226`: “¢ Represents the leading companies engaged in the business of chemistry. 8 ACC members are committed to improved environmental, health and s…”
+  - ColPali top-1 `hffn0226`: “C4 - Fourth Quarter 2005 * Charnley Chronicle Modular Fixed-Bearing Total Knee Arthroplasty with Retention of the Posterior Cruciate Ligamen…”
+- **What is the name of the meeting?** — `general`; rank B=25, A=7, BGE=46, T_rr=8
+  - gold `sxvw0217`: “[Page] March Trimegestone Publication Management Meeting — Publication and Abstract Tracking Report March 7, 2003, 8:30 AM—11:00 AM, Confere…”
+  - ColPali top-1 `tzbn0226`: “Record of EPA Meeting with Society of Chemical Manufacturers & Affiliates (SOCMA) May 24, 2017 2:00 — 2:30 pm Administrator's Office, US Env…”
+- **What is the day and date of the program?** — `general`; rank B=29, A=55, BGE=13, T_rr=32
+  - gold `tzwm0227`: “Wednesday, July 24 9:00 a.m. WORKSHOP RECOMMENDATIONS Room 402 Chairman: Barbara Underwood, Director, Biological Health Division, Penn State…”
+  - ColPali top-1 `rhlm0227`: “Nghe NUTRITION IN CLINICAL PRACTICE A One Day Postgraduate Course Course Directors: Julian Katz, M.D. Donald Kaye, M.D. FRIDAY SEPTEMBER 22,…”
+- **Which meeting is this?** — `general`; rank B=35, A=18, BGE=5, T_rr=13; text_finds_it
+  - gold `ghkw0228`: “Interurban Club Spring Meeting _ . Draft Program (Working Titles) 472) v:w:-.F &:/, é Interurban Club Spring Meeting Penn State _ > aie May …”
+  - ColPali top-1 `tzbn0226`: “Record of EPA Meeting with Society of Chemical Manufacturers & Affiliates (SOCMA) May 24, 2017 2:00 — 2:30 pm Administrator's Office, US Env…”
+- **what is the title of this page ?** — `general`; rank B=256, A=365, BGE=471, T_rr=470
+  - gold `khxj0037`: “Carbon Evaluations The second Danchi test evaluating two carbon activity levels, two OV levels and two sieve sizes has been shipped. The res…”
+  - ColPali top-1 `ylwn0226`: “ee <—<———______ . acetabular cup Hip-Solutions = saes femoral stem Ceramic on Poly Metal-on-polyethylene = CORAIL® Total Hip System 5 Hi plm…”
+
+## no_overlap (39)
+
+- **What is the title of first plot?** — `visual`; rank B=6, A=369, BGE=267, T_rr=381; near_miss
+  - gold `jyxg0226`: “As can be seen in Figures 13 and 14, one “Medium” cartridge yielded significant amounts of aerosol for more than 600 puffs. With 22 puffs de…”
+  - ColPali top-1 `mslw0227`: “-13b- Figure 1.--Plot of Mean Supplement Intake and Mean Growth Rates in Supine Length for Quartiles of Atole (@) and Fresco (x) at 12-24 an…”
+- **Whose photograph is shown at the top left side of the page ?** — `visual`; rank B=11, A=191, BGE=163, T_rr=214
+  - gold `smvd0227`: “OUR SPEAKERS BRYCE L. MUNGER, M.D. ‘58, became professor and chairman of the depart- ment of anatomy at the Pennsylvania State University Co…”
+  - ColPali top-1 `njnp0227`: “The Opera Walk- ing Stick This ele- gant, ebony colored hardwood walking stick has a German silver handle, and is 36" long. $85(2.00)#G38 Th…”
+- **What is the title given above the cartoon in right side of the page?** — `general`; rank B=11, A=448, BGE=144, T_rr=266
+  - gold `hffn0226`: “C4 - Fourth Quarter 2005 * Charnley Chronicle Modular Fixed-Bearing Total Knee Arthroplasty with Retention of the Posterior Cruciate Ligamen…”
+  - ColPali top-1 `xmwn0226`: “z0000-20200-d SELPBZEOO Ada “BAGO AALOSLOud OL LOSPENS INSNINOO “LNSANOQO0 ELIS LOnd Susurencut SHER snuyue diy JP] LUPING? f,”
+- **What is the y-axis of the plot?** — `visual`; rank B=12, A=69, BGE=370, T_rr=145
+  - gold `xkbw0217`: “900120 ALINMG % Unange trom baseline Baseline ™@ Placebo 12 Months Visit @ CEE Only 36 Months @ CEE/MPA (cyclic) Baseline 12 months 36 month…”
+  - ColPali top-1 `ylvd0228`: “. ee83 ° » 80 é oe 3 oe <a Dee ¢ °9 0 O 5 iu ° 20 O Oo 2 3 4 5 6 7 8 ‘available lysine’ (g/16 g N) Fig. 7 - Relation of available lysine det…”
+- **What is the number in parentheses [ ], between the two Tables?** — `exact`; rank B=13, A=429, BGE=19, T_rr=16
+  - gold `hlvj0223`: “[202100] Notes - Other provisions, contingent liabilities and contingent assets Disclosure of other provisions [Table] (1) ‘Classes of other…”
+  - ColPali top-1 `fsbn0226`: “Update on Toxicity of 1,4-Dioxane and Potential Regulatory Implications CONTENTS Acronyms and Abbreviations... ic ce cece ce eeneeeceeeaetee…”
+- **What is the name of the company on the letter head ?** — `general`; rank B=13, A=473, BGE=56, T_rr=121
+  - gold `fsdw0217`: “DesignWrite INCORPORATED IMPORTANT FAX MESSAGE PLEASE DELIVER IMMEDIATELY TO: Dr. Rose Miketta FAX NUMBER: 847-470-6717 FROM: Fran Karo, PhD…”
+  - ColPali top-1 `yxpj0226`: “ASRS Hacked Emil So Coe-Cota Ain To Influence Hillary Clintom And The Media”
+- **To whom is the letter is addressed?** — `general`; rank B=16, A=85, BGE=169, T_rr=128
+  - gold `xhxj0037`: “PHILIP MORRIS U.S. A. INTER-OFFICE CORRESPONDENCE Richmond, Virginia To: Mr. R. P. Heretick Date: June 5, 1990 From: W. A. Geiszler cg90. 02…”
+  - ColPali top-1 `qmld0217`: “AIP Associated Press Thursday, May 22, 2003 Maria Simeone, Docket Clerk Office of U.S. District Court Judge Patti B. Saris John Joseph Moakl…”
+- **What is the heading of the first column of the table?** — `general`; rank B=19, A=193, BGE=464, T_rr=340
+  - gold `rrgj0223`: “EQUITY HOLDING PROMOTERS & MAJOR INVESTORS Equity Owner Type:Locked-In Shares-2007 Equity Owner Name Dalmia Housing Finance Ltd Holding Date…”
+  - ColPali top-1 `xnbx0223`: “taxes, low tourist arrivals into India in the first half coupled with the gestation of new hotel investments, and incubation of new business…”
+- **Who is shown in the picture/photo?** — `visual`; rank B=21, A=143, BGE=47, T_rr=80
+  - gold `sgwb0228`: “g To The Freshman Class Of 1961 “I welcome you at the threshold of one of the richest educational experiences that life holds, the experienc…”
+  - ColPali top-1 `yxpj0226`: “ASRS Hacked Emil So Coe-Cota Ain To Influence Hillary Clintom And The Media”
+- **What is the date of the letter ?** — `general`; rank B=32, A=190, BGE=160, T_rr=186
+  - gold `srjf0226`: “REM AR ERE EERE RRR H AAD ORE E EE edd dae EEE AE Privileged and Conijidential: Attorney - Client Communication and Attorney Work Product SE…”
+  - ColPali top-1 `qmld0217`: “AIP Associated Press Thursday, May 22, 2003 Maria Simeone, Docket Clerk Office of U.S. District Court Judge Patti B. Saris John Joseph Moakl…”
+- **Who wrote the ‘letter’?** — `exact`; rank B=33, A=17, BGE=169, T_rr=17
+  - gold `zzfv0228`: “The University of Texas System Cancer Center M. D. Anderson Hospital and Tumor Institute Texas Medical Center + 6723 Bertner Avenue + Housto…”
+  - ColPali top-1 `zybd0227`: “pied Sty} JO aprsur ay} uo yt payursd aaey | se Apoexa paqmwosurt aureu Aur pue uant3 aaey | ssorppe ay} 0} JUaS aq prnoYs ‘suey JO [TPH WOp…”
+- **What is written at the top of the page in bold capital letters?** — `visual`; rank B=36, A=347, BGE=440, T_rr=452
+  - gold `lfyx0078`: “x : Q a o S x ann et MICHIGAN SPEEDWAY MILLER 400 CAMEL ROADHOUSE SCHEDULE FRIDAY - JUNE 13, 4:00 PM - 9:00 PM SATURDAY - JUNE 14, 2:00 PM -…”
+  - ColPali top-1 `prbn0226`: “CA Alan Geller, Harvard School of Public Health August 17, 2017 “yest eee PS e ee PS RBS”
+- **What is the name of the company mentioned at the top of the table?** — `general`; rank B=37, A=328, BGE=463, T_rr=449
+  - gold `mhjb0228`: “FORD FOUNDATION AMOUNT RECIPIENT PURPOSE Nov. for interdisciplinary undergraduat cnajor in Afro-American studies Duke University, N. C. $100…”
+  - ColPali top-1 `rrgj0223`: “EQUITY HOLDING PROMOTERS & MAJOR INVESTORS Equity Owner Type:Locked-In Shares-2007 Equity Owner Name Dalmia Housing Finance Ltd Holding Date…”
+- **Who has written the note?** — `general`; rank B=37, A=491, BGE=325, T_rr=450
+  - gold `fjpk0226`: “Limca fur Mlewdey OF AAA quant - ALTA, 6 we : : te meg AG, hovtngh. ore US DA- Vee f t ‘ i £1 age fat Ae St Source: https:/Awww.industrydocu…”
+  - ColPali top-1 `jzlw0227`: “Dear Dottie: Before we could write the attached note to Miss Williamson, she phoned us. She will probably be calling you, so I thought it be…”
+- **What is the Received date stamped?** — `exact`; rank B=40, A=408, BGE=117, T_rr=204
+  - gold `jhkp0227`: “Annual Reviews Inc. Palo Alto, Calif. 94306 USA DEDUCTIONS NET | PAY | , TOTAL | LESS a PERIOD 4 EARNINGS F.LCA. Wate INSURANCE cwt EARNINGS…”
+  - ColPali top-1 `rqvg0227`: “1129 Macklind Avenue St. Louis, Missouri 63110 The Visiting Nurse Association of Greater St. Louis Dr. Anita Pepper Visiting Nurse Associati…”
+- **What is the year mentioned at the top?** — `general`; rank B=44, A=453, BGE=9, T_rr=29
+  - gold `gmvg0227`: “PUBLIC alo rs O ce S O Y Y) < APRIL 24, 25, & 26, 1973 HOTEL MUEHLEBACH KANSAS CITY, MISSOURI Source: https://www.industrydo' ents.ucsf.edu/…”
+  - ColPali top-1 `zznp0227`: “CELLULAR TRANSGLUTAMINASE, GROWTH, AND TRANSFORMATION Paul J. Birckbichler and M. K. Patterson, Jr Reprinted from ANNALS OF THE NEW YORK ACA…”
+- **What is the name of the city mentioned?** — `general`; rank B=59, A=91, BGE=42, T_rr=61
+  - gold `zhdw0228`: “MAKC MDACGMEP -} Kote ot a a RUSSISCHES og 9THMOAOCLHYECKHE | ETYMOLOGISCHES WORTERBUCH CIOBAPL PYCCKOLO WSBIRA von MAX VASMER Tlepesnoy GC …”
+  - ColPali top-1 `tnkp0227`: “ADDRESS PHONE OUT DATE READING FOLIO NUMBER IN DATE IN NO. CALLS ADVANCE PAYMENT OR TRAVEL PROG. PREVIOUS BALANCE PICK-UP REFERENCE | CHARGE…”
+- **What is the number printed at the top right of first slip?** — `general`; rank B=65, A=402, BGE=131, T_rr=231
+  - gold `jppp0227`: “COMMITTEE-ON-THE ASSESSMENT OF THE SAFETY ON LEAD AND LEAD SALTS IN FOOD. PAY TO THE ORDER OF __Dr- Robert A, Neal One Thousand y] Commerce …”
+  - ColPali top-1 `njnp0227`: “The Opera Walk- ing Stick This ele- gant, ebony colored hardwood walking stick has a German silver handle, and is 36" long. $85(2.00)#G38 Th…”
+- **What is the name of the company mentioned at the top of the page?** — `general`; rank B=76, A=213, BGE=334, T_rr=306
+  - gold `tlgw0228`: “Eprroriat Commirree ANNUAL REVIEW OF NUTRITION Eprron Harry P. Broquist - . William J. Darby William J. Darby ——— |§ ANNUAL REVIEWS INC. Cha…”
+  - ColPali top-1 `znbx0223`: “Inspired individuals share their story- what drove them to succeed against the odds and how they realized their goals. “The launch of three …”
+- **Who is the sender of this letter?** — `general`; rank B=83, A=349, BGE=192, T_rr=309
+  - gold `kgpj0226`: “Page 4 ~ Memorandum of Meeting a) That they are searching for a means to have uniform’ open os date: labeling--that open date labeling for n…”
+  - ColPali top-1 `zzfv0228`: “The University of Texas System Cancer Center M. D. Anderson Hospital and Tumor Institute Texas Medical Center + 6723 Bertner Avenue + Housto…”
+- **What is the document about?** — `general`; rank B=83, A=83, BGE=250, T_rr=152
+  - gold `xpww0217`: “Minutes From November’s Menopausal Health Publication Management Meeting November 13, 2002 Status Meeting Investigator Study/Title Source SU…”
+  - ColPali top-1 `zfkf0226`: “obligations described itt oo 6 herein. (b) Institution represents and warrants to TGRD that: (i) the terms of this Agreement do not violate …”
+- **What is the company's name on the letter head?** — `general`; rank B=86, A=435, BGE=250, T_rr=378
+  - gold `hlhp0053`: “Contact: Shanel Hicks SME 00-00 (336) 741-0743 E-mail: hickss9@rjrt.com 08/10/00 Sports Marketing Enterprises For Immediate Release Whole Lo…”
+  - ColPali top-1 `nggw0228`: “punwal Reviews Ine The Board of Directors . ale with avitude ¢ your dedicated service advancement of SCLENKES William Darby Editorial Commit…”
+- **what type of communication is this?** — `general`; rank B=99, A=296, BGE=157, T_rr=264
+  - gold `lrgn0226`: “To: Distribution From: John S. Wagley Date: August 6, 2001 Re: Product Development Agreement with Brian Haas, M.D. DePuy Orthopaedics has en…”
+  - ColPali top-1 `zhdw0228`: “MAKC MDACGMEP -} Kote ot a a RUSSISCHES og 9THMOAOCLHYECKHE | ETYMOLOGISCHES WORTERBUCH CIOBAPL PYCCKOLO WSBIRA von MAX VASMER Tlepesnoy GC …”
+- **What is the first name of the month mentioned at the top of the page?** — `general`; rank B=107, A=375, BGE=6, T_rr=2; text_finds_it
+  - gold `kqnl0226`: “Magazine Circulation AMERICAN HOE 1,975,492 ROMANTIC STORY 247,090 MOTION PICTURES 309 050 TRUS CONFESSIONS 2,317,785 SECRETS 311,471 ay Tit…”
+  - ColPali top-1 `tnkp0227`: “ADDRESS PHONE OUT DATE READING FOLIO NUMBER IN DATE IN NO. CALLS ADVANCE PAYMENT OR TRAVEL PROG. PREVIOUS BALANCE PICK-UP REFERENCE | CHARGE…”
+- **What is the phone number given?** — `general`; rank B=111, A=218, BGE=343, T_rr=327
+  - gold `rgcw0217`: “VS SONA NY GOES SS SANS ENS NN ONAL : RANAAAANGS Featuring Case Studies and Presentations from: | This exclusive event addresses ail relevan…”
+  - ColPali top-1 `spjf0226`: “INTERNATIONAL LITIGATION SERVICES CERTIFICATION OF TRANSLATION International Litigation Services, a company specializing in international ca…”
+- **What form of communication is used?** — `general`; rank B=132, A=234, BGE=323, T_rr=327
+  - gold `ptdg0227`: “DR. MANUEL MORANTE AV. JAVIER PRADO ESTE 225 OF. 402 SAN ISIDRO LIMA, PERU SINCERELY REGRET UNABLE RETURN LIMA SOON DR. ROBERT E. SHANK WR o…”
+  - ColPali top-1 `qjgn0226`: “\ * BIOMET, INC. ROYALTY PAYMENT FORM Roger Emerson Jr. MD : _ 3 Castle Creek Court Dallas, TX 75225-1821 Royalty product :- “Vanguard - E P…”
+- **What is the date mentioned at the bottom of the page?** — `general`; rank B=158, A=252, BGE=179, T_rr=228
+  - gold `rmjl0226`: “The Future of Sugar Its Role in the Diet and in Industry Address of 7) Di Romer G-Heces at P\ 3 Scientific Dixector of the Sugar Research Fo…”
+  - ColPali top-1 `znbx0223`: “Inspired individuals share their story- what drove them to succeed against the odds and how they realized their goals. “The launch of three …”
+- **What is the title of the document?** — `general`; rank B=162, A=127, BGE=106, T_rr=133
+  - gold `tqvc0228`: “AMERICAN CONFERENCE OF GOVERNMENTAL INDUSTRIAL HYGIENISTS Committee on Agricultural Health I. Are you at present condusting oF planning acti…”
+  - ColPali top-1 `slcn0226`: “Scientific Review of the Proposed Risk Assessment Bulletin from the Office of Management and Budget http://www.nap.edu/catalog/1 1811.html I…”
+- **What is the last line on the page?** — `general`; rank B=190, A=238, BGE=299, T_rr=316
+  - gold `pzwd0228`: “Procedures for the Appraisal of the Toxicity of Chemicals in Foods, Drugs and Cosmetics ‘ Reprinted from the October, 1955 Issue of Foop Dru…”
+  - ColPali top-1 `znbx0223`: “Inspired individuals share their story- what drove them to succeed against the odds and how they realized their goals. “The launch of three …”
+- **What is the phone number given at the top left end of the page?** — `general`; rank B=196, A=272, BGE=45, T_rr=84
+  - gold `qmhh0078`: “68/10 "96 1:25 031 451 5075 ICR RICCARTON oao2 OCT 08 “96 13:39 The Sora TsTasISOTE pane ot T~529 P02 F-047 ; I Gekieet: 4-7 13 - O65 akeH L…”
+  - ColPali top-1 `spjf0226`: “INTERNATIONAL LITIGATION SERVICES CERTIFICATION OF TRANSLATION International Litigation Services, a company specializing in international ca…”
+- **What is the number shown below the heading on top right corner?** — `general`; rank B=229, A=203, BGE=224, T_rr=258
+  - gold `rrlw0227`: “VITAMIN C IN FOODS 1/2 Cup NONE ORANGE GRAPEFRUIT CABBAGE BROCCOLI TURNIP GREENS, TOMATO PINEAPPLE BANANA APPLE its JUICE JUICE COOKED COOKE…”
+  - ColPali top-1 `hffn0226`: “C4 - Fourth Quarter 2005 * Charnley Chronicle Modular Fixed-Bearing Total Knee Arthroplasty with Retention of the Posterior Cruciate Ligamen…”
+- **What is the date of the document mentioned at the top?** — `general`; rank B=257, A=438, BGE=188, T_rr=317
+  - gold `hjyc0079`: “Mr. L.L. Bass, III Page —4- : February 22, 1988 Production Services o The modification and repairs have been completed on capsule washer and…”
+  - ColPali top-1 `zznp0227`: “CELLULAR TRANSGLUTAMINASE, GROWTH, AND TRANSFORMATION Paul J. Birckbichler and M. K. Patterson, Jr Reprinted from ANNALS OF THE NEW YORK ACA…”
+- **What is written in bold letters?** — `visual`; rank B=307, A=250, BGE=480, T_rr=403
+  - gold `mzmk0226`: “NEWS U.S. DEPARTMENT OF AGRICULTURE SUGAR DISTRIBUTION BY PRIMARY GROUPS ANNOUNCED FOR WEEK ENDING FEBRUARY 21, 1876: WASHINGTON, Feb. 26 --…”
+  - ColPali top-1 `zfkf0226`: “obligations described itt oo 6 herein. (b) Institution represents and warrants to TGRD that: (i) the terms of this Agreement do not violate …”
+- **what is the name of the company mentioned on the bottom left of the page ?** — `general`; rank B=318, A=490, BGE=489, T_rr=500
+  - gold `fkxn0226`: “Mrs. Herlihy-Paoli’s Losses Loss of Earnings Capacity ¢ Earnings Capacity is what an individual was able to earn before and is not limited t…”
+  - ColPali top-1 `znbx0223`: “Inspired individuals share their story- what drove them to succeed against the odds and how they realized their goals. “The launch of three …”
+- **What is the name of the company on top of the document ?** — `general`; rank B=334, A=392, BGE=128, T_rr=220
+  - gold `jycw0217`: “DesigniWiiis ta cor POP ATE DB Important Fax Message Please Deliver immediately To: Alice H. Conti Fax: (610) 964-3890 Wyeth Pharmaceuticals…”
+  - ColPali top-1 `yxpj0226`: “ASRS Hacked Emil So Coe-Cota Ain To Influence Hillary Clintom And The Media”
+- **What is the name of chocolate brand?** — `general`; rank B=340, A=246, BGE=318, T_rr=346
+  - gold `pmwm0227`: “The Role of Sugar in Modern Nutrition Symposium held at Marabou, Sundbyberg, Sweden August 18, 1973 Supplement Nr9 till Naringsforskning, ar…”
+  - ColPali top-1 `snbx0223`: “ITC Limited report and accounts 2013 Providing Value to Customers & Consumers ; ties os _ Yat tial ik As an organisation which upholds and m…”
+- **What are the letters in the monogram logo at the top right of the document?** — `visual`; rank B=354, A=131, BGE=241, T_rr=207
+  - gold `tnbx0223`: “Meetings and Attendance The Company’s Governance Policy requires the Board to meet at least six times in a year. The intervening period betw…”
+  - ColPali top-1 `tybx0223`: “NOTES ON THE FINANCIAL STATEMENTS VST Industries Limited includes purchase cost net of CENVAT credit availed and attributable expenses. Cons…”
+- **What is the date and time mentioned at the top of the page, outside of the Tabular representation?** — `exact`; rank B=368, A=270, BGE=138, T_rr=213
+  - gold `rnww0217`: “Agenda for March’s Menopausal Health Publication Management Meeting March 24, 2003, 1:00 PM—2:30 PM, Executive Conference Room 150B2 Status …”
+  - ColPali top-1 `yzdc0228`: “§ oa a u o a a sd a v = a oO v n Figure 1. Protein Solution”
+- **What is title given at the top of the page?** — `general`; rank B=483, A=223, BGE=445, T_rr=370
+  - gold `rjxn0226`: “CAMPBELL BILLING BREAKDOWN 2013 Date 7/24/2013 10-1011 $ 3,187.50 10/30/2013 10-1012 $ 9,375.00 TOTAL 2013 $ 12,562.50 2014 Date Invo: 2/17/…”
+  - ColPali top-1 `yxpj0226`: “ASRS Hacked Emil So Coe-Cota Ain To Influence Hillary Clintom And The Media”
+
+## other (17)
+
+- **What is the name of the person in the CC field ?** — `exact`; rank B=6, A=11, BGE=337, T_rr=17; near_miss
+  - gold `lflm0081`: “TO: W.C. Combs Product Recovery Department FROM: Jo Spach Public Relations . DATE: February 27, 1992 SUBJECT: Unauthorized Cigarettes Enclos…”
+  - ColPali top-1 `sncj0037`: “% BROWN & WILLIAMSON TOBACCO CORPORATION RESEARCH & DEVELOPMENT MEETING REPORT SUBJECT : Reduced Ignition Propensity/498 PRESENT: J. Wu, L. …”
+- **Which company’s memorandum is given?** — `general`; rank B=6, A=4, BGE=1, T_rr=4; near_miss, text_finds_it
+  - gold `jxjh0227`: “ae u 0 - INTER-OF FICE MEMORANDUM ye fw THE GREAT WESTERN SUGAR compan Hu \? ab ’ Your DATE: November 13 : All letters from geographic areas…”
+  - ColPali top-1 `qhmf0227`: “American Heart Association Memorandum November 8, 1977 Ronald Lauer, M.D. Robert Shank, M.D. Charles Glueck, M.D. 0 4 Ne Mary Winston, pap. …”
+- **How many points are there under the title ‘distribution’?** — `exact`; rank B=7, A=16, BGE=6, T_rr=1; near_miss, text_finds_it
+  - gold `jxmk0226`: “NUTRITION IS/Film Distribution and Promotion Distribution: 1. Print to each SA member. 2. Prints to designated allies of the industry: A. FN…”
+  - ColPali top-1 `smwn0226`: “Distribution: Manufacturing - Phil Jenks / Sam Fryback Quality - Brian Motter R&D - Jeff Ondrla / Dick Tarr / Tim Pruitt / Don McNulty Clini…”
+- **What is the name of the Client given in the report?** — `exact`; rank B=10, A=13, BGE=63, T_rr=2; near_miss, text_finds_it
+  - gold `kkww0217`: “PROGRESS REPORT 37 Totelle 2mg Client: Wyeth October 18, 2002 PROJECT CLASSIFICATION TARGET SUBMISSION DATE/JOURNAL STATUS / ACTION TRIMEGES…”
+  - ColPali top-1 `lqcw0217`: “PROGRESS REPORT 6 Totelle Img CLIENT CONTACTS | WYETH-AYERST Wyeth: DaveDowney —_ (downey@labs.wyeth.com) Rick Winneker (01 484 865 9394) Ja…”
+- **What is the name of the laboratory?** — `general`; rank B=14, A=3, BGE=48, T_rr=7; text_finds_it
+  - gold `hkbp0078`: “PRO DUC 1 PLEASE PRINT NAME/ADDRESS CORRECTIONS IN THIS SPACE. DOES THE CHANGE abbiy O PIN ION . YO ALL FAMILY MEMBERS (~) OR gust To You C)…”
+  - ColPali top-1 `yzbw0217`: “MEETING AGENDA 9/19/97 Wyeth-Ayerst Laboratories 1. Breast Cancer Paper © Changes to manuscript e Identify target audience for selection of …”
+- **Which department is mentioned in the document?** — `general`; rank B=17, A=29, BGE=1, T_rr=17; text_finds_it
+  - gold `jycg0227`: “Pere ses, Gwe Be ere eee Se ae ee CALIFORNIA STATE DEPARTMENT OF PUBLIC HEALTH 2151 Berkeley Way Berkeley, California Source: https:/Awww.in…”
+  - ColPali top-1 `xlvb0228`: “Memoranda for the President of the United States ESTABLISHMENT OF A DEPARTMENT OF NATURAL RESOURCES ORGANIZATION FOR SOCIAL AND ECONOMIC PRO…”
+- **When was this meeting happened?** — `general`; rank B=18, A=37, BGE=17, T_rr=5; text_finds_it
+  - gold `yzbd0227`: “TECHNICAL GROUP MEETING ON MATERNAL NUTRITION AND FAMILY PLANNING - October 20 - 24, 1969 Washington, D. C. Monday, October 20 First Session…”
+  - ColPali top-1 `ysvw0217`: “Strategic Publications Development Meeting September 11, 2000 11:00 am—12:30 pm Conference Room 555-5A Meeting Agenda I. Strategic Publicati…”
+- **what is the subject of this letter?** — `general`; rank B=27, A=32, BGE=265, T_rr=68
+  - gold `prvl0037`: “11/22/91 , A. W. Hayes : J. D. deBethizy P. M. Lippiello J. C. Walker R. A. Jennings { B. J. Ingebrethsen M. R. Savoca T. A. Perfetti W. M. …”
+  - ColPali top-1 `yfpj0226`: “[.& t AT J a bla v From: Michael Goltzman <mgoltzman@coca-cola.com> Sent time: Tue, 17 May 2016 04:16:57 +0000 To: Adrian Ristow <adrristow@…”
+- **What is the table number mentioned at the top centre of the page?** — `general`; rank B=38, A=78, BGE=443, T_rr=161
+  - gold `ggxn0226`: “TABLE 6.05 INDICATIONS FOR IMPLANTATION Coarctation of the aorta Congenital malformation * Includes 5 ruptured aneurisms cases The following…”
+  - ColPali top-1 `qsnc0227`: “TABLE 30 DIETARY SURVEY, ARMED FORCES OF THE PHILIPPINES, 1957 AVERAGE DAILY PER CAPITA CONSUMPTION Ord. Personnel, Cebu City Pro- Carbo- Ca…”
+- **Who is there in the first photo?** — `visual`; rank B=57, A=30, BGE=12, T_rr=3; text_finds_it
+  - gold `fkbk0226`: “OFFICERS Mr. Victor L. Johnson, Chairman of the Board of Directors Dr. Philip Ross, President and Secretary Dr. John L. Hickson, Vice Presid…”
+  - ColPali top-1 `yxpj0226`: “ASRS Hacked Emil So Coe-Cota Ain To Influence Hillary Clintom And The Media”
+- **What is page number printed at the bottom of the page?** — `general`; rank B=70, A=86, BGE=407, T_rr=163
+  - gold `rrcw0217`: “ERT/HRT Expert Forums Research examining the degree that replacement estrogen improves menopause-associated sexual changes has generated con…”
+  - ColPali top-1 `zfkf0226`: “obligations described itt oo 6 herein. (b) Institution represents and warrants to TGRD that: (i) the terms of this Agreement do not violate …”
+- **How many bullet points are there?** — `general`; rank B=136, A=2, BGE=116, T_rr=13; text_finds_it
+  - gold `zpxl0226`: “DIRECTORS" MEETING Thursday, August 1st, 1929 AGENDA Minutes. Reports of Committees. a) Enforcement Committee b) Report to Department of Jus…”
+  - ColPali top-1 `ynjf0226`: “ACTOS Risks, Upsides & Gaps Potential Risks > Avandamet 4/1000 launch » Lag behind on SOV and other marketing spending (DTC, etc.) Vs. compe…”
+- **What is the name of the company on the letter head?** — `general`; rank B=147, A=30, BGE=10, T_rr=6
+  - gold `pzyy0078`: “ge ee > MICROBIOLOGICAL ASSOCIATES INC. DIAGNOSTICS TEST ORDER CUSTOMER NAME _ LEROY GERALD BILLING ADDRESS _RIR TOBACH 00. COMPANY NAME _ R…”
+  - ColPali top-1 `znbx0223`: “Inspired individuals share their story- what drove them to succeed against the odds and how they realized their goals. “The launch of three …”
+- **What is the name of the country mentioned at the top of the page?** — `general`; rank B=161, A=44, BGE=239, T_rr=90
+  - gold `nngv0228`: “other honhe pauTVAST Name of Foundation: hexheds..ad> es Gi hin Individual(s) who plan to attend: v; We prefer the following timing for the …”
+  - ColPali top-1 `lrgn0226`: “To: Distribution From: John S. Wagley Date: August 6, 2001 Re: Product Development Agreement with Brian Haas, M.D. DePuy Orthopaedics has en…”
+- **What is the Title of the document ?** — `exact`; rank B=210, A=34, BGE=5, T_rr=10; text_finds_it
+  - gold `pyfg0227`: “NOTICE OF RESEARCH PROJECT BIO- SCIENCES INFORMATION EXCHANGE pared te sil ae SMITHSONIAN INSTITUTION QN 187 C6 SUPPORTING AGENCY: Nutrition…”
+  - ColPali top-1 `znbx0223`: “Inspired individuals share their story- what drove them to succeed against the odds and how they realized their goals. “The launch of three …”
+- **What is the first heading of the table?** — `general`; rank B=293, A=25, BGE=279, T_rr=55
+  - gold `mfmh0227`: “PENNANT RATING PREMIUMS AND PENALTIES - (PENALTIES UNDERLINED FIRST PERIOD ENDING OCTOBER 7, 1963 Pennant Rating Mol. Comp. Period & True Sa…”
+  - ColPali top-1 `zfkf0226`: “obligations described itt oo 6 herein. (b) Institution represents and warrants to TGRD that: (i) the terms of this Agreement do not violate …”
+- **What is the date mentioned at the top of the page?** — `general`; rank B=422, A=49, BGE=10, T_rr=22
+  - gold `hkvd0079`: “Mr. Page -3- April 18, 1988 L. L. Bass, III GLASS FIBER Quality- Size and standard deviation with different rolls of glass mat continue to b…”
+  - ColPali top-1 `znbx0223`: “Inspired individuals share their story- what drove them to succeed against the odds and how they realized their goals. “The launch of three …”
