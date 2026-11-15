@@ -2,7 +2,7 @@
 place of the test list and outputs go to a scratch directory. Used once before the real test run.
 
 Usage:
-    python scripts/checks/dry_run_test_evaluation.py --out /tmp/test_eval_dry_run
+    python scripts/checks/dry_run_test_evaluation.py --out /tmp/test_eval_dry_run [--config configs/<test config>.yaml]
 """
 
 import argparse
@@ -19,13 +19,14 @@ sys.path.insert(0, str(REPO))
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", required=True)
+    parser.add_argument("--config", default="configs/test_evaluation.yaml")
     args = parser.parse_args()
     out = Path(args.out).resolve()
     out.mkdir(parents=True, exist_ok=True)
 
     split = json.loads((REPO / "results/splits/docvqa_split.json").read_text())
     (out / "split_dev_as_test.json").write_text(json.dumps({"dev": split["dev"], "test": split["dev"]}))
-    cfg = yaml.safe_load((REPO / "configs/test_evaluation.yaml").read_text())
+    cfg = yaml.safe_load((REPO / args.config).read_text())
     cfg["splits"], cfg["output_dir"] = str(out / "split_dev_as_test.json"), str(out / "results")
     (out / "config.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False))
 

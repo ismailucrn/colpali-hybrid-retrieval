@@ -1,0 +1,183 @@
+{
+  "timestamp_utc": "2026-11-15T19:48:05+00:00",
+  "config_path": "configs/posthoc2_docvqa.yaml",
+  "config": {
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "text_dataset": "vidore/docvqa_test_subsampled_tesseract",
+      "text_revision": "9a183a7237d678eaaf68dc0f640a42f46016802f",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "scores": {
+      "A": "results/bm25_docvqa/scores.npz",
+      "BGE": "results/bge_m3_docvqa/scores.npz",
+      "B": "results/colpali_v1.3_docvqa/scores.npz"
+    },
+    "hybrid": {
+      "inputs": [
+        "A",
+        "BGE"
+      ],
+      "k_grid": [
+        1,
+        5,
+        10,
+        20,
+        40,
+        60,
+        80,
+        100,
+        200,
+        500
+      ],
+      "selection_metric": "ndcg_at_5",
+      "tie_break": "closest_to_60"
+    },
+    "reranker": {
+      "name": "BAAI/bge-reranker-v2-m3",
+      "revision": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+      "device": "auto",
+      "use_fp16": true,
+      "normalize": false,
+      "max_length_candidates": [
+        512,
+        1024,
+        2048
+      ],
+      "coverage": 0.95,
+      "batch_size": 16,
+      "pool_top": 50,
+      "latency": {
+        "n_queries": 50,
+        "warmup": 3,
+        "n_values": [
+          5,
+          10,
+          20,
+          50
+        ]
+      }
+    },
+    "rerank": {
+      "n_grid": [
+        1,
+        5,
+        10,
+        20,
+        50
+      ],
+      "selection_metric": "ndcg_at_5",
+      "tie_break": "smaller_n",
+      "systems": {
+        "T_rr": {
+          "name": "T_rr: T_hyb top-N reranked by cross-encoder",
+          "first": "T_hyb",
+          "second": "CE"
+        },
+        "B_ce": {
+          "name": "B_ce: ColPali top-N reranked by cross-encoder",
+          "first": "B",
+          "second": "CE"
+        }
+      }
+    },
+    "cascade": {
+      "first": "A",
+      "second": "B",
+      "n_values": [
+        10,
+        20,
+        50,
+        100
+      ]
+    },
+    "seed": 0,
+    "reranker_output_dir": "results/reranker_docvqa",
+    "output_dir": "results/posthoc2"
+  },
+  "seed": 0,
+  "git_commit": "243d8e2beb07d7d6f64ad449f54dd9a9af569ab8",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6",
+    "FlagEmbedding": "1.4.2"
+  },
+  "hardware": {
+    "device": "mps",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_reranker.py",
+  "label": "POST-HOC set 2 (exploratory): cross-encoder scores over a candidate pool",
+  "resolved": {
+    "use_fp16": true,
+    "model_sha": "953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e",
+    "dataset_sha": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+    "text_dataset_sha": "9a183a7237d678eaaf68dc0f640a42f46016802f",
+    "T_hyb_k": 5
+  },
+  "pool": {
+    "top": 50,
+    "n_pairs": 37895,
+    "mean_pages_per_query": 84.02439024390245,
+    "min_pages_per_query": 64,
+    "max_pages_per_query": 99
+  },
+  "max_length": {
+    "longest_query_tokens": 29,
+    "page_tokens_median": 248.5,
+    "page_tokens_p95": 800.0999999999999,
+    "page_tokens_max": 2013,
+    "share_of_pairs_fitting": {
+      "512": 0.798,
+      "1024": 0.974,
+      "2048": 1.0
+    },
+    "coverage_rule": 0.95,
+    "chosen_max_length": 1024,
+    "pages_truncated_at_chosen": 13
+  },
+  "timings": {
+    "download_s": 21.103512083005626,
+    "model_load_s": 0.5982569589978084,
+    "score_pool_s": 1402.461809415996,
+    "score_per_pair_ms": 37.00915185158981
+  },
+  "latency_by_n": {
+    "5": {
+      "median_ms": 698.1378334967303,
+      "mean_ms": 761.438962459215,
+      "p95_ms": 1401.1504246976983
+    },
+    "10": {
+      "median_ms": 1633.6632710008416,
+      "mean_ms": 1794.9403307196917,
+      "p95_ms": 2694.2715706609306
+    },
+    "20": {
+      "median_ms": 5340.352937499119,
+      "mean_ms": 4662.562835800054,
+      "p95_ms": 5634.695862803346
+    },
+    "50": {
+      "median_ms": 13595.434937495156,
+      "mean_ms": 13685.774278281315,
+      "p95_ms": 14252.360716148542
+    }
+  },
+  "latency_note": "rerank T_hyb's top N for one query on mps: tokenisation + forward, batch = N pairs; 50 queries after 3 warm-up",
+  "peak_memory": {
+    "peak_driver_allocated_mb": 5221.3125,
+    "method": "sampled torch.mps.driver_allocated_memory"
+  }
+}

@@ -1,0 +1,59 @@
+# POST-HOC set 2 test evaluation (pre-registered 2026-11-15 in 92c2163, after the main test run and post-hoc set 1).
+# Text RAG retrieval stack (T_hyb, T_rr), cross-encoder reranking of ColPali (B_ce), and the BM25 -> ColPali cascade.
+# Settings come from the dev selections in results/posthoc2/; the script refuses any other value (frozen_check: posthoc2).
+# The test split is evaluated once for these systems. Exploratory: changes nothing in the main result.
+
+title: "POST-HOC set 2 test-split results (exploratory; main test run was 2026-11-04)"
+frozen_check: posthoc2
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  split: test
+
+splits: results/splits/docvqa_split.json
+tags: results/splits/docvqa_query_tags.csv
+
+scores:
+  A: results/bm25_docvqa/scores.npz
+  BGE: results/bge_m3_docvqa/scores.npz
+  B: results/colpali_v1.3_docvqa/scores.npz
+  CE: results/reranker_docvqa/ce_scores.npz     # NaN outside the candidate pool
+
+component_metrics:
+  A: results/bm25_docvqa/metrics.json
+  BGE: results/bge_m3_docvqa/metrics.json
+  B: results/colpali_v1.3_docvqa/metrics.json
+  CE: results/reranker_docvqa/metrics.json
+
+extra_metrics: [recall_at_20, recall_at_50, recall_at_100]
+cascade_n_values: [10, 20, 50, 100]
+
+# Order matters: a rerank system may use an earlier system as its first stage.
+systems:
+  A:      {name: "A: BM25",                                    kind: single, scores: A, role: "reference"}
+  BGE:    {name: "BGE-M3 (dense text)",                        kind: single, scores: BGE, role: "reference"}
+  B:      {name: "B: ColPali v1.3",                            kind: single, scores: B, role: "baseline"}
+  T_hyb:  {name: "T_hyb: RRF(BM25, BGE-M3)",                   kind: rrf, inputs: [A, BGE], k: 5, role: "post-hoc 2: text hybrid"}
+  T_rr:   {name: "T_rr: T_hyb top-N reranked by cross-encoder", kind: rerank, first: T_hyb, second: CE, n: 50, role: "post-hoc 2: text RAG stack"}
+  B_ce:   {name: "B_ce: ColPali top-N reranked by cross-encoder", kind: rerank, first: B, second: CE, n: 1, role: "post-hoc 2: text signal on ColPali"}
+  AB_10:  {name: "Cascade: ColPali reorders BM25 top 10",  kind: rerank, first: A, second: B, n: 10,  role: "post-hoc 2: cascade (descriptive)"}
+  AB_20:  {name: "Cascade: ColPali reorders BM25 top 20",  kind: rerank, first: A, second: B, n: 20,  role: "post-hoc 2: cascade (descriptive)"}
+  AB_50:  {name: "Cascade: ColPali reorders BM25 top 50",  kind: rerank, first: A, second: B, n: 50,  role: "post-hoc 2: cascade (descriptive)"}
+  AB_100: {name: "Cascade: ColPali reorders BM25 top 100", kind: rerank, first: A, second: B, n: 100, role: "post-hoc 2: cascade (descriptive)"}
+
+baseline: B
+compare_to_baseline: [T_hyb, T_rr, B_ce]          # Holm over these three
+extra_pairs: [[T_rr, T_hyb], [T_hyb, A], [T_rr, A]]
+pairs_title: "Pairs (post-hoc set 2): reranker effect, hybrid vs BM25, full text stack vs BM25"
+headroom_pairs: [[T_rr, B]]
+
+statistics:
+  metric: ndcg_at_5
+  bootstrap_resamples: 10000
+  permutations: 10000
+  alpha: 0.05
+  seed: 0
+  multiple_comparisons: holm
+
+output_dir: results/posthoc2

@@ -1,0 +1,5 @@
+T_rr dev nDCG@5: N=1: 0.4062  N=5: 0.4428  N=10: 0.4546  N=20: 0.4707  N=50: 0.4747
+  -> selected N = 50
+B_ce dev nDCG@5: N=1: 0.5804  N=5: 0.5508  N=10: 0.5234  N=20: 0.5025  N=50: 0.4725
+  -> selected N = 1
+wrote /Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval/results/posthoc2/dev_selection_rerank.json

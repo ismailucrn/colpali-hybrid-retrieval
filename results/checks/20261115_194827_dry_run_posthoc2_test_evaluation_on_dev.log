@@ -1,0 +1,78 @@
+# POST-HOC set 2 test-split results (exploratory; main test run was 2026-11-04) (n = 226 queries), nDCG@5 unless stated
+
+| System | Role | nDCG@5 [95% CI] | Recall@5 | Recall@10 | nDCG@10 | MRR@10 | Δ vs B [95% CI] | p (perm.) | p (Holm) | W/T/L vs B |
+|---|---|---|---|---|---|---|---|---|---|---|
+| A: BM25 | reference | 0.3995 [0.3403, 0.4613] | 0.4558 | 0.4823 | 0.4082 | 0.3842 | – | – | – | – |
+| BGE-M3 (dense text) | reference | 0.2351 [0.1842, 0.2880] | 0.2788 | 0.3938 | 0.2727 | 0.2371 | – | – | – | – |
+| B: ColPali v1.3 | baseline | 0.5804 [0.5204, 0.6406] | 0.6460 | 0.6991 | 0.5976 | 0.5658 | – | – | – | – |
+| T_hyb: RRF(BM25, BGE-M3) | post-hoc 2: text hybrid | 0.4062 [0.3459, 0.4673] | 0.4690 | 0.5088 | 0.4190 | 0.3905 | -0.1742 [-0.2221, -0.1275] | 0.0001 | 0.0003 | 10/150/66 |
+| T_rr: T_hyb top-N reranked by cross-encoder | post-hoc 2: text RAG stack | 0.4747 [0.4113, 0.5364] | 0.5265 | 0.5708 | 0.4893 | 0.4636 | -0.1057 [-0.1525, -0.0601] | 0.0001 | 0.0003 | 18/162/46 |
+| B_ce: ColPali top-N reranked by cross-encoder | post-hoc 2: text signal on ColPali | 0.5804 [0.5204, 0.6406] | 0.6460 | 0.6991 | 0.5976 | 0.5658 | +0.0000 [+0.0000, +0.0000] | 1.0000 | 1.0000 | 0/226/0 |
+| Cascade: ColPali reorders BM25 top 10 | post-hoc 2: cascade (descriptive) | 0.4471 [0.3829, 0.5118] | 0.4735 | 0.4823 | 0.4500 | 0.4395 | – | – | – | – |
+| Cascade: ColPali reorders BM25 top 20 | post-hoc 2: cascade (descriptive) | 0.4583 [0.3934, 0.5224] | 0.4867 | 0.5044 | 0.4641 | 0.4512 | – | – | – | – |
+| Cascade: ColPali reorders BM25 top 50 | post-hoc 2: cascade (descriptive) | 0.5007 [0.4373, 0.5631] | 0.5442 | 0.5708 | 0.5093 | 0.4900 | – | – | – | – |
+| Cascade: ColPali reorders BM25 top 100 | post-hoc 2: cascade (descriptive) | 0.5145 [0.4514, 0.5769] | 0.5664 | 0.5973 | 0.5243 | 0.5014 | – | – | – | – |
+
+## Pairs (post-hoc set 2): reranker effect, hybrid vs BM25, full text stack vs BM25
+
+| Pair | Δ [95% CI] | p (perm.) | W/T/L |
+|---|---|---|---|
+| T_rr vs T_hyb | +0.0685 [+0.0287, +0.1087] | 0.0008 | 40/171/15 |
+| T_hyb vs A | +0.0067 [-0.0166, +0.0306] | 0.5832 | 17/192/17 |
+| T_rr vs A | +0.0752 [+0.0401, +0.1108] | 0.0001 | 37/179/10 |
+
+## By query type (exploratory, uncorrected)
+
+| System | exact (n=93) | general (n=115) | visual (n=18) |
+|---|---|---|---|
+| A: BM25 | 0.644 | 0.256 | 0.056 |
+| BGE-M3 (dense text) | 0.405 | 0.118 | 0.107 |
+| B: ColPali v1.3 | 0.828 | 0.411 | 0.385 |
+| T_hyb: RRF(BM25, BGE-M3) | 0.623 (Δ -0.206, p=0.000) | 0.286 (Δ -0.125, p=0.000) | 0.056 (Δ -0.329, p=0.014) |
+| T_rr: T_hyb top-N reranked by cross-encoder | 0.726 (Δ -0.103, p=0.002) | 0.337 (Δ -0.073, p=0.031) | 0.056 (Δ -0.329, p=0.014) |
+| B_ce: ColPali top-N reranked by cross-encoder | 0.828 (Δ +0.000, p=1.000) | 0.411 (Δ +0.000, p=1.000) | 0.385 (Δ +0.000, p=1.000) |
+| Cascade: ColPali reorders BM25 top 10 | 0.702 | 0.302 | 0.056 |
+| Cascade: ColPali reorders BM25 top 20 | 0.726 | 0.304 | 0.056 |
+| Cascade: ColPali reorders BM25 top 50 | 0.767 | 0.342 | 0.139 |
+| Cascade: ColPali reorders BM25 top 100 | 0.778 | 0.351 | 0.198 |
+
+## Post-hoc: without duplicated query texts (n = 217)
+
+| System | nDCG@5 | Δ vs B |
+|---|---|---|
+| A: BM25 | 0.4161 | – |
+| BGE-M3 (dense text) | 0.2429 | – |
+| B: ColPali v1.3 | 0.6045 | – |
+| T_hyb: RRF(BM25, BGE-M3) | 0.4230 | -0.1815 |
+| T_rr: T_hyb top-N reranked by cross-encoder | 0.4944 | -0.1101 |
+| B_ce: ColPali top-N reranked by cross-encoder | 0.6045 | +0.0000 |
+| Cascade: ColPali reorders BM25 top 10 | 0.4656 | – |
+| Cascade: ColPali reorders BM25 top 20 | 0.4773 | – |
+| Cascade: ColPali reorders BM25 top 50 | 0.5215 | – |
+| Cascade: ColPali reorders BM25 top 100 | 0.5359 | – |
+
+## Resources (per system; components measured on different devices, see note)
+
+| System | Index time (s) | Index size (MB) | Query latency, sequential (ms) | parallel (ms) | Fusion overhead (ms) |
+|---|---|---|---|---|---|
+| A: BM25 | 0.35 | 0.63 | 0.12 | 0.12 | 0.000 |
+| BGE-M3 (dense text) | 21.10 | 1.95 | 29.04 | 29.04 | 0.000 |
+| B: ColPali v1.3 | 111.70 | 125.85 | 51.30 | 51.30 | 0.000 |
+| T_hyb: RRF(BM25, BGE-M3) | 21.44 | 2.58 | 29.31 | 29.18 | 0.140 |
+| T_rr: T_hyb top-N reranked by cross-encoder | 21.44 | 2.58 | 13624.74 | 13624.62 | 0.140 |
+| B_ce: ColPali top-N reranked by cross-encoder | 111.70 | 125.85 | 51.30 | 51.30 | 0.000 |
+| Cascade: ColPali reorders BM25 top 10 | 112.04 | 126.48 | 51.42 | 51.42 | 0.000 |
+| Cascade: ColPali reorders BM25 top 20 | 112.04 | 126.48 | 51.42 | 51.42 | 0.000 |
+| Cascade: ColPali reorders BM25 top 50 | 112.04 | 126.48 | 51.42 | 51.42 | 0.000 |
+| Cascade: ColPali reorders BM25 top 100 | 112.04 | 126.48 | 51.42 | 51.42 | 0.000 |
+
+Component latencies were measured on different devices (ColPali: L4 GPU; BGE-M3: Mac MPS; BM25 and fusion: Mac CPU). Sequential = sum of components + fusion; parallel = slowest component + fusion.
+
+## Top-5 headroom: T_rr vs B
+
+| Group | T_rr_hit | B_hit | T_rr_only | B_only |
+|---|---|---|---|---|
+| all (n=226) | 119 | 146 | 5 | 32 |
+| exact (n=93) | 71 | 81 | 0 | 10 |
+| general (n=115) | 47 | 57 | 5 | 15 |
+| visual (n=18) | 1 | 8 | 0 | 7 |

@@ -72,6 +72,90 @@ def table(name: str, spec: str, header: str, rows: list[str], note: str | None =
     (OUT / f"{name}.tex").write_text("\n".join(lines) + "\n")
 
 
+def posthoc2(N: dict) -> None:
+    """POST-HOC set 2 (pre-registered 2026-11-15, commit 92c2163): text RAG stack, cross-encoder, cascade, OCR."""
+    t = load("results/posthoc2/metrics.json")
+    hy = load("results/posthoc2/dev_selection_hybrid.json")
+    rr = load("results/posthoc2/dev_selection_rerank.json")
+    ce = load("results/reranker_docvqa/metrics.json")
+    oq = load("results/ocr_quality/ocr_quality.json")
+    R, V, P = t["results"], t["vs_baseline"], t["pairs"]
+    k_h = hy["systems"]["T_hyb"]["selected_k"]
+    n_t, n_b = rr["systems"]["T_rr"]["selected_n"], rr["systems"]["B_ce"]["selected_n"]
+    N.update({
+        "kThyb": str(k_h), "devThyb": f3(hy["systems"]["T_hyb"]["dev_sweep"][str(k_h)]["ndcg_at_5"]),
+        "nTrr": str(n_t), "nBce": str(n_b),
+        "devTrr": f3(rr["systems"]["T_rr"]["dev_sweep"][str(n_t)]["ndcg_at_5"]),
+        "devBce": f3(rr["systems"]["B_ce"]["dev_sweep"][str(n_b)]["ndcg_at_5"]),
+        "ceMaxLen": str(ce["max_length"]["chosen_max_length"]),
+        "ceFitPct": f"{100 * ce['max_length']['share_of_pairs_fitting'][str(ce['max_length']['chosen_max_length'])]:.1f}",
+        "cePairs": f"{ce['pool']['n_pairs']:,}".replace(",", "{,}"),
+        "cePoolMean": f"{ce['pool']['mean_pages_per_query']:.0f}",
+        "ceScoreS": f"{ce['timings']['score_pool_s']:.0f}",
+        "ceMemGB": f"{next(v for k, v in ce['peak_memory'].items() if k.endswith('_mb')) / 1024:.1f}",
+    })
+    for s, key in (("T_hyb", "Thyb"), ("T_rr", "Trr"), ("B_ce", "Bce")):
+        N[f"test{key}"] = f3(R[s]["metrics"]["ndcg_at_5"])
+        N[f"test{key}CI"] = ci(R[s]["ndcg_at_5_ci95"])
+        N[f"delta{key}"] = sgn(V[s]["delta"])
+        N[f"delta{key}CI"] = sci(V[s]["delta_ci95"])
+        N[f"pHolm{key}"] = pval(V[s]["p_holm"])
+        N[f"wtl{key}"] = "{wins}/{ties}/{losses}".format(**V[s])
+    for pair, key in (("T_rr vs T_hyb", "TrrThyb"), ("T_hyb vs A", "ThybA"), ("T_rr vs A", "TrrA")):
+        N[f"delta{key}"] = sgn(P[pair]["delta"])
+        N[f"delta{key}CI"] = sci(P[pair]["delta_ci95"])
+        N[f"p{key}"] = pval(P[pair]["p_permutation"])
+    lat = t["resources"]["systems"]
+    for s, key in (("T_rr", "Trr"), ("B_ce", "Bce")):
+        N[f"lat{key}"] = f"{lat[s]['query_latency_sequential_ms']:.0f}"
+    H = t["headroom_at_5"]["T_rr vs B"]["all"]
+    N.update({"headTrrOnly": str(H["T_rr_only"]), "headTrrBOnly": str(H["B_only"]), "hitTrr": str(H["T_rr_hit"])})
+
+    rows = []
+    for s in ["A", "BGE", "T_hyb", "T_rr", "B", "B_ce"]:
+        m = R[s]
+        label = {"A": "A: BM25", "BGE": "BGE-M3 (dense text)",
+                 "T_hyb": f"T$_\\text{{hyb}}$: RRF(BM25, BGE-M3), $k{{=}}{k_h}$",
+                 "T_rr": f"T$_\\text{{rr}}$: T$_\\text{{hyb}}$ top-{n_t} reranked by cross-encoder",
+                 "B": "B: ColPali v1.3",
+                 "B_ce": f"B$_\\text{{ce}}$: ColPali top-{n_b} reranked by cross-encoder"}[s]
+        tail = f"{sgn(V[s]['delta'])} {sci(V[s]['delta_ci95'])} & {pval(V[s]['p_holm'])}" if s in V else "-- & --"
+        rows.append(f"{label} & {f3(m['metrics']['ndcg_at_5'])} {ci(m['ndcg_at_5_ci95'])} & "
+                    f"{f3(m['metrics']['recall_at_5'])} & {f3(m['metrics']['mrr_at_10'])} & {tail}")
+    table("tab_posthoc2", "llllll",
+          r"System (post-hoc set 2) & nDCG@5 [95\% CI] & R@5 & MRR@10 & $\Delta$ vs B [95\% CI] & $p_\mathrm{Holm}$", rows,
+          f"Test split, {t['n_test_queries']} queries, evaluated once with settings chosen on dev. Holm correction over "
+          "T$_\\text{hyb}$, T$_\\text{rr}$ and B$_\\text{ce}$ vs B. Cross-encoder: bge-reranker-v2-m3 over the same OCR text, "
+          f"max length {ce['max_length']['chosen_max_length']} tokens.")
+
+    rows = []
+    for n in t["config"]["cascade_n_values"]:
+        m = R[f"AB_{n}"]["metrics"]
+        rows.append(f"{n} & {f3(R['A']['metrics'][f'recall_at_{n}'])} & {f3(m['ndcg_at_5'])} & {f3(m['recall_at_5'])}")
+    rows.append(f"500 (all pages) & 1.000 & {f3(R['B']['metrics']['ndcg_at_5'])} & {f3(R['B']['metrics']['recall_at_5'])}")
+    table("tab_cascade", "rrrr", r"$N$ & BM25 Recall@$N$ (ceiling) & nDCG@5 & R@5", rows,
+          "Test split; ColPali reorders BM25's top $N$ (descriptive, no selection). $N{=}500$ is ColPali alone.")
+
+    rows = []
+    names = {"A": "BM25", "BGE": "BGE-M3", "B": "ColPali"}
+    for g in ("low", "mid", "high", "empty OCR"):
+        r = oq["by_tercile"][g]
+        rng = f"{r['proxy_range'][0]:.2f}--{r['proxy_range'][1]:.2f}" if r["proxy_range"] else "--"
+        rows.append(f"{g} & {r['n']} & {rng} & " + " & ".join(f3(r[f'{s}_hit5']) for s in names))
+    rows.append(r"\midrule Spearman $\rho$ [95\% CI] & 451 & & " + " & ".join(
+        f"{sgn(oq['spearman_vs_ndcg5'][s]['spearman_rho'], 2)} [{sgn(oq['spearman_vs_ndcg5'][s]['ci95'][0], 2)}, "
+        f"{sgn(oq['spearman_vs_ndcg5'][s]['ci95'][1], 2)}]" for s in names))
+    table("tab_ocr", "lrllll", r"Gold-page OCR proxy & $n$ & range & BM25 Hit@5 & BGE-M3 Hit@5 & ColPali Hit@5", rows,
+          "Full query set. Proxy: share of alphabetic OCR tokens found in the NLTK English word list; queries grouped "
+          "by the proxy of their gold page. $\\rho$: Spearman correlation between the proxy and per-query nDCG@5.")
+    N.update({"ocrMedian": f"{oq['pages']['median']:.2f}", "ocrPtenth": f"{oq['pages']['p10']:.2f}",
+              "ocrPninety": f"{oq['pages']['p90']:.2f}"})
+    for s, key in (("A", "A"), ("BGE", "BGE"), ("B", "B")):
+        c = oq["spearman_vs_ndcg5"][s]
+        N[f"ocrRho{key}"] = sgn(c["spearman_rho"], 2)
+        N[f"ocrRho{key}CI"] = f"[{sgn(c['ci95'][0], 2)}, {sgn(c['ci95'][1], 2)}]"
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     full = {s: load(f"results/{d}/metrics.json") for s, d in
@@ -299,6 +383,8 @@ def main() -> None:
           f"Test split, {ph['n_test_queries']} queries; post-hoc analyses pre-registered after the main test run. "
           "Holm correction over C$_\\text{code}$, C$_\\text{cc}$, D$_\\text{cc}$ vs B. "
           "$\\alpha$ was selected on dev; $\\alpha{=}1$ means ColPali alone.")
+
+    posthoc2(N)
 
     lines = ["% generated by scripts/make_report_tables.py -- do not edit"]
     lines += [f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in N.items()]

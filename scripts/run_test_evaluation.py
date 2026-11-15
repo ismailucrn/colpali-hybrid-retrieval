@@ -25,6 +25,7 @@ from scripts.run_fusion_dev import load_scores  # noqa: E402
 from src.data import load_task  # noqa: E402
 from src.evaluation import evaluate, scores_to_run, subset  # noqa: E402
 from src.fusion import convex_combination, rrf, weighted_rrf  # noqa: E402
+from src.rerank import rerank_top_n  # noqa: E402
 from src.runinfo import REPO_ROOT, collect_metadata  # noqa: E402
 from src.stats import bootstrap_ci, holm, paired_bootstrap_ci, paired_permutation_test  # noqa: E402
 
@@ -38,6 +39,16 @@ DEFAULT_COMPONENTS = {"A": "results/bm25_docvqa/metrics.json", "B": "results/col
 
 def check_frozen_settings(systems: dict, mode: str = "main") -> None:
     """Fail loudly if the config differs from what was selected on dev."""
+    if mode == "posthoc2":
+        hyb = json.loads((REPO_ROOT / "results/posthoc2/dev_selection_hybrid.json").read_text())["systems"]
+        rer = json.loads((REPO_ROOT / "results/posthoc2/dev_selection_rerank.json").read_text())["systems"]
+        if systems["T_hyb"]["k"] != hyb["T_hyb"]["selected_k"]:
+            raise SystemExit(f"T_hyb: k {systems['T_hyb']['k']} != dev selection {hyb['T_hyb']['selected_k']}")
+        for sid in ("T_rr", "B_ce"):
+            if (systems[sid]["first"], systems[sid]["n"]) != (rer[sid]["first"], rer[sid]["selected_n"]):
+                raise SystemExit(f"{sid}: config (first={systems[sid]['first']}, N={systems[sid]['n']}) != dev selection "
+                                 f"(first={rer[sid]['first']}, N={rer[sid]['selected_n']})")
+        return
     if mode == "posthoc":
         cc = json.loads((REPO_ROOT / "results/posthoc_extensions/dev_selection_cc.json").read_text())["systems"]
         plain = json.loads((REPO_ROOT / "results/fusion_docvqa/dev_selection.json").read_text())["systems"]
@@ -66,6 +77,10 @@ def build_scores(systems: dict, base: dict[str, np.ndarray], page_ids: list[str]
         if cfg["kind"] == "single":
             scores[sid] = base[cfg["scores"]]
             continue
+        if cfg["kind"] == "rerank":  # post-hoc set 2: first stage (a base score or an earlier system), top N reordered
+            first = scores[cfg["first"]] if cfg["first"] in scores else base[cfg["first"]]
+            scores[sid] = rerank_top_n(first, base[cfg["second"]], cfg["n"], page_ids)
+            continue
         inputs = [base[i] for i in cfg["inputs"]]
         if cfg["kind"] == "rrf":
             fuse = lambda x, c=cfg: rrf(x, page_ids, k=c["k"])  # noqa: E731
@@ -91,6 +106,13 @@ def resource_table(fusion_ms: dict, systems: dict, components: dict | None = Non
     comp = {}
     for key, path in (components or DEFAULT_COMPONENTS).items():
         m = json.loads((REPO_ROOT / path).read_text())
+        if "latency_by_n" in m:  # cross-encoder: no index; latency depends on how many pages are reranked
+            mem = m["peak_memory"]
+            comp[key] = {"device": m["hardware"]["device"], "index_time_s": 0.0, "index_size_mb": 0.0,
+                         "latency_by_n_ms": {int(n): v["median_ms"] for n, v in m["latency_by_n"].items()},
+                         "peak_memory_mb": next(v for k, v in mem.items() if k.endswith("_mb")),
+                         "peak_memory_kind": next(k for k in mem if k.endswith("_mb"))}
+            continue
         lat = m["latency"]["total"]["median_ms"] if "total" in m["latency"] else m["latency"]["median_ms"]
         mem = m["peak_memory"]
         comp[key] = {
@@ -103,6 +125,31 @@ def resource_table(fusion_ms: dict, systems: dict, components: dict | None = Non
         }
     table = {}
     for sid, cfg in systems.items():
+        if cfg["kind"] == "rerank":
+            # Sequential by nature: first stage, then the second stage on its top N.
+            f = table[cfg["first"]] if cfg["first"] in table else None
+            f_parts = f["components"] if f else [cfg["first"]]
+            f_seq = f["query_latency_sequential_ms"] if f else comp[cfg["first"]]["query_latency_median_ms"]
+            f_par = f["query_latency_parallel_ms"] if f else comp[cfg["first"]]["query_latency_median_ms"]
+            c2 = comp[cfg["second"]]
+            if "latency_by_n_ms" in c2:
+                if cfg["n"] <= 1:
+                    second_ms = 0.0
+                elif cfg["n"] in c2["latency_by_n_ms"]:
+                    second_ms = c2["latency_by_n_ms"][cfg["n"]]
+                else:
+                    raise SystemExit(f"{sid}: no latency measured for N={cfg['n']}")
+            else:  # e.g. ColPali reordering N pages: query encoding dominates, so use its full latency (upper bound)
+                second_ms = c2["query_latency_median_ms"] if cfg["n"] > 1 else 0.0
+            table[sid] = {
+                "components": f_parts + [cfg["second"]],
+                "index_time_s": (f["index_time_s"] if f else comp[cfg["first"]]["index_time_s"]) + c2["index_time_s"],
+                "index_size_mb": (f["index_size_mb"] if f else comp[cfg["first"]]["index_size_mb"]) + c2["index_size_mb"],
+                "query_latency_sequential_ms": f_seq + second_ms,
+                "query_latency_parallel_ms": f_par + second_ms,
+                "fusion_overhead_ms": f["fusion_overhead_ms"] if f else 0.0,
+            }
+            continue
         parts = [cfg["scores"]] if cfg["kind"] == "single" else cfg["inputs"]
         seq = sum(comp[p]["query_latency_median_ms"] for p in parts) + fusion_ms.get(sid, 0.0)
         par = max(comp[p]["query_latency_median_ms"] for p in parts) + fusion_ms.get(sid, 0.0)
@@ -144,8 +191,9 @@ def main() -> None:
     def ci(values):
         return bootstrap_ci(values, scfg["bootstrap_resamples"], scfg["alpha"], scfg["seed"])
 
+    report_metrics = REPORT_METRICS + [m for m in config.get("extra_metrics", []) if m not in REPORT_METRICS]
     results = {sid: {"name": systems[sid]["name"], "role": systems[sid].get("role", ""),
-                     "metrics": {m: agg[sid][m] for m in REPORT_METRICS},
+                     "metrics": {m: agg[sid][m] for m in report_metrics},
                      f"{metric}_ci95": ci(vec[sid])} for sid in scores}
 
     # Paired comparisons.
