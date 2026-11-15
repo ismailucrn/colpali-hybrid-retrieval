@@ -1,0 +1,5 @@
+repo:   /Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval @ fda9e01
+python: Python 3.11.16 (.venv/bin/python)
+clone:  /var/folders/nh/6rr8fmbx7gs01rbm1n984w6h0000gn/T/tmp.yvH76xIJDB/repo
+== scripts/run_bm25.py --config configs/bm25_docvqa.yaml
+scripts/checks/reproduce_cpu_pipeline.sh: line 25: .venv/bin/python: No such file or directory
