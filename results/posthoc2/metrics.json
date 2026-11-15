@@ -1,0 +1,1012 @@
+{
+  "timestamp_utc": "2026-11-15T19:48:47+00:00",
+  "config_path": "configs/posthoc2_test_evaluation.yaml",
+  "config": {
+    "title": "POST-HOC set 2 test-split results (exploratory; main test run was 2026-11-04)",
+    "frozen_check": "posthoc2",
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "tags": "results/splits/docvqa_query_tags.csv",
+    "scores": {
+      "A": "results/bm25_docvqa/scores.npz",
+      "BGE": "results/bge_m3_docvqa/scores.npz",
+      "B": "results/colpali_v1.3_docvqa/scores.npz",
+      "CE": "results/reranker_docvqa/ce_scores.npz"
+    },
+    "component_metrics": {
+      "A": "results/bm25_docvqa/metrics.json",
+      "BGE": "results/bge_m3_docvqa/metrics.json",
+      "B": "results/colpali_v1.3_docvqa/metrics.json",
+      "CE": "results/reranker_docvqa/metrics.json"
+    },
+    "extra_metrics": [
+      "recall_at_20",
+      "recall_at_50",
+      "recall_at_100"
+    ],
+    "cascade_n_values": [
+      10,
+      20,
+      50,
+      100
+    ],
+    "systems": {
+      "A": {
+        "name": "A: BM25",
+        "kind": "single",
+        "scores": "A",
+        "role": "reference"
+      },
+      "BGE": {
+        "name": "BGE-M3 (dense text)",
+        "kind": "single",
+        "scores": "BGE",
+        "role": "reference"
+      },
+      "B": {
+        "name": "B: ColPali v1.3",
+        "kind": "single",
+        "scores": "B",
+        "role": "baseline"
+      },
+      "T_hyb": {
+        "name": "T_hyb: RRF(BM25, BGE-M3)",
+        "kind": "rrf",
+        "inputs": [
+          "A",
+          "BGE"
+        ],
+        "k": 5,
+        "role": "post-hoc 2: text hybrid"
+      },
+      "T_rr": {
+        "name": "T_rr: T_hyb top-N reranked by cross-encoder",
+        "kind": "rerank",
+        "first": "T_hyb",
+        "second": "CE",
+        "n": 50,
+        "role": "post-hoc 2: text RAG stack"
+      },
+      "B_ce": {
+        "name": "B_ce: ColPali top-N reranked by cross-encoder",
+        "kind": "rerank",
+        "first": "B",
+        "second": "CE",
+        "n": 1,
+        "role": "post-hoc 2: text signal on ColPali"
+      },
+      "AB_10": {
+        "name": "Cascade: ColPali reorders BM25 top 10",
+        "kind": "rerank",
+        "first": "A",
+        "second": "B",
+        "n": 10,
+        "role": "post-hoc 2: cascade (descriptive)"
+      },
+      "AB_20": {
+        "name": "Cascade: ColPali reorders BM25 top 20",
+        "kind": "rerank",
+        "first": "A",
+        "second": "B",
+        "n": 20,
+        "role": "post-hoc 2: cascade (descriptive)"
+      },
+      "AB_50": {
+        "name": "Cascade: ColPali reorders BM25 top 50",
+        "kind": "rerank",
+        "first": "A",
+        "second": "B",
+        "n": 50,
+        "role": "post-hoc 2: cascade (descriptive)"
+      },
+      "AB_100": {
+        "name": "Cascade: ColPali reorders BM25 top 100",
+        "kind": "rerank",
+        "first": "A",
+        "second": "B",
+        "n": 100,
+        "role": "post-hoc 2: cascade (descriptive)"
+      }
+    },
+    "baseline": "B",
+    "compare_to_baseline": [
+      "T_hyb",
+      "T_rr",
+      "B_ce"
+    ],
+    "extra_pairs": [
+      [
+        "T_rr",
+        "T_hyb"
+      ],
+      [
+        "T_hyb",
+        "A"
+      ],
+      [
+        "T_rr",
+        "A"
+      ]
+    ],
+    "pairs_title": "Pairs (post-hoc set 2): reranker effect, hybrid vs BM25, full text stack vs BM25",
+    "headroom_pairs": [
+      [
+        "T_rr",
+        "B"
+      ]
+    ],
+    "statistics": {
+      "metric": "ndcg_at_5",
+      "bootstrap_resamples": 10000,
+      "permutations": 10000,
+      "alpha": 0.05,
+      "seed": 0,
+      "multiple_comparisons": "holm"
+    },
+    "output_dir": "results/posthoc2"
+  },
+  "seed": 0,
+  "git_commit": "68cf359be3bd491d15596b963387eb494e3a393f",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_test_evaluation.py --config configs/posthoc2_test_evaluation.yaml",
+  "n_test_queries": 225,
+  "results": {
+    "A": {
+      "name": "A: BM25",
+      "role": "reference",
+      "metrics": {
+        "ndcg_at_5": 0.3818168465314686,
+        "recall_at_5": 0.4444444444444444,
+        "recall_at_10": 0.49777777777777776,
+        "ndcg_at_10": 0.39908637651396084,
+        "mrr_at_10": 0.36855202821869487,
+        "recall_at_20": 0.5511111111111111,
+        "recall_at_50": 0.6355555555555555,
+        "recall_at_100": 0.6888888888888889
+      },
+      "ndcg_at_5_ci95": [
+        0.3231485075813466,
+        0.4409692240061987
+      ]
+    },
+    "BGE": {
+      "name": "BGE-M3 (dense text)",
+      "role": "reference",
+      "metrics": {
+        "ndcg_at_5": 0.2622118984405109,
+        "recall_at_5": 0.30666666666666664,
+        "recall_at_10": 0.4177777777777778,
+        "ndcg_at_10": 0.29731167644418216,
+        "mrr_at_10": 0.261994708994709,
+        "recall_at_20": 0.5066666666666667,
+        "recall_at_50": 0.6,
+        "recall_at_100": 0.6844444444444444
+      },
+      "ndcg_at_5_ci95": [
+        0.20870931965999504,
+        0.31691279636528047
+      ]
+    },
+    "B": {
+      "name": "B: ColPali v1.3",
+      "role": "baseline",
+      "metrics": {
+        "ndcg_at_5": 0.5698845531501103,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5788816778359264,
+        "mrr_at_10": 0.5459365079365079,
+        "recall_at_20": 0.7422222222222222,
+        "recall_at_50": 0.8133333333333334,
+        "recall_at_100": 0.8666666666666667
+      },
+      "ndcg_at_5_ci95": [
+        0.5104222964046498,
+        0.6274600432665112
+      ]
+    },
+    "T_hyb": {
+      "name": "T_hyb: RRF(BM25, BGE-M3)",
+      "role": "post-hoc 2: text hybrid",
+      "metrics": {
+        "ndcg_at_5": 0.38513188841045665,
+        "recall_at_5": 0.44,
+        "recall_at_10": 0.5022222222222222,
+        "ndcg_at_10": 0.40532987006335136,
+        "mrr_at_10": 0.3751164021164021,
+        "recall_at_20": 0.5644444444444444,
+        "recall_at_50": 0.6577777777777778,
+        "recall_at_100": 0.7333333333333333
+      },
+      "ndcg_at_5_ci95": [
+        0.3257202556471366,
+        0.4441527176765409
+      ]
+    },
+    "T_rr": {
+      "name": "T_rr: T_hyb top-N reranked by cross-encoder",
+      "role": "post-hoc 2: text RAG stack",
+      "metrics": {
+        "ndcg_at_5": 0.43846522174379,
+        "recall_at_5": 0.4888888888888889,
+        "recall_at_10": 0.5288888888888889,
+        "ndcg_at_10": 0.45092815341230646,
+        "mrr_at_10": 0.4264250440917107,
+        "recall_at_20": 0.5866666666666667,
+        "recall_at_50": 0.6577777777777778,
+        "recall_at_100": 0.7333333333333333
+      },
+      "ndcg_at_5_ci95": [
+        0.3770216712649641,
+        0.4979103555715472
+      ]
+    },
+    "B_ce": {
+      "name": "B_ce: ColPali top-N reranked by cross-encoder",
+      "role": "post-hoc 2: text signal on ColPali",
+      "metrics": {
+        "ndcg_at_5": 0.5698845531501103,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5788816778359264,
+        "mrr_at_10": 0.5459365079365079,
+        "recall_at_20": 0.7422222222222222,
+        "recall_at_50": 0.8133333333333334,
+        "recall_at_100": 0.8666666666666667
+      },
+      "ndcg_at_5_ci95": [
+        0.5104222964046498,
+        0.6274600432665112
+      ]
+    },
+    "AB_10": {
+      "name": "Cascade: ColPali reorders BM25 top 10",
+      "role": "post-hoc 2: cascade (descriptive)",
+      "metrics": {
+        "ndcg_at_5": 0.4536943221039188,
+        "recall_at_5": 0.49333333333333335,
+        "recall_at_10": 0.49777777777777776,
+        "ndcg_at_10": 0.45509638822296655,
+        "mrr_at_10": 0.4407037037037037,
+        "recall_at_20": 0.5511111111111111,
+        "recall_at_50": 0.6355555555555555,
+        "recall_at_100": 0.6888888888888889
+      },
+      "ndcg_at_5_ci95": [
+        0.39150599955481136,
+        0.5140035446714286
+      ]
+    },
+    "AB_20": {
+      "name": "Cascade: ColPali reorders BM25 top 20",
+      "role": "post-hoc 2: cascade (descriptive)",
+      "metrics": {
+        "ndcg_at_5": 0.47568747374338277,
+        "recall_at_5": 0.5244444444444445,
+        "recall_at_10": 0.5377777777777778,
+        "ndcg_at_10": 0.48023357976015923,
+        "mrr_at_10": 0.46119576719576716,
+        "recall_at_20": 0.5511111111111111,
+        "recall_at_50": 0.6355555555555555,
+        "recall_at_100": 0.6888888888888889
+      },
+      "ndcg_at_5_ci95": [
+        0.41415989405803105,
+        0.5365779467208236
+      ]
+    },
+    "AB_50": {
+      "name": "Cascade: ColPali reorders BM25 top 50",
+      "role": "post-hoc 2: cascade (descriptive)",
+      "metrics": {
+        "ndcg_at_5": 0.5012957382195735,
+        "recall_at_5": 0.56,
+        "recall_at_10": 0.5866666666666667,
+        "ndcg_at_10": 0.5098180709667455,
+        "mrr_at_10": 0.4848553791887125,
+        "recall_at_20": 0.6,
+        "recall_at_50": 0.6355555555555555,
+        "recall_at_100": 0.6888888888888889
+      },
+      "ndcg_at_5_ci95": [
+        0.4395597253644443,
+        0.5615794941748649
+      ]
+    },
+    "AB_100": {
+      "name": "Cascade: ColPali reorders BM25 top 100",
+      "role": "post-hoc 2: cascade (descriptive)",
+      "metrics": {
+        "ndcg_at_5": 0.5144790345737308,
+        "recall_at_5": 0.5822222222222222,
+        "recall_at_10": 0.6044444444444445,
+        "ndcg_at_10": 0.5214667073089942,
+        "mrr_at_10": 0.4944673721340388,
+        "recall_at_20": 0.6355555555555555,
+        "recall_at_50": 0.6755555555555556,
+        "recall_at_100": 0.6888888888888889
+      },
+      "ndcg_at_5_ci95": [
+        0.45295125405766395,
+        0.573870230754785
+      ]
+    }
+  },
+  "vs_baseline": {
+    "T_hyb": {
+      "delta": -0.18475266473965363,
+      "delta_ci95": [
+        -0.2342477564806044,
+        -0.13660298026171314
+      ],
+      "p_permutation": 9.999000099990002e-05,
+      "wins": 12,
+      "ties": 140,
+      "losses": 73,
+      "n": 225,
+      "p_holm": 0.00029997000299970003
+    },
+    "T_rr": {
+      "delta": -0.1314193314063203,
+      "delta_ci95": [
+        -0.1804309618848979,
+        -0.08460466029405965
+      ],
+      "p_permutation": 9.999000099990002e-05,
+      "wins": 20,
+      "ties": 148,
+      "losses": 57,
+      "n": 225,
+      "p_holm": 0.00029997000299970003
+    },
+    "B_ce": {
+      "delta": 0.0,
+      "delta_ci95": [
+        0.0,
+        0.0
+      ],
+      "p_permutation": 1.0,
+      "wins": 0,
+      "ties": 225,
+      "losses": 0,
+      "n": 225,
+      "p_holm": 1.0
+    }
+  },
+  "pairs": {
+    "T_rr vs T_hyb": {
+      "delta": 0.05333333333333334,
+      "delta_ci95": [
+        0.01355187940155695,
+        0.09456895401016777
+      ],
+      "p_permutation": 0.0115988401159884,
+      "wins": 36,
+      "ties": 171,
+      "losses": 18,
+      "n": 225
+    },
+    "T_hyb vs A": {
+      "delta": 0.003315041878988155,
+      "delta_ci95": [
+        -0.021041047527478696,
+        0.028599999073890055
+      ],
+      "p_permutation": 0.7898210178982101,
+      "wins": 18,
+      "ties": 185,
+      "losses": 22,
+      "n": 225
+    },
+    "T_rr vs A": {
+      "delta": 0.05664837521232149,
+      "delta_ci95": [
+        0.018970133615261092,
+        0.0955721625092193
+      ],
+      "p_permutation": 0.0033996600339966003,
+      "wins": 32,
+      "ties": 173,
+      "losses": 20,
+      "n": 225
+    }
+  },
+  "by_type": {
+    "exact": {
+      "n": 93,
+      "systems": {
+        "A": {
+          "mean": 0.6166999407195691,
+          "ci95": [
+            0.520669086027844,
+            0.7082289835625135
+          ]
+        },
+        "BGE": {
+          "mean": 0.45773465340632874,
+          "ci95": [
+            0.3636244149320014,
+            0.5510945527040929
+          ]
+        },
+        "B": {
+          "mean": 0.8334165941373893,
+          "ci95": [
+            0.7648675107577976,
+            0.8951186253652829
+          ]
+        },
+        "T_hyb": {
+          "mean": 0.620197503033797,
+          "ci95": [
+            0.5259775838671297,
+            0.7115953524961625
+          ]
+        },
+        "T_rr": {
+          "mean": 0.6940584734255018,
+          "ci95": [
+            0.6038134276113687,
+            0.777519328341017
+          ]
+        },
+        "B_ce": {
+          "mean": 0.8334165941373893,
+          "ci95": [
+            0.7648675107577976,
+            0.8951186253652829
+          ]
+        },
+        "AB_10": {
+          "mean": 0.6708902071044556,
+          "ci95": [
+            0.5741160135560686,
+            0.7622880565668213
+          ]
+        },
+        "AB_20": {
+          "mean": 0.7047473287644282,
+          "ci95": [
+            0.6133494793020626,
+            0.7896160304925397
+          ]
+        },
+        "AB_50": {
+          "mean": 0.7484205149111471,
+          "ci95": [
+            0.6624628423679195,
+            0.8282120324116756
+          ]
+        },
+        "AB_100": {
+          "mean": 0.755204705809765,
+          "ci95": [
+            0.6707790731398111,
+            0.8321832354459944
+          ]
+        }
+      },
+      "vs_baseline": {
+        "T_hyb": {
+          "delta": -0.21321909110359252,
+          "delta_ci95": [
+            -0.290263528070326,
+            -0.14101941486801994
+          ],
+          "p_permutation": 9.999000099990002e-05,
+          "wins": 4,
+          "ties": 58,
+          "losses": 31,
+          "n": 93
+        },
+        "T_rr": {
+          "delta": -0.13935812071188775,
+          "delta_ci95": [
+            -0.21832207943657045,
+            -0.06453507130392426
+          ],
+          "p_permutation": 0.00029997000299970003,
+          "wins": 8,
+          "ties": 63,
+          "losses": 22,
+          "n": 93
+        },
+        "B_ce": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 93,
+          "losses": 0,
+          "n": 93
+        }
+      }
+    },
+    "general": {
+      "n": 115,
+      "systems": {
+        "A": {
+          "mean": 0.23091909550139553,
+          "ci95": [
+            0.16483654237962275,
+            0.29834680762123206
+          ]
+        },
+        "BGE": {
+          "mean": 0.12981177723762063,
+          "ci95": [
+            0.07536082500159527,
+            0.18943981322981518
+          ]
+        },
+        "B": {
+          "mean": 0.39090801475525816,
+          "ci95": [
+            0.3126633545313733,
+            0.46754768142554776
+          ]
+        },
+        "T_hyb": {
+          "mean": 0.2377858900577233,
+          "ci95": [
+            0.17025555541261608,
+            0.3096298242785925
+          ]
+        },
+        "T_rr": {
+          "mean": 0.26066354008877946,
+          "ci95": [
+            0.18783739487218487,
+            0.3362515902544076
+          ]
+        },
+        "B_ce": {
+          "mean": 0.39090801475525816,
+          "ci95": [
+            0.3126633545313733,
+            0.46754768142554776
+          ]
+        },
+        "AB_10": {
+          "mean": 0.3222391605138774,
+          "ci95": [
+            0.24564903893227924,
+            0.40358753653279167
+          ]
+        },
+        "AB_20": {
+          "mean": 0.3378891327269377,
+          "ci95": [
+            0.2585969570600345,
+            0.4171338909248983
+          ]
+        },
+        "AB_50": {
+          "mean": 0.33849194526542997,
+          "ci95": [
+            0.26088125086956393,
+            0.41622019933964904
+          ]
+        },
+        "AB_100": {
+          "mean": 0.3554350680382942,
+          "ci95": [
+            0.2770178898725287,
+            0.433072710742149
+          ]
+        }
+      },
+      "vs_baseline": {
+        "T_hyb": {
+          "delta": -0.15312212469753486,
+          "delta_ci95": [
+            -0.22157120346221895,
+            -0.08392991376072866
+          ],
+          "p_permutation": 0.00019998000199980003,
+          "wins": 8,
+          "ties": 71,
+          "losses": 36,
+          "n": 115
+        },
+        "T_rr": {
+          "delta": -0.1302444746664787,
+          "delta_ci95": [
+            -0.1934843626655188,
+            -0.06835355674827626
+          ],
+          "p_permutation": 9.999000099990002e-05,
+          "wins": 9,
+          "ties": 75,
+          "losses": 31,
+          "n": 115
+        },
+        "B_ce": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 115,
+          "losses": 0,
+          "n": 115
+        }
+      }
+    },
+    "visual": {
+      "n": 17,
+      "systems": {
+        "A": {
+          "mean": 0.11764705882352941,
+          "ci95": [
+            0.0,
+            0.29411764705882354
+          ]
+        },
+        "BGE": {
+          "mean": 0.08823529411764706,
+          "ci95": [
+            0.0,
+            0.23529411764705882
+          ]
+        },
+        "B": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.14705882352941177,
+            0.5448152651260538
+          ]
+        },
+        "T_hyb": {
+          "mean": 0.0959370443277328,
+          "ci95": [
+            0.0,
+            0.25069761806723034
+          ]
+        },
+        "T_rr": {
+          "mean": 0.24299586785714458,
+          "ci95": [
+            0.06652527962185044,
+            0.44887822079832107
+          ]
+        },
+        "B_ce": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.14705882352941177,
+            0.5448152651260538
+          ]
+        },
+        "AB_10": {
+          "mean": 0.1547605737394975,
+          "ci95": [
+            0.0,
+            0.33123116197479163
+          ]
+        },
+        "AB_20": {
+          "mean": 0.1547605737394975,
+          "ci95": [
+            0.0,
+            0.33123116197479163
+          ]
+        },
+        "AB_50": {
+          "mean": 0.25069761806723034,
+          "ci95": [
+            0.07422702983193619,
+            0.44887822079832107
+          ]
+        },
+        "AB_100": {
+          "mean": 0.2734536655516151,
+          "ci95": [
+            0.0959370443277328,
+            0.47058823529411764
+          ]
+        }
+      },
+      "vs_baseline": {
+        "T_hyb": {
+          "delta": -0.24299586785714458,
+          "delta_ci95": [
+            -0.4271682063025244,
+            -0.08823529411764706
+          ],
+          "p_permutation": 0.029697030296970302,
+          "wins": 0,
+          "ties": 11,
+          "losses": 6,
+          "n": 17
+        },
+        "T_rr": {
+          "delta": -0.0959370443277328,
+          "delta_ci95": [
+            -0.29411764705882354,
+            0.08053354390756132
+          ],
+          "p_permutation": 0.39936006399360063,
+          "wins": 3,
+          "ties": 10,
+          "losses": 4,
+          "n": 17
+        },
+        "B_ce": {
+          "delta": 0.0,
+          "delta_ci95": [
+            0.0,
+            0.0
+          ],
+          "p_permutation": 1.0,
+          "wins": 0,
+          "ties": 17,
+          "losses": 0,
+          "n": 17
+        }
+      }
+    }
+  },
+  "posthoc_without_duplicated_queries": {
+    "n": 212,
+    "systems": {
+      "A": 0.4022540599811744,
+      "BGE": 0.2782909299486554,
+      "B": 0.5976709523489095,
+      "T_hyb": 0.4063899759073243,
+      "T_rr": 0.4606352589261923,
+      "B_ce": 0.5976709523489095,
+      "AB_10": 0.4785391166028787,
+      "AB_20": 0.49984941170102015,
+      "AB_50": 0.5240519105386214,
+      "AB_100": 0.5380436165748733
+    },
+    "vs_baseline": {
+      "T_hyb": {
+        "delta": -0.19128097644158523,
+        "delta_ci95": [
+          -0.24328451226314718,
+          -0.14030173547950592
+        ],
+        "p_permutation": 9.999000099990002e-05,
+        "wins": 11,
+        "ties": 130,
+        "losses": 71,
+        "n": 212
+      },
+      "T_rr": {
+        "delta": -0.13703569342271732,
+        "delta_ci95": [
+          -0.188579109641159,
+          -0.08781454645077887
+        ],
+        "p_permutation": 9.999000099990002e-05,
+        "wins": 19,
+        "ties": 138,
+        "losses": 55,
+        "n": 212
+      },
+      "B_ce": {
+        "delta": 0.0,
+        "delta_ci95": [
+          0.0,
+          0.0
+        ],
+        "p_permutation": 1.0,
+        "wins": 0,
+        "ties": 212,
+        "losses": 0,
+        "n": 212
+      }
+    }
+  },
+  "resources": {
+    "components": {
+      "A": {
+        "device": "cpu",
+        "index_time_s": 0.3473937500093598,
+        "index_size_mb": 0.6288890838623047,
+        "query_latency_median_ms": 0.12400001287460327,
+        "peak_memory_mb": 921.953125,
+        "peak_memory_kind": "peak_process_rss_mb"
+      },
+      "BGE": {
+        "device": "mps",
+        "index_time_s": 21.09505387500394,
+        "index_size_mb": 1.953125,
+        "query_latency_median_ms": 29.042874986771494,
+        "peak_memory_mb": 2139.984375,
+        "peak_memory_kind": "peak_driver_allocated_mb"
+      },
+      "B": {
+        "device": "cuda (NVIDIA L4)",
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_median_ms": 51.29878100001406,
+        "peak_memory_mb": 16188.8076171875,
+        "peak_memory_kind": "peak_allocated_mb"
+      },
+      "CE": {
+        "device": "mps",
+        "index_time_s": 0.0,
+        "index_size_mb": 0.0,
+        "latency_by_n_ms": {
+          "5": 698.1378334967303,
+          "10": 1633.6632710008416,
+          "20": 5340.352937499119,
+          "50": 13595.434937495156
+        },
+        "peak_memory_mb": 5221.3125,
+        "peak_memory_kind": "peak_driver_allocated_mb"
+      }
+    },
+    "systems": {
+      "A": {
+        "components": [
+          "A"
+        ],
+        "index_time_s": 0.3473937500093598,
+        "index_size_mb": 0.6288890838623047,
+        "query_latency_sequential_ms": 0.12400001287460327,
+        "query_latency_parallel_ms": 0.12400001287460327,
+        "fusion_overhead_ms": 0.0
+      },
+      "BGE": {
+        "components": [
+          "BGE"
+        ],
+        "index_time_s": 21.09505387500394,
+        "index_size_mb": 1.953125,
+        "query_latency_sequential_ms": 29.042874986771494,
+        "query_latency_parallel_ms": 29.042874986771494,
+        "fusion_overhead_ms": 0.0
+      },
+      "B": {
+        "components": [
+          "B"
+        ],
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_sequential_ms": 51.29878100001406,
+        "query_latency_parallel_ms": 51.29878100001406,
+        "fusion_overhead_ms": 0.0
+      },
+      "T_hyb": {
+        "components": [
+          "A",
+          "BGE"
+        ],
+        "index_time_s": 21.4424476250133,
+        "index_size_mb": 2.5820140838623047,
+        "query_latency_sequential_ms": 29.299750007339753,
+        "query_latency_parallel_ms": 29.17574999446515,
+        "fusion_overhead_ms": 0.1328750076936558
+      },
+      "T_rr": {
+        "components": [
+          "A",
+          "BGE",
+          "CE"
+        ],
+        "index_time_s": 21.4424476250133,
+        "index_size_mb": 2.5820140838623047,
+        "query_latency_sequential_ms": 13624.734687502496,
+        "query_latency_parallel_ms": 13624.610687489621,
+        "fusion_overhead_ms": 0.1328750076936558
+      },
+      "B_ce": {
+        "components": [
+          "B",
+          "CE"
+        ],
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_sequential_ms": 51.29878100001406,
+        "query_latency_parallel_ms": 51.29878100001406,
+        "fusion_overhead_ms": 0.0
+      },
+      "AB_10": {
+        "components": [
+          "A",
+          "B"
+        ],
+        "index_time_s": 112.04253123900935,
+        "index_size_mb": 126.4833812713623,
+        "query_latency_sequential_ms": 51.42278101288866,
+        "query_latency_parallel_ms": 51.42278101288866,
+        "fusion_overhead_ms": 0.0
+      },
+      "AB_20": {
+        "components": [
+          "A",
+          "B"
+        ],
+        "index_time_s": 112.04253123900935,
+        "index_size_mb": 126.4833812713623,
+        "query_latency_sequential_ms": 51.42278101288866,
+        "query_latency_parallel_ms": 51.42278101288866,
+        "fusion_overhead_ms": 0.0
+      },
+      "AB_50": {
+        "components": [
+          "A",
+          "B"
+        ],
+        "index_time_s": 112.04253123900935,
+        "index_size_mb": 126.4833812713623,
+        "query_latency_sequential_ms": 51.42278101288866,
+        "query_latency_parallel_ms": 51.42278101288866,
+        "fusion_overhead_ms": 0.0
+      },
+      "AB_100": {
+        "components": [
+          "A",
+          "B"
+        ],
+        "index_time_s": 112.04253123900935,
+        "index_size_mb": 126.4833812713623,
+        "query_latency_sequential_ms": 51.42278101288866,
+        "query_latency_parallel_ms": 51.42278101288866,
+        "fusion_overhead_ms": 0.0
+      }
+    },
+    "note": "Component latencies were measured on different devices (ColPali: L4 GPU; BGE-M3: Mac MPS; BM25 and fusion: Mac CPU). Sequential = sum of components + fusion; parallel = slowest component + fusion."
+  },
+  "headroom_at_5": {
+    "T_rr vs B": {
+      "all": {
+        "n": 225,
+        "T_rr_hit": 110,
+        "B_hit": 147,
+        "T_rr_only": 6,
+        "B_only": 43
+      },
+      "exact": {
+        "n": 93,
+        "T_rr_hit": 69,
+        "B_hit": 84,
+        "T_rr_only": 2,
+        "B_only": 17
+      },
+      "general": {
+        "n": 115,
+        "T_rr_hit": 36,
+        "B_hit": 56,
+        "T_rr_only": 3,
+        "B_only": 23
+      },
+      "visual": {
+        "n": 17,
+        "T_rr_hit": 5,
+        "B_hit": 7,
+        "T_rr_only": 1,
+        "B_only": 3
+      }
+    }
+  }
+}
