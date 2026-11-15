@@ -331,3 +331,16 @@ Chronological record of every run and decision. One entry per run or decision; n
 - **Measured:** the 4 empty pages share the empty-string embedding; at least one is in BGE-M3's top 5 for 388 of 451 queries (each page for 363–368).
 - On dev, moving them to the bottom of BGE-M3's ranking: BGE-M3 0.2351 → 0.3131; D (k = 1) 0.5263 → 0.5194; T_hyb (k = 5) 0.4062 → 0.4060.
 - *Interpretation:* BGE-M3's stand-alone score is understated, and its closeness to the paper's 25.7 is partly coincidental. D and T_hyb, on which our conclusions rest, are essentially unchanged. Not corrected on test; reported as a limitation. `scripts/checks/bge_empty_pages.py`, `results/checks/bge_empty_pages.json`.
+
+### 2026-11-16 — Plan (written before computing any count): taxonomy of ColPali's misses
+- Type: descriptive analysis, user request ("why can't fusion beat ColPali?"). **No new system, no selection, no new test-set evaluation of any system:** it reads ranks of B, A, BGE-M3 and T_rr that are already frozen and evaluated. Run on dev and test separately.
+- A **miss** = gold page not in ColPali's top 5 (gold rank > 5). The same flags are computed for ColPali's hits, so each flag's rate in misses can be compared with its rate in hits.
+- Flags (not exclusive), fixed here before looking at counts:
+  - F1 `duplicate_text`: the query text occurs on more than one dataset row (the official protocol keeps one arbitrary gold page). F1b `alt_page_in_top5`: a page of another row with the same query text is in ColPali's top 5.
+  - F2 `gold_ocr_short`: the gold page's OCR text has fewer than 20 whitespace tokens (includes the 4 empty pages).
+  - F3 `generic_query`: every BM25 query token (official tokenizer) occurs in the OCR of at least 25 pages (5 % of the corpus), or the query has no BM25 token. Sensitivity: 10 and 50 pages.
+  - F4 `no_overlap`: no BM25 query token occurs in the gold page's OCR.
+  - F5 `near_miss`: gold rank 6–10.
+  - F6 `text_finds_it`: BM25, BGE-M3 or T_rr has the gold page in its top 5.
+- Primary category for the count table, in this priority order: duplicate_text → gold_ocr_short → generic_query → no_overlap → `other` (specific query, gold page has text and shares a word with it, ColPali still misses).
+- *Expectation (hypothesis):* duplicate and generic queries are over-represented among misses compared with hits; `text_finds_it` is rare in every category.
