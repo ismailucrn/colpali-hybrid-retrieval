@@ -55,6 +55,10 @@ def main() -> None:
     start = time.perf_counter()
     task = load_task(dcfg["dataset"], dcfg["revision"], dcfg["split"],
                      text_dataset=dcfg["text_dataset"], text_revision=dcfg["text_revision"])
+    if dcfg.get("text_json"):  # post-hoc set 3 (H3): page text from a VLM transcription instead of Tesseract
+        texts = json.loads((REPO_ROOT / dcfg["text_json"]).read_text())
+        task.page_texts = [texts[pid] for pid in task.page_ids]
+    dev_only = bool(config.get("dev_only", False))  # post-hoc set 3: never compute full-set (incl. test) metrics
     timings["data_load_s"] = time.perf_counter() - start
     print(f"{len(task.queries)} queries, {len(task.page_ids)} pages, "
           f"{sum(not t.strip() for t in task.page_texts)} pages with empty OCR text")
@@ -80,19 +84,23 @@ def main() -> None:
     }
 
     run = scores_to_run(scores, task.queries, task.page_ids)
-    metrics, per_query = evaluate(task.qrels, run)
-    clean = [q for q in task.queries if q not in task.duplicated_queries]
-    metrics_clean, _ = evaluate(*subset(task.qrels, run, clean))
-
     split = json.loads((REPO_ROOT / config["splits"]).read_text())
     metrics_dev, _ = evaluate(*subset(task.qrels, run, split["dev"]))
-
-    print(f"\nfull set: nDCG@5 = {metrics['ndcg_at_5']:.4f}  (paper, BM25 on Unstructured + OCR: 0.368; "
+    if dev_only:
+        metrics = metrics_clean = None
+    else:
+        metrics, per_query = evaluate(task.qrels, run)
+        clean = [q for q in task.queries if q not in task.duplicated_queries]
+        metrics_clean, _ = evaluate(*subset(task.qrels, run, clean))
+    if not dev_only:
+        print(f"\nfull set: nDCG@5 = {metrics['ndcg_at_5']:.4f}  (paper, BM25 on Unstructured + OCR: 0.368; "
           f"tokenizer: {tokenizer.mode})")
-    print(f"Recall@5 = {metrics['recall_at_5']:.4f}  Recall@10 = {metrics['recall_at_10']:.4f}  "
-          f"nDCG@10 = {metrics['ndcg_at_10']:.4f}  MRR@10 = {metrics['mrr_at_10']:.4f}")
+        print(f"Recall@5 = {metrics['recall_at_5']:.4f}  Recall@10 = {metrics['recall_at_10']:.4f}  "
+              f"nDCG@10 = {metrics['ndcg_at_10']:.4f}  MRR@10 = {metrics['mrr_at_10']:.4f}")
     print(f"dev ({metrics_dev['n_queries']} queries): nDCG@5 = {metrics_dev['ndcg_at_5']:.4f}")
-    print(f"post-hoc, without {len(task.duplicated_queries)} duplicated query texts: nDCG@5 = {metrics_clean['ndcg_at_5']:.4f}")
+    if not dev_only:
+        print(f"post-hoc, without {len(task.duplicated_queries)} duplicated query texts: "
+              f"nDCG@5 = {metrics_clean['ndcg_at_5']:.4f}")
     print(f"queries with no tokens left after preprocessing: {len(empty_queries)}")
     print(f"timings: {json.dumps({k: round(v, 3) for k, v in timings.items()})}")
     print(f"latency per query (median): {lat['median_ms']:.2f} ms; index: {index_info}")
@@ -101,9 +109,10 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     np.savez_compressed(out_dir / "scores.npz", scores=scores.astype(np.float32),
                         queries=np.array(task.queries, dtype=str), page_ids=np.array(task.page_ids, dtype=str))
-    split_of = {q: s for s in ("dev", "test") for q in split[s]}
-    write_per_query_csv(out_dir / "per_query.csv", task.queries, task.qrels, per_query,
-                        extra={"split": split_of, "duplicated": {q: int(q in task.duplicated_queries) for q in task.queries}})
+    if not dev_only:
+        split_of = {q: s for s in ("dev", "test") for q in split[s]}
+        write_per_query_csv(out_dir / "per_query.csv", task.queries, task.qrels, per_query,
+                            extra={"split": split_of, "duplicated": {q: int(q in task.duplicated_queries) for q in task.queries}})
 
     record = collect_metadata(config, args.config, "cpu", config["seed"])
     record.update({

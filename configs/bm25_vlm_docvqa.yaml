@@ -1,0 +1,22 @@
+# POST-HOC set 3, H3: BM25 (same implementation and tokenizer as system A) over a VLM transcription of each page
+# (Qwen3.5-4B, scripts/run_posthoc3_gpu.py --stage ocr) instead of the Tesseract text. Pre-registered in e70f2a7.
+# dev_only: full-set metrics would include the test split, which is evaluated once in the post-hoc set 3 test run.
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  text_dataset: vidore/docvqa_test_subsampled_tesseract   # loaded only to check row alignment
+  text_revision: 9a183a7237d678eaaf68dc0f640a42f46016802f
+  text_json: results/vlm_ocr_docvqa/page_texts.json        # replaces the Tesseract text
+  split: test
+
+dev_only: true
+system_name: "A_vlm: BM25 over Qwen3.5-4B transcription"
+splits: results/splits/docvqa_split.json
+
+latency:
+  n_queries: 451
+  warmup: 5
+
+seed: 0
+output_dir: results/bm25_vlm_docvqa

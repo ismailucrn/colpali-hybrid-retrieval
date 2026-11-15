@@ -1,0 +1,9 @@
+B (ColPali) dev nDCG@5 = 0.5804
+  quantile 0.5   tau=0.1873 fused on 113 dev queries: nDCG@5 0.5758
+  quantile 0.75  tau=0.3871 fused on  57 dev queries: nDCG@5 0.5824
+  quantile 0.9   tau=0.5896 fused on  23 dev queries: nDCG@5 0.5846
+  quantile 0.95  tau=0.6943 fused on  12 dev queries: nDCG@5 0.5804
+  quantile 0.99  tau=1.0000 fused on   5 dev queries: nDCG@5 0.5804
+  quantile inf   tau=inf fused on   0 dev queries: nDCG@5 0.5804
+selected tau = 0.5896278476550768 (dev nDCG@5 0.5846)
+wrote results/posthoc3/dev_selection_selective.json

@@ -1,0 +1,157 @@
+{
+  "timestamp_utc": "2026-11-15T22:20:14+00:00",
+  "config_path": "configs/posthoc3_docvqa.yaml",
+  "config": {
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "seed": 0,
+    "scores": {
+      "A": "results/bm25_docvqa/scores.npz",
+      "B": "results/colpali_v1.3_docvqa/scores.npz"
+    },
+    "reranker": {
+      "model": "Qwen/Qwen3-VL-Reranker-2B",
+      "revision": "4bd860ac4f15ad1897a214615cccc700f8f71818",
+      "instruction": "Given a question, retrieve the document page image that answers it.",
+      "pool_first": "B",
+      "pool_top": 20,
+      "batch_size": 4,
+      "dtype": "bfloat16",
+      "latency": {
+        "n_queries": 20,
+        "n_values": [
+          5,
+          10,
+          20
+        ]
+      },
+      "output_dir": "results/visual_reranker_docvqa",
+      "n_grid": [
+        1,
+        5,
+        10,
+        20
+      ],
+      "tie_break": "smaller_n"
+    },
+    "selective": {
+      "fused": {
+        "inputs": [
+          "A",
+          "B"
+        ],
+        "k": 1
+      },
+      "confidence_of": "A",
+      "tau_quantiles": [
+        0.5,
+        0.75,
+        0.9,
+        0.95,
+        0.99
+      ],
+      "tie_break": "larger_tau"
+    },
+    "ocr": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "fallback_model": "Qwen/Qwen3-VL-4B-Instruct",
+      "fallback_revision": "ebb281ec70b05090aa6165b016eac8ec08e71b17",
+      "prompt": "Transcribe all text on this page in natural reading order as plain text. Output only the text.",
+      "max_new_tokens": 2048,
+      "temperature": 0.0,
+      "max_model_len": 16384,
+      "output_dir": "results/vlm_ocr_docvqa",
+      "bm25_output_dir": "results/bm25_vlm_docvqa"
+    },
+    "embedding": {
+      "model": "Qwen/Qwen3-VL-Embedding-2B",
+      "revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+      "query_instruction": "Retrieve the document page image that answers the question.",
+      "batch_size": 8,
+      "dtype": "bfloat16",
+      "output_dir": "results/qwen3vl_embedding_docvqa"
+    },
+    "rrf": {
+      "k_grid": [
+        1,
+        5,
+        10,
+        20,
+        40,
+        60,
+        80,
+        100,
+        200,
+        500
+      ],
+      "tie_break": "closest_to_60"
+    },
+    "output_dir": "results/posthoc3"
+  },
+  "seed": 0,
+  "git_commit": "e70f2a7160de690d2855f1e34ba01195944aee20",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_posthoc3_dev.py --stage selective",
+  "label": "POST-HOC set 3 (exploratory, pre-registered in e70f2a7), dev split only",
+  "dev_n_queries": 226,
+  "B_dev_ndcg_at_5": 0.5804297695980011,
+  "systems": {
+    "C_sel": {
+      "selected_tau": 0.5896278476550768,
+      "fused_k": 1,
+      "sweep": {
+        "0.5": {
+          "tau": 0.18732115484610468,
+          "dev_queries_fused": 113,
+          "dev_ndcg_at_5": 0.5758110804349974
+        },
+        "0.75": {
+          "tau": 0.387115906030603,
+          "dev_queries_fused": 57,
+          "dev_ndcg_at_5": 0.5824482485765903
+        },
+        "0.9": {
+          "tau": 0.5896278476550768,
+          "dev_queries_fused": 23,
+          "dev_ndcg_at_5": 0.5845819540597497
+        },
+        "0.95": {
+          "tau": 0.6942935783114372,
+          "dev_queries_fused": 12,
+          "dev_ndcg_at_5": 0.5804297695980011
+        },
+        "0.99": {
+          "tau": 1.0,
+          "dev_queries_fused": 5,
+          "dev_ndcg_at_5": 0.5804297695980011
+        },
+        "inf": {
+          "tau": Infinity,
+          "dev_queries_fused": 0,
+          "dev_ndcg_at_5": 0.5804297695980011
+        }
+      }
+    }
+  }
+}

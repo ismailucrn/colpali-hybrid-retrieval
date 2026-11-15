@@ -28,3 +28,4 @@ YZM5110_Research_Project*.pdf
 
 # Test cache
 .pytest_cache/
+results/*_smoke/
