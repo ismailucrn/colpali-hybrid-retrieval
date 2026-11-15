@@ -1,0 +1,59 @@
+# POST-HOC set 2 (pre-registered 2026-11-15 in commit 92c2163, after the main test run and post-hoc set 1).
+# Text RAG retrieval stack (hybrid BM25 + BGE-M3, then a cross-encoder reranker), the cross-encoder as a reranker of
+# ColPali's candidates, and a BM25 -> ColPali cascade. Dev selection only here; test is evaluated once, by
+# configs/posthoc2_test_evaluation.yaml. Exploratory: changes nothing in the main result.
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  text_dataset: vidore/docvqa_test_subsampled_tesseract
+  text_revision: 9a183a7237d678eaaf68dc0f640a42f46016802f
+  split: test
+
+splits: results/splits/docvqa_split.json
+
+scores:
+  A: results/bm25_docvqa/scores.npz
+  BGE: results/bge_m3_docvqa/scores.npz
+  B: results/colpali_v1.3_docvqa/scores.npz
+
+# 1. T_hyb = RRF(BM25, BGE-M3): same grid and rule as C and D.
+hybrid:
+  inputs: [A, BGE]
+  k_grid: [1, 5, 10, 20, 40, 60, 80, 100, 200, 500]
+  selection_metric: ndcg_at_5
+  tie_break: closest_to_60
+
+# 2. Cross-encoder reranker, scored once over a candidate pool per query (no relevance labels used).
+reranker:
+  name: BAAI/bge-reranker-v2-m3
+  revision: 953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e
+  device: auto              # mps on the Mac
+  use_fp16: true
+  normalize: false          # raw logits; the sigmoid would not change the order
+  max_length_candidates: [512, 1024, 2048]
+  coverage: 0.95            # smallest candidate that fits >= 95 % of (longest query + page) pairs
+  batch_size: 16
+  pool_top: 50              # union of T_hyb's and ColPali's top 50
+  latency:
+    n_queries: 50
+    warmup: 3
+    n_values: [5, 10, 20, 50]
+
+rerank:
+  n_grid: [1, 5, 10, 20, 50]   # N = 1 means no reranking
+  selection_metric: ndcg_at_5
+  tie_break: smaller_n
+  systems:
+    T_rr: {name: "T_rr: T_hyb top-N reranked by cross-encoder", first: T_hyb, second: CE}
+    B_ce: {name: "B_ce: ColPali top-N reranked by cross-encoder", first: B, second: CE}
+
+# 3. Cascade A -> B: ColPali reorders BM25's top N. Descriptive curve, no selection.
+cascade:
+  first: A
+  second: B
+  n_values: [10, 20, 50, 100]
+
+seed: 0
+reranker_output_dir: results/reranker_docvqa
+output_dir: results/posthoc2

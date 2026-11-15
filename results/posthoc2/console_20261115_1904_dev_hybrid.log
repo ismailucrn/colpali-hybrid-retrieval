@@ -1,0 +1,7 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+T_hyb = RRF(BM25, BGE-M3) dev nDCG@5: k=1: 0.3892  k=5: 0.4062  k=10: 0.3987  k=20: 0.3951  k=40: 0.3830  k=60: 0.3778  k=80: 0.3786  k=100: 0.3784  k=200: 0.3750  k=500: 0.3717
+  -> selected k = 5
+A dev nDCG@5: 0.3995
+BGE dev nDCG@5: 0.2351
+B dev nDCG@5: 0.5804
+wrote /Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval/results/posthoc2/dev_selection_hybrid.json
