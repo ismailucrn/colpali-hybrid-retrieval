@@ -1,0 +1,27 @@
+{
+  "label": "diagnostic, not pre-registered; dev split only",
+  "empty_pages": [
+    "fxcv0079",
+    "phjc0228",
+    "mhfk0226",
+    "ljgg0227"
+  ],
+  "queries_with_empty_page_in_bge_top5": 388,
+  "n_queries": 451,
+  "dev_n": 226,
+  "dev_queries_with_empty_gold": 3,
+  "dev_ndcg_at_5": {
+    "BGE-M3": {
+      "as_is": 0.23513474783191407,
+      "empty_demoted": 0.31305326924413357
+    },
+    "D = RRF(BGE-M3, ColPali), k=1": {
+      "as_is": 0.5263025769505572,
+      "empty_demoted": 0.5194429534831665
+    },
+    "T_hyb = RRF(BM25, BGE-M3), k=5": {
+      "as_is": 0.4061834104126123,
+      "empty_demoted": 0.4060181635169755
+    }
+  }
+}

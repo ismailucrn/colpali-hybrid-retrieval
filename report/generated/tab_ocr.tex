@@ -1,0 +1,14 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lrllll}
+\toprule
+Gold-page OCR proxy & $n$ & range & BM25 Hit@5 & BGE-M3 Hit@5 & ColPali Hit@5 \\
+\midrule
+low & 149 & 0.10--0.68 & 0.416 & 0.282 & 0.631 \\
+mid & 151 & 0.69--0.78 & 0.503 & 0.318 & 0.709 \\
+high & 147 & 0.78--0.96 & 0.442 & 0.259 & 0.605 \\
+empty OCR & 4 & -- & 0.000 & 1.000 & 0.750 \\
+\midrule Spearman $\rho$ [95\% CI] & 451 & & +0.03 [$-$0.06, +0.12] & $-$0.02 [$-$0.11, +0.07] & +0.01 [$-$0.09, +0.10] \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Full query set. Proxy: share of alphabetic OCR tokens found in the NLTK English word list; queries grouped by the proxy of their gold page. $\rho$: Spearman correlation between the proxy and per-query nDCG@5.}

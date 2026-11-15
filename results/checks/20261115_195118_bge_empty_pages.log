@@ -1,0 +1,9 @@
+pages with empty OCR text: ['fxcv0079', 'phjc0228', 'mhfk0226', 'ljgg0227']
+all 451 queries: an empty page is in BGE-M3's top 5 for 388; per page: [368, 363, 366, 365]
+
+DEV only (226 queries; 3 have an empty-OCR gold page), nDCG@5 as is -> empty pages demoted:
+  BGE-M3: 0.2351 -> 0.3131
+  D = RRF(BGE-M3, ColPali), k=1: 0.5263 -> 0.5194
+  T_hyb = RRF(BM25, BGE-M3), k=5: 0.4062 -> 0.4060
+  (B ColPali dev: 0.5804; A BM25 dev: 0.3995)
+wrote results/checks/bge_empty_pages.json

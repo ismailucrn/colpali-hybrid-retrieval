@@ -67,18 +67,26 @@ These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Plan
 - A better tokenizer makes BM25 better on its own (+2.3 points), but only on queries ColPali already solves. BM25-only hits stay at 3.
 - Both alternative explanations are therefore ruled out on this task.
 
-**15 · Cost.**
+**15 · Post-hoc set 2: a full text RAG stack, and reranking ColPali.**
+- Added on 15 November, pre-registered before running, labelled exploratory.
+- A standard text RAG retrieval stack: BM25 + BGE-M3 hybrid, then a cross-encoder reranks the top 50. The cross-encoder helps the text pipeline by about 5 points, but the stack is still about 13 points below ColPali.
+- The same cross-encoder applied to ColPali's own candidates makes dev worse at every depth, so dev picks "no reranking".
+- So the negative result is not just "BM25 is too weak": even a strong reader of the OCR text adds nothing to ColPali here.
+- OCR quality: a dictionary-share proxy does not explain who wins. Say that the proxy is crude.
+- If asked about BGE-M3: the 4 empty-OCR pages share one embedding that ranks high for most queries. BGE-M3 alone is understated, but D and the hybrid barely change (checked on dev only).
+
+**16 · Cost.**
 - Fusion is almost free: a fraction of a millisecond and a sub-MB index. So the obstacle is quality, not cost.
 - Caveat: the components were measured on different devices.
 
-**16 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
+**17 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
 
-**17 · Conclusions.**
+**18 · Conclusions.**
 - The reproduction holds. Fusion hurts, and the control shows it is not specific to BM25.
 - The literature is consistent with this: fusion fails with unequal inputs and helped where the text was clean and equally strong.
 - Open question: would better text extraction change this?
 
-**18 · Reproducibility and AI use.**
+**19 · Reproducibility and AI use.**
 - Everything is re-runnable on a laptop from the committed score matrices, and a fresh clone reproduces all outputs exactly.
 - State plainly what the AI did and what you did and verified.
 

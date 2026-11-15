@@ -1,0 +1,15 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{llllll}
+\toprule
+System (post-hoc set 2) & nDCG@5 [95\% CI] & R@5 & MRR@10 & $\Delta$ vs B [95\% CI] & $p_\mathrm{Holm}$ \\
+\midrule
+A: BM25 & 0.382 [0.323, 0.441] & 0.444 & 0.369 & -- & -- \\
+BGE-M3 (dense text) & 0.262 [0.209, 0.317] & 0.307 & 0.262 & -- & -- \\
+T$_\text{hyb}$: RRF(BM25, BGE-M3), $k{=}5$ & 0.385 [0.326, 0.444] & 0.440 & 0.375 & $-$0.185 [$-$0.234, $-$0.137] & $<$0.001 \\
+T$_\text{rr}$: T$_\text{hyb}$ top-50 reranked by cross-encoder & 0.438 [0.377, 0.498] & 0.489 & 0.426 & $-$0.131 [$-$0.180, $-$0.085] & $<$0.001 \\
+B: ColPali v1.3 & 0.570 [0.510, 0.627] & 0.653 & 0.546 & -- & -- \\
+B$_\text{ce}$: ColPali top-$N$ reranked by cross-encoder, $N{=}1$ (no reranking) & 0.570 [0.510, 0.627] & 0.653 & 0.546 & +0.000 [+0.000, +0.000] & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Test split, 225 queries, evaluated once with settings chosen on dev. Holm correction over T$_\text{hyb}$, T$_\text{rr}$ and B$_\text{ce}$ vs B. Cross-encoder: bge-reranker-v2-m3 over the same OCR text, max length 1024 tokens.}

@@ -303,3 +303,31 @@ Chronological record of every run and decision. One entry per run or decision; n
 - Frozen config `configs/posthoc2_test_evaluation.yaml` → `scripts/run_test_evaluation.py`; it refuses settings that differ from the committed dev selections. Test is evaluated once for these systems.
 - Holm correction over T_hyb, T_rr and B_ce vs B. Extra pairs: T_rr vs T_hyb, T_hyb vs A, T_rr vs A. Top-5 headroom T_rr vs B.
 - Resources: reranker latency per query at the selected N (median over 50 queries, MPS; the device differs from ColPali's L4) and the model's memory.
+
+### 2026-11-15 — Post-hoc set 2: dev selection, reranker run, single test run, OCR analysis
+- Type: runs (registry rows 39–44). Design and expectations pre-registered in `92c2163` (approved by the user).
+- **T_hyb (dev):** k = 5, dev nDCG@5 0.4062 (BM25 alone 0.3995).
+- **Cross-encoder** (`bge-reranker-v2-m3`, MPS fp16): max_length 1024 by the rule (97.4 % of pairs fit; 13 pages truncated). Pool 37,895 pairs (84 pages/query). 1,402 s in total. Rerank latency median: top 5 0.70 s, top 50 13.6 s.
+- **Dev selection of N:**
+  - T_rr: 0.4062 (N = 1) → 0.4747 (N = 50), monotone; selected N = 50.
+  - B_ce: 0.5804 (N = 1) → 0.5508 (5) → 0.5234 (10) → 0.5025 (20) → 0.4725 (50); selected **N = 1 (no reranking)**. The cross-encoder over OCR text reorders ColPali's top pages for the worse, even inside the top 5.
+- **Test (once, `68cf359`, n = 225, nDCG@5):**
+  - T_hyb 0.385 vs A 0.382: Δ +0.003, p 0.79.
+  - T_rr 0.438: vs T_hyb +0.053 [+0.014, +0.095], p 0.012; vs B −0.131 [−0.180, −0.085], p_Holm 0.0003.
+  - B_ce = B by construction.
+  - Cascade (ColPali reorders BM25's top N): 0.454 / 0.476 / 0.501 / 0.514 for N = 10 / 20 / 50 / 100; BM25 Recall@N 0.498 / 0.551 / 0.636 / 0.689.
+  - Headroom: T_rr finds the gold page that ColPali misses on 6 queries (BM25: 3); ColPali finds it where T_rr misses on 43.
+- **OCR proxy (full set, descriptive):** median page 0.731 (10th–90th 0.525–0.843). Spearman ρ with nDCG@5: BM25 +0.027 [−0.065, +0.120], BGE-M3 −0.019 [−0.108, +0.073], ColPali +0.008 [−0.087, +0.104].
+- **Verdict on the pre-registered hypotheses:**
+  - T_hyb ≈ A: held.
+  - T_rr > T_hyb and T_rr significantly < B: held.
+  - B_ce: dev selects N = 1: held (strongest form). The result that would have changed our conclusion (B_ce > B) did not occur.
+  - Cascade below B for every N, gap shrinking with N: held.
+  - OCR: **not supported**. No system's success correlates with the proxy. *Interpretation:* the proxy is crude (it penalises clean pages full of names, codes and numbers) and does not measure whether the *query's* words survive OCR, which the earlier overlap analysis does.
+- *Interpretation:* a much stronger text signal (cross-encoder) improves the text pipeline by ~5 points but does not approach ColPali, and hurts when applied to ColPali's candidates. The main negative result is not an artefact of weak first-stage text retrievers.
+
+### 2026-11-15 — Diagnostic (not pre-registered): empty-OCR pages dominate BGE-M3's top ranks
+- Type: analysis (registry row 45), dev only; test not touched. Found while reading the OCR table: BGE-M3 hits all 4 queries whose gold page has empty OCR text.
+- **Measured:** the 4 empty pages share the empty-string embedding; at least one is in BGE-M3's top 5 for 388 of 451 queries (each page for 363–368).
+- On dev, moving them to the bottom of BGE-M3's ranking: BGE-M3 0.2351 → 0.3131; D (k = 1) 0.5263 → 0.5194; T_hyb (k = 5) 0.4062 → 0.4060.
+- *Interpretation:* BGE-M3's stand-alone score is understated, and its closeness to the paper's 25.7 is partly coincidental. D and T_hyb, on which our conclusions rest, are essentially unchanged. Not corrected on test; reported as a limitation. `scripts/checks/bge_empty_pages.py`, `results/checks/bge_empty_pages.json`.

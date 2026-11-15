@@ -1,0 +1,14 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{rrrr}
+\toprule
+$N$ & BM25 Recall@$N$ (ceiling) & nDCG@5 & R@5 \\
+\midrule
+10 & 0.498 & 0.454 & 0.493 \\
+20 & 0.551 & 0.476 & 0.524 \\
+50 & 0.636 & 0.501 & 0.560 \\
+100 & 0.689 & 0.514 & 0.582 \\
+500 (all pages) & 1.000 & 0.570 & 0.653 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Test split; ColPali reorders BM25's top $N$ (descriptive, no selection). $N{=}500$ is ColPali alone.}

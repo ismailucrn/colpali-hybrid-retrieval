@@ -118,7 +118,8 @@ def posthoc2(N: dict) -> None:
                  "T_hyb": f"T$_\\text{{hyb}}$: RRF(BM25, BGE-M3), $k{{=}}{k_h}$",
                  "T_rr": f"T$_\\text{{rr}}$: T$_\\text{{hyb}}$ top-{n_t} reranked by cross-encoder",
                  "B": "B: ColPali v1.3",
-                 "B_ce": f"B$_\\text{{ce}}$: ColPali top-{n_b} reranked by cross-encoder"}[s]
+                 "B_ce": f"B$_\\text{{ce}}$: ColPali top-$N$ reranked by cross-encoder, $N{{=}}{n_b}$"
+                         + (" (no reranking)" if n_b <= 1 else "")}[s]
         tail = f"{sgn(V[s]['delta'])} {sci(V[s]['delta_ci95'])} & {pval(V[s]['p_holm'])}" if s in V else "-- & --"
         rows.append(f"{label} & {f3(m['metrics']['ndcg_at_5'])} {ci(m['ndcg_at_5_ci95'])} & "
                     f"{f3(m['metrics']['recall_at_5'])} & {f3(m['metrics']['mrr_at_10'])} & {tail}")
@@ -150,6 +151,14 @@ def posthoc2(N: dict) -> None:
           "by the proxy of their gold page. $\\rho$: Spearman correlation between the proxy and per-query nDCG@5.")
     N.update({"ocrMedian": f"{oq['pages']['median']:.2f}", "ocrPtenth": f"{oq['pages']['p10']:.2f}",
               "ocrPninety": f"{oq['pages']['p90']:.2f}"})
+    ep = load("results/checks/bge_empty_pages.json")  # diagnostic, not pre-registered, dev only
+    E = ep["dev_ndcg_at_5"]
+    N.update({"emptyTopFive": str(ep["queries_with_empty_page_in_bge_top5"]),
+              "emptyBGEdev": f3(E["BGE-M3"]["as_is"]), "emptyBGEdevFixed": f3(E["BGE-M3"]["empty_demoted"]),
+              "emptyDdev": f3(E["D = RRF(BGE-M3, ColPali), k=1"]["as_is"]),
+              "emptyDdevFixed": f3(E["D = RRF(BGE-M3, ColPali), k=1"]["empty_demoted"]),
+              "emptyThybdev": f3(E["T_hyb = RRF(BM25, BGE-M3), k=5"]["as_is"]),
+              "emptyThybdevFixed": f3(E["T_hyb = RRF(BM25, BGE-M3), k=5"]["empty_demoted"])})
     for s, key in (("A", "A"), ("BGE", "BGE"), ("B", "B")):
         c = oq["spearman_vs_ndcg5"][s]
         N[f"ocrRho{key}"] = sgn(c["spearman_rho"], 2)

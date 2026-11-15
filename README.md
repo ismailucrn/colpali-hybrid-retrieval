@@ -23,6 +23,12 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
 - **Post-hoc checks** (exploratory, `results/posthoc_extensions/summary.md`):
   - Score-level convex combination selects ColPali alone (α = 1) on dev.
   - A code-preserving BM25 tokenizer improves BM25 (0.382 → 0.405) but still adds only 3 queries that ColPali misses.
+- **Post-hoc set 2** (exploratory, pre-registered 15 Nov, `results/posthoc2/summary.md`, `results/ocr_quality/summary.md`):
+  - A text RAG retrieval stack (RRF of BM25 and BGE-M3, then the `bge-reranker-v2-m3` cross-encoder over the top 50) reaches 0.438, still −0.131 below ColPali (p_Holm 0.0003). The cross-encoder adds +0.053 over the hybrid.
+  - Reranking ColPali's own top N with the cross-encoder lowers dev nDCG@5 for every N > 1, so dev selects no reranking.
+  - ColPali reordering BM25's top N (a cascade) stays below ColPali alone for every N up to 100.
+  - A dictionary-based OCR-quality proxy does not correlate with any system's success.
+  - Diagnostic: the 4 empty-OCR pages rank high in BGE-M3 for most queries, which understates BGE-M3 alone; D and the text hybrid are unaffected on dev (`results/checks/bge_empty_pages.json`).
 
 ## Systems
 
@@ -34,6 +40,7 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
 | D | RRF(BGE-M3 dense vectors over the same OCR text, ColPali) | Control: lexical signal vs. any second retriever |
 | E | RRF `k` sweep on dev, plus weighted RRF (C_w, D_w), dev-informed | Ablation |
 | post-hoc | Score-level convex combination (C_cc, D_cc); code-preserving BM25 tokenizer (A_code, C_code) | Exploratory checks of two alternative explanations, pre-registered after the main test run |
+| post-hoc 2 | T_hyb = RRF(BM25, BGE-M3); T_rr = T_hyb reranked by a cross-encoder; B_ce = ColPali reranked by it; BM25 → ColPali cascade; OCR-quality proxy | A full text RAG retrieval stack and a strong text signal on ColPali, pre-registered 15 Nov |
 
 - **Primary metric:** nDCG@5. We also report Recall@5/10, nDCG@10, MRR@10 and resource cost (indexing time, index size, query latency, peak memory).
 - **Pre-registered predictions and protocol:** `CLAUDE.md` and `docs/experiment_log.md`.
@@ -125,6 +132,12 @@ python scripts/failure_analysis.py                                              
 python scripts/run_bm25.py --config configs/bm25_codes_docvqa.yaml                     # post-hoc: A_code
 python scripts/run_cc_fusion_dev.py --config configs/fusion_cc_docvqa.yaml             # post-hoc: CC alpha on dev
 python scripts/run_test_evaluation.py --config configs/posthoc_test_evaluation.yaml    # post-hoc: test, once
+python scripts/run_posthoc2_dev.py --stage hybrid                                      # post-hoc 2: T_hyb k on dev
+python scripts/run_reranker.py --config configs/posthoc2_docvqa.yaml                   # post-hoc 2: cross-encoder (torch; ~25 min on MPS)
+python scripts/run_posthoc2_dev.py --stage rerank                                      # post-hoc 2: N on dev
+python scripts/run_test_evaluation.py --config configs/posthoc2_test_evaluation.yaml   # post-hoc 2: test, once
+python scripts/ocr_quality.py                                                          # post-hoc 2: OCR proxy (full set)
+python scripts/checks/bge_empty_pages.py                                               # diagnostic, dev only
 python scripts/make_figures.py                                                         # results/figures/
 python scripts/make_report_tables.py                                                   # report/generated/
 (cd report && tectonic main.tex)                                                       # report/main.pdf
@@ -141,6 +154,7 @@ python scripts/make_report_tables.py                                            
 | Tables: test results, by query type, resources; report Figures 2–3 | `run_test_evaluation.py` | `results/test_evaluation/` |
 | Table: headroom; report Figure 4; examples | `failure_analysis.py` | `results/failure_analysis/` |
 | Table: post-hoc extensions (report §7.6) | `run_bm25.py` (codes), `run_cc_fusion_dev.py`, `run_test_evaluation.py` (post-hoc config) | `results/bm25_codes_docvqa/`, `results/posthoc_extensions/` |
+| Tables: post-hoc set 2, cascade, OCR quality (report §7.7) | `run_posthoc2_dev.py`, `run_reranker.py`, `run_test_evaluation.py` (posthoc2 config), `ocr_quality.py`, `checks/bge_empty_pages.py` | `results/posthoc2/`, `results/reranker_docvqa/`, `results/ocr_quality/`, `results/checks/bge_empty_pages.json` |
 
 Figure files (`results/figures/`, made by `make_figures.py`):
 

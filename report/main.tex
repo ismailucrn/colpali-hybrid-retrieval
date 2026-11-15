@@ -56,6 +56,7 @@ We then test reciprocal rank fusion (RRF) of ColPali with BM25 over the benchmar
 The result is negative. Equal-weight RRF lowers test nDCG@5 from \testB{} to \testC{} ($\Delta$ \deltaC{}, 95\% CI \deltaCCI{}, Holm-corrected $p$ \pHolmC{}), and the dense control behaves the same ($\Delta$ C$-$D \deltaCvsD{}, $p$ = \pCvsD{}). A dev-tuned weighted RRF only matches ColPali (\deltaCw{}, $p$ = \pCw{}).
 Failure analysis explains why. BM25 finds the gold page that ColPali misses on only \headallAnotB{} of \nTest{} test queries, and ColPali is already strongest on the exact-match queries where we expected BM25 to help. BM25 succeeds only when the query's words survive OCR, so fusion mostly imports its errors.
 Two post-hoc checks, pre-registered after the main test run, support this reading. A score-level convex combination selects ColPali alone on dev. A code-preserving BM25 tokenizer improves BM25 by \deltaAcodeA{} nDCG@5, but it adds no query that ColPali misses.
+A second post-hoc set tests a full text RAG retrieval stack. BM25 + BGE-M3 hybrid retrieval followed by a cross-encoder reranker reaches \testTrr{}, still \deltaTrr{} below ColPali. Reranking ColPali's own candidates with the same cross-encoder lowers dev nDCG@5 at every depth, so dev selects no reranking.
 \end{abstract}
 
 \paragraph{How to read this report.} The assignment asks to keep four kinds of statements apart. We label them where it matters: \Pub{} = reported by the cited authors; \Mea{} = obtained by us (every such number is generated from a committed file in \file{results/} by \file{scripts/make\_report\_tables.py}); \Int{} = our reading of a paper or result; \Hyp{} = expected but not tested.
@@ -78,14 +79,14 @@ Deliberately narrow:
   \item one ViDoRe~v1 task (DocVQA: \nPages{} pages, \nQueries{} queries);
   \item the authors' published checkpoint, inference only, with no training or fine-tuning;
   \item page retrieval only, with no answer generation;
-  \item rank-level fusion only (RRF and a weighted variant).
+  \item rank-level fusion only (RRF and a weighted variant) in the main analysis; score-level fusion, a text RAG stack with a cross-encoder reranker, and an OCR-quality analysis only post-hoc (Section~\ref{sec:posthoc}).
 \end{itemize}
 
 \paragraph{Contributions.}
 \begin{enumerate}
   \item A traceable reproduction of ColPali v1.3 on DocVQA with the official evaluation protocol. The metric code is checked against MTEB, every run (including failed ones) is logged, and outputs are saved (Section~\ref{sec:repro}).
   \item A pre-registered, controlled test of BM25 + ColPali fusion. It has a dense-text control, a frozen dev/test split, frozen query-type tags, paired significance tests with multiple-comparison correction, and resource measurements (Sections~\ref{sec:improve}--\ref{sec:results}).
-  \item A negative result with a mechanism. The failure analysis shows the lexical signal has almost no headroom on this task, and why: lexical overlap after OCR (Section~\ref{sec:failure}). Two pre-registered post-hoc checks (score-level fusion, a code-preserving tokenizer) rule out the two most obvious alternative explanations (Section~\ref{sec:posthoc}).
+  \item A negative result with a mechanism. The failure analysis shows the lexical signal has almost no headroom on this task, and why: lexical overlap after OCR (Section~\ref{sec:failure}). Two pre-registered post-hoc checks (score-level fusion, a code-preserving tokenizer) rule out the two most obvious alternative explanations (Section~\ref{sec:posthoc}). A second post-hoc set shows that a stronger text pipeline (hybrid retrieval + cross-encoder reranking) does not close the gap either (Section~\ref{sec:posthoc2}).
   \item A literature matrix of eight papers. It shows that text + visual fusion has been tried only recently, with mixed and uncontrolled results (Section~\ref{sec:lit}).
 \end{enumerate}
 
@@ -512,7 +513,61 @@ Both analyses, their selection rules and our expectations were committed before 
 \caption{\Mea{} Post-hoc extensions on the test split (\file{results/posthoc\_extensions/metrics.json}).}\label{tab:posthoc}
 \end{table}
 
-\paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali. Post-hoc, neither score-level fusion nor a better BM25 tokenizer changes this.
+\subsection{Post-hoc set 2: a text RAG stack, cross-encoder reranking and OCR quality (exploratory)}
+\label{sec:posthoc2}
+A common text RAG retrieval stack is hybrid lexical + dense retrieval followed by a cross-encoder reranker, which reads the query and the page text together. This set asks three questions:
+\begin{itemize}
+  \item Does this stronger text pipeline close the gap to ColPali?
+  \item Does a strong text signal help when it reranks \emph{ColPali's} candidates? If so, our negative result would hold only for weak text retrievers.
+  \item Does retrieval success depend on the OCR quality of the gold page?
+\end{itemize}
+Design, grids, selection rules and expectations were committed before anything was run (\texttt{92c2163}, 15 November, after the main test run and post-hoc set 1). Settings were chosen on dev, and the test split was evaluated once for these systems. Every text system reads the same Tesseract OCR text, one page per passage (no chunking; the median page has 134 words).
+
+\paragraph{Systems.}
+\begin{itemize}
+  \item T$_\text{hyb}$ = RRF(BM25, BGE-M3), with $k$ chosen on dev from the grid used for C and D: $k$ = \kThyb{}.
+  \item Cross-encoder: \texttt{BAAI/bge-reranker-v2-m3}, fp16 on Apple MPS. Its maximum length was fixed by a pre-registered rule from token counts alone: \ceMaxLen{} tokens, which fits \ceFitPct{}\% of query--page pairs. It scored a candidate pool per query (the union of T$_\text{hyb}$'s and ColPali's top 50; \cePairs{} pairs, \cePoolMean{} pages per query on average).
+  \item T$_\text{rr}$: T$_\text{hyb}$'s top $N$ reranked by the cross-encoder. B$_\text{ce}$: ColPali's top $N$ reranked by it. $N \in \{1, 5, 10, 20, 50\}$, chosen on dev; $N = 1$ means no reranking.
+  \item Cascade: ColPali reorders BM25's top $N$, $N \in \{10, 20, 50, 100\}$. This is a descriptive cost/quality curve with no selection.
+\end{itemize}
+
+\paragraph{Dev selection.} \Mea{} T$_\text{rr}$ improves with depth and selects $N$ = \nTrr{} (dev \devTrr{}). For B$_\text{ce}$, every $N > 1$ is \emph{below} ColPali on dev, and nDCG@5 falls as $N$ grows. The rule therefore selects $N$ = \nBce{}, i.e.\ no reranking, so B$_\text{ce}$ equals ColPali on test by construction. This matches the pre-registered expectation.
+
+\paragraph{Test results.} \Mea{} (Table~\ref{tab:posthoc2})
+\begin{itemize}
+  \item The hybrid adds nothing over BM25: T$_\text{hyb}$ $-$ A = \deltaThybA{} (CI \deltaThybACI{}, $p$ = \pThybA{}).
+  \item The cross-encoder helps the text pipeline: T$_\text{rr}$ $-$ T$_\text{hyb}$ = \deltaTrrThyb{} (CI \deltaTrrThybCI{}, $p$ = \pTrrThyb{}, uncorrected).
+  \item The full text stack stays far below ColPali: T$_\text{rr}$ \testTrr{} vs \testB{}, $\Delta$ \deltaTrr{} (CI \deltaTrrCI{}, $p_\text{Holm}$ \pHolmTrr{}).
+  \item T$_\text{rr}$ finds the gold page that ColPali misses on \headTrrOnly{} test queries (BM25 alone: \headallAnotB{}); ColPali finds it where T$_\text{rr}$ misses on \headTrrBOnly{}.
+  \item Cost: reranking 50 pages took a median of \latTrr{}\,ms per query on the Mac's MPS. That is a different device from ColPali's L4, so the number shows the order of magnitude only.
+\end{itemize}
+
+\begin{table}[!htbp]\centering\small
+\input{generated/tab_posthoc2.tex}
+\caption{\Mea{} Post-hoc set 2 on the test split (\file{results/posthoc2/metrics.json}).}\label{tab:posthoc2}
+\end{table}
+
+\paragraph{Cascade.} \Mea{} When ColPali only reorders BM25's candidates, nDCG@5 is bounded by BM25's recall at that depth, and it stays below ColPali alone for every $N$ (Table~\ref{tab:cascade}). \Int{} At this corpus size a cascade saves almost nothing: page embeddings are computed offline either way, and scoring all 500 pages takes a few milliseconds. Its use would be on large corpora, where it trades quality for speed.
+
+\begin{table}[!htbp]\centering\small
+\input{generated/tab_cascade.tex}
+\caption{\Mea{} BM25 $\rightarrow$ ColPali cascade on the test split.}\label{tab:cascade}
+\end{table}
+
+\paragraph{OCR quality.} \Mea{} As a proxy we use the share of a page's alphabetic OCR tokens that are in an English word list. The median page scores \ocrMedian{} (10th--90th percentile \ocrPtenth{}--\ocrPninety{}). On the full query set, the proxy of the gold page does not predict success for any system (Table~\ref{tab:ocr}). Spearman $\rho$ with nDCG@5 is \ocrRhoA{} for BM25, \ocrRhoBGE{} for BGE-M3 and \ocrRhoB{} for ColPali, and every CI includes 0.
+\Int{} The pre-registered expectation (text systems depend on OCR quality, ColPali does not) is not supported. The proxy is crude: it also penalises clean pages full of names, codes and numbers, which are common in DocVQA forms. So this does not show that OCR quality is irrelevant. It shows that a simple dictionary-based proxy does not explain who wins. The earlier overlap analysis (Section~\ref{sec:failure}) remains the better explanation, because it measures whether the \emph{query's} words survive OCR on the gold page.
+
+\begin{table}[!htbp]\centering\small
+\input{generated/tab_ocr.tex}
+\caption{\Mea{} OCR-quality proxy of the gold page vs Hit@5, full query set (\file{results/ocr\_quality/}).}\label{tab:ocr}
+\end{table}
+
+\paragraph{Empty OCR pages and BGE-M3 (diagnostic, not pre-registered, dev only).} \Mea{} While building Table~\ref{tab:ocr} we noticed that BGE-M3 hits all four queries whose gold page has \emph{empty} OCR text. The reason is an artefact: the four empty pages share the embedding of the empty string, and at least one of them is in BGE-M3's top 5 for \emptyTopFive{} of \nQueries{} queries. On dev, moving these pages to the bottom of BGE-M3's ranking raises BGE-M3 alone from \emptyBGEdev{} to \emptyBGEdevFixed{}. It barely changes the systems we draw conclusions from: D goes from \emptyDdev{} to \emptyDdevFixed{}, and T$_\text{hyb}$ from \emptyThybdev{} to \emptyThybdevFixed{}.
+\Int{} BGE-M3's stand-alone score is therefore understated, and its closeness to the paper's 25.7 is partly a coincidence. The control comparison (C vs D) and the text-hybrid results do not depend on it. We report this as found and did not re-run the test split.
+
+\paragraph{Reading.} \Int{} A much stronger text signal improves the \emph{text} pipeline by about five points, but it still leaves the pipeline far below ColPali. Used on ColPali's own candidates, it hurts on dev at every depth. The negative result is therefore not an artefact of weak first-stage text retrievers: on this task, with this OCR, text read from the page adds no ranking information that ColPali lacks.
+
+\paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali. Post-hoc, neither score-level fusion nor a better BM25 tokenizer changes this, and neither does a text RAG stack with a cross-encoder reranker.
 
 % =====================================================================================================
 \section{Limitations, conclusions and open questions}
@@ -523,6 +578,8 @@ Both analyses, their selection rules and our expectations were committed before 
   \item \textbf{One task, one OCR, one checkpoint.} All conclusions are about ViDoRe~v1 DocVQA with the benchmark's Tesseract text and ColPali~v1.3. \Pub{} DocVQA is one of the academic datasets in ColPali's training data~\cite[\S4.2, App.~A.3]{colpali} \todo{verify in App.~A.3 / Table~3 (39,463 DocVQA pairs, read only from an extracted summary)}. The paper does not say which DocVQA split was used, and its contamination check covers multi-page PDFs only~\cite[\S4.2]{colpali}. \Int{} Training on DocVQA data favours ColPali against the zero-shot text baselines on this task. We did not check whether any test page also appears in the training set.
   \item \textbf{Small test set.} 225 queries; 17 visual queries. Per-type results are exploratory, and the confidence intervals are wide (about $\pm$0.06 nDCG@5 per system).
   \item \textbf{Fusion functions.} Our main analysis used rank fusion. Score-level convex combination and a code-preserving tokenizer were tested only post-hoc (Section~\ref{sec:posthoc}), with one normalisation (min-max) and one tokenizer design. Other score normalisations, learned fusion and query-dependent weights remain untested.
+  \item \textbf{Post-hoc set 2 is post-hoc and partly cross-device.} The text RAG stack, the cross-encoder and the OCR analysis were added on 15 November, after the main test run, at our own initiative to answer an obvious objection. They were pre-registered before running, but the test split had already been used twice. We tested one reranker, one pool size and one OCR proxy, and the proxy is crude. The cross-encoder ran on Apple MPS, so its latency is not comparable with ColPali's L4 numbers.
+  \item \textbf{Empty OCR pages in BGE-M3.} Four pages have no OCR text, and their empty-string embedding ranks high for most queries. This understates BGE-M3 alone; on dev it barely affects D and T$_\text{hyb}$ (Section~\ref{sec:posthoc2}). Found after the experiments; not corrected on test.
   \item \textbf{Official BM25 preprocessing in the main run.} It drops stopwords such as ``no'' and non-alphanumeric tokens such as ``2-26''. We kept it for comparability with the paper; its effect was checked post-hoc (Section~\ref{sec:posthoc}).
   \item \textbf{Coarse query tags.} The rule-based tags miss rare lowercase terms and count generic capitalised labels as anchors.
   \item \textbf{Mixed hardware.} Resource numbers were measured on different devices (L4 GPU, M5 MPS, M5 CPU), so cross-system latency sums are indicative only.
@@ -533,13 +590,13 @@ Both analyses, their selection rules and our expectations were committed before 
 \paragraph{Conclusions.}
 \begin{itemize}
   \item \Mea{} ColPali's DocVQA result is reproducible with the authors' code and checkpoint (\fullB{} vs \pubCard{}).
-  \item \Mea{} Adding BM25 through RRF significantly \emph{hurts} it (\deltaC{} nDCG@5 on test). A dense-text control hurts equally. The best dev-tuned weighting only ties. Post-hoc, score-level fusion selects ColPali alone on dev, and a better BM25 tokenizer improves BM25 but adds no query that ColPali misses.
+  \item \Mea{} Adding BM25 through RRF significantly \emph{hurts} it (\deltaC{} nDCG@5 on test). A dense-text control hurts equally. The best dev-tuned weighting only ties. Post-hoc, score-level fusion selects ColPali alone on dev, and a better BM25 tokenizer improves BM25 but adds no query that ColPali misses. A text RAG stack (hybrid + cross-encoder reranker) stays \deltaTrr{} below ColPali, and reranking ColPali's candidates with the cross-encoder is rejected on dev.
   \item \Int{} On this task ColPali already reads the lexical anchors that BM25 depends on, and reads them better than Tesseract OCR does. Equal-weight rank fusion with a much weaker second ranking therefore mostly imports that ranking's errors. This is consistent with the conditions under which fusion is reported to fail in text IR~\cite{bruch}, and with the cases where text + visual fusion did help having clean text and comparably strong inputs~\cite{irpapers}.
 \end{itemize}
 
 \paragraph{Open questions.}
 \begin{itemize}
-  \item \Hyp{} A lexical signal should start to help when the page \emph{text} improves (layout-aware or LLM-based OCR), or on text-dense corpora. Improving the tokenizer alone did not create headroom (Section~\ref{sec:posthoc}), which points to the OCR text itself as the bottleneck. Either way, text retrieval would have to come close to visual retrieval. Testing this needs a task where the headroom (``A only'' in Table~\ref{tab:headroom}) is large.
+  \item \Hyp{} A lexical signal should start to help when the page \emph{text} improves (layout-aware or LLM-based OCR), or on text-dense corpora. Improving the tokenizer alone did not create headroom (Section~\ref{sec:posthoc}), and neither did a cross-encoder reading the same OCR text (Section~\ref{sec:posthoc2}). This points to the OCR text itself as the bottleneck. A simple dictionary-based OCR-quality proxy did not explain success, so a direct test needs a cleaner transcription of the same pages. Either way, text retrieval would have to come close to visual retrieval. Testing this needs a task where the headroom (``A only'' in Table~\ref{tab:headroom}) is large.
   \item \Hyp{} On ViDoRe~V2, which reduces query--page lexical overlap by design~\cite{vidorev2}, fusion should help even less.
   \item Open: why does ColPali v1.3 use about \peakGPU{}\,GiB of GPU memory to encode pages?
 \end{itemize}
@@ -573,6 +630,20 @@ python scripts/failure_analysis.py
 python scripts/make_figures.py
 python scripts/make_report_tables.py && (cd report && tectonic main.tex)
 python -m pytest -q tests                                             # fast tests
+\end{Verbatim}
+
+\noindent\textbf{Post-hoc sets 1 and 2.} Only the cross-encoder needs torch (about 25 minutes on Apple MPS); its scores are committed, so every other step runs on CPU in seconds:
+\begin{Verbatim}[fontsize=\footnotesize,breaklines=true]
+python scripts/run_bm25.py --config configs/bm25_codes_docvqa.yaml
+python scripts/run_cc_fusion_dev.py --config configs/fusion_cc_docvqa.yaml
+python scripts/run_test_evaluation.py --config configs/posthoc_test_evaluation.yaml
+python scripts/run_posthoc2_dev.py --stage hybrid
+python scripts/run_reranker.py --config configs/posthoc2_docvqa.yaml   # torch, MPS/GPU
+python scripts/run_posthoc2_dev.py --stage rerank
+python scripts/run_test_evaluation.py --config configs/posthoc2_test_evaluation.yaml
+python scripts/ocr_quality.py
+python scripts/checks/bge_empty_pages.py                               # diagnostic, dev only
+bash scripts/checks/reproduce_cpu_pipeline.sh                          # fresh-clone check of all of the above
 \end{Verbatim}
 
 \section{AI-use disclosure}

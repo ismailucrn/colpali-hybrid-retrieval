@@ -287,6 +287,33 @@ keeps ``no'' and ``2-26''-style codes
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
+\begin{frame}{Post-hoc set 2: a full text RAG stack, and reranking ColPali}
+\small Pre-registered 15 Nov (\texttt{92c2163}); chosen on dev, test evaluated once --- \textbf{exploratory}.\\[6pt]
+\begin{columns}[T]
+\column{0.5\linewidth}
+\textbf{Text RAG stack} (same OCR text)\\[2pt]
+BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
+\begin{itemize}
+  \item \Mea{} hybrid $\approx$ BM25 (\deltaThybA{}, $p$ \pThybA{})
+  \item \Mea{} reranker helps text: \deltaTrrThyb{} ($p$ \pTrrThyb{})
+  \item \Mea{} still far below ColPali: \testTrr{} vs \testB{}, $\Delta$ \deltaTrr{}, $p_\text{Holm}$ \pHolmTrr{}
+  \item cost: \latTrr{}\,ms/query on Mac MPS (top 50)
+\end{itemize}
+\column{0.46\linewidth}
+\textbf{Cross-encoder on ColPali's top $N$}
+\begin{itemize}
+  \item \Mea{} dev: every $N>1$ \emph{below} ColPali; rule picks $N$ = \nBce{} = no reranking
+  \item \Int{} even a strong text signal adds nothing to ColPali here
+\end{itemize}
+\textbf{OCR quality} (dictionary share)
+\begin{itemize}
+  \item \Mea{} $\rho$ with nDCG@5: BM25 \ocrRhoA{}, ColPali \ocrRhoB{} (CIs include 0)
+  \item \Int{} crude proxy; overlap analysis explains more
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
 \begin{frame}{Cost: fusion is cheap --- quality is the obstacle}
 \centering
 {\scriptsize\input{../report/generated/tab_resources.tex}}
@@ -306,7 +333,8 @@ keeps ``no'' and ``2-26''-style codes
   \item One task (DocVQA), one OCR (Tesseract), one checkpoint (v1.3)
   \item \Pub{} DocVQA is in ColPali's training data (split not stated) --- favours ColPali vs zero-shot text baselines
   \item Test set: \nTest{} queries, only \nvisual{} visual --- wide CIs, per-type results exploratory
-  \item Score-level fusion and tokenizer tested only post-hoc, one design each (min-max; one tokenizer)
+  \item Score-level fusion, tokenizer, text RAG stack, reranker and OCR proxy tested only post-hoc, one design each
+  \item BGE-M3 alone understated: empty-OCR pages rank high (\emptyTopFive{}/\nQueries{} queries); D, T$_\text{hyb}$ unaffected on dev
   \item Main run keeps the official BM25 preprocessing (drops ``no'', ``2-26'') for comparability
   \item Resource numbers from three devices (L4, M5 MPS, M5 CPU)
   \item Reproduction gap (\gapCardPts{} pt) not traced to a cause
@@ -317,7 +345,7 @@ keeps ``no'' and ``2-26''-style codes
 \begin{frame}{Conclusions and open questions}
 \begin{itemize}
   \item \Mea{} ColPali's DocVQA result reproduces with the authors' code and checkpoint.
-  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties; post-hoc, score-level fusion picks ColPali alone and a better tokenizer adds no headroom.
+  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties; post-hoc, score-level fusion picks ColPali alone, a better tokenizer adds no headroom, and a text RAG stack with a cross-encoder stays \deltaTrr{} below ColPali.
   \item \Int{} On DocVQA, ColPali already reads the lexical anchors BM25 needs --- better than Tesseract OCR does. Fusion with a much weaker ranking imports its errors.
   \item \Int{} Consistent with when fusion fails in text IR (unequal inputs) and when text + visual fusion helped (clean text, equal strength).
 \end{itemize}
