@@ -262,3 +262,44 @@ Chronological record of every run and decision. One entry per run or decision; n
   - CC: as expected, no gain. Dev already rejects every alpha < 1.
   - Tokenizer: A_code is better than A, as expected. The expected rise in "A only" did **not** happen; C_code is still significantly below B, as expected.
 - *Interpretation:* better lexical matching improves BM25 on its own, but only on queries ColPali already solves. This strengthens the main conclusion: on DocVQA the lexical signal is largely redundant with ColPali, whatever the tokenizer and whatever the fusion function (rank or score). Caveat: post-hoc, single task.
+
+### 2026-11-15 — Pre-registration of POST-HOC set 2: text RAG retrieval stack, cross-encoder reranking, OCR quality (written before running any of it)
+- Type: decision (approved by the user 2026-11-15). Requested by the user on 2026-11-15, **after** the main test run (2026-11-04) and post-hoc set 1 (2026-11-11). Everything below is labelled *post-hoc set 2, exploratory* in every output. It changes nothing in the main result or its verdicts.
+- Why:
+  - A common text-RAG retrieval stack is hybrid lexical + dense retrieval followed by a cross-encoder reranker. The ColPali paper compares ColPali with single text retrievers; this stack is a stronger text baseline.
+  - A cross-encoder reads the query and the page text together, so it is a much stronger text signal than BM25 or BGE-M3. Reranking ColPali's candidates with it tests whether our negative result only holds for *weak* text retrievers.
+  - The failure analysis points to OCR damage; we have not measured OCR quality directly.
+- Text input for every text system: the same `_tesseract` OCR text (`9a183a7`), one page = one passage. No chunking: the median page has 134 words.
+
+**1. Text hybrid T_hyb = RRF(BM25, BGE-M3)**
+- Scores of A and BGE-M3 as committed. k from the same grid as C/D ({1, 5, 10, 20, 40, 60, 80, 100, 200, 500}), same rule: max dev nDCG@5, ties → k closest to 60.
+
+**2. Cross-encoder reranker**
+- `BAAI/bge-reranker-v2-m3` @ `953dc6f6f85a1b2dbfca4c34a2796e7dde08d41e` (Apache-2.0, not gated), FlagEmbedding 1.4.2 `FlagReranker`, fp16 on Apple MPS, raw scores (`normalize=False`; ordering is the same).
+- `max_length`: the smallest value in {512, 1024, 2048} for which at least 95 % of (query + page) pairs fit without truncation, taking the longest query. Decided from token counts only, before any reranker score exists.
+- The reranker scores, once, a candidate pool per query: the union of the top 50 pages of T_hyb (selected k) and the top 50 of ColPali. Relevance labels are not used to build the pool.
+- **T_rr** = T_hyb's top N reranked by the cross-encoder (pages below N keep T_hyb's order).
+- **B_ce** = ColPali's top N reranked by the cross-encoder (pages below N keep ColPali's order).
+- N ∈ {1, 5, 10, 20, 50}, selected on dev separately for T_rr and B_ce (max nDCG@5; ties → smaller N). N = 1 means no reranking, so "do not rerank" is a possible outcome.
+
+**3. Cascade A→B (ColPali reranks BM25's candidates)**
+- ColPali's order applied to BM25's top N; pages below N keep BM25's order. N ∈ {10, 20, 50, 100}.
+- Descriptive cost/quality curve: no selection. Every N is reported on test, together with BM25's Recall@N (the ceiling of the cascade).
+
+**4. OCR quality (descriptive)**
+- Proxy per page: share of alphabetic OCR tokens (lowercased, regex `[a-z]+`, length ≥ 2) found in the NLTK `words` English word list. Pages with empty OCR text are reported separately.
+- Full query set (451; no tuned systems involved): A, BGE-M3 and B. Queries are grouped by the proxy of their gold page into terciles. Per group: Hit@5 and nDCG@5 per system; Spearman ρ between the proxy and per-query nDCG@5 per system, with a bootstrap 95 % CI (10,000 resamples, seed 0).
+
+**Hypotheses (before running)**
+- T_hyb ≈ A: |Δ| < 2 nDCG@5 points, because BGE-M3 is much weaker than BM25 here (Bruch et al.: fusion gains shrink when the inputs differ in quality).
+- T_rr > T_hyb on test, but T_rr significantly < B: the full text RAG stack does not reach ColPali on DocVQA.
+- B_ce: dev selects a small N (≤ 5) or N = 1; on test |Δ B_ce vs B| < 1 point and not significant.
+  - **What would change our conclusion:** B_ce significantly > B. The main negative result would then hold only for weak first-stage text retrievers, not for text signals in general.
+- Cascade: nDCG@5 below B for every N; the gap shrinks as N grows and is bounded by BM25's Recall@N.
+- OCR: ρ is clearly positive for A and BGE-M3, and much smaller for ColPali; text systems' Hit@5 rises across terciles more than ColPali's.
+  - **What would contradict it:** ColPali equally sensitive to the proxy. The proxy would then measure page difficulty in general, not damage to the text channel.
+
+**Test protocol**
+- Frozen config `configs/posthoc2_test_evaluation.yaml` → `scripts/run_test_evaluation.py`; it refuses settings that differ from the committed dev selections. Test is evaluated once for these systems.
+- Holm correction over T_hyb, T_rr and B_ce vs B. Extra pairs: T_rr vs T_hyb, T_hyb vs A, T_rr vs A. Top-5 headroom T_rr vs B.
+- Resources: reranker latency per query at the selected N (median over 50 queries, MPS; the device differs from ColPali's L4) and the model's memory.
