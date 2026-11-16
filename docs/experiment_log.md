@@ -444,3 +444,22 @@ Chronological record of every run and decision. One entry per run or decision; n
 - What would change our reading: a significant gain on InfoVQA → "a stronger/second visual model helps". No gain → the DocVQA dev gains were selection noise.
 - Interpretation caveat, fixed now: replacing ColPali with a newer retriever answers "is there a better retriever?", not the project's question "does a second signal help ColPali?". Only F_cq, F_tm, F_q8 and B_vr8 speak to the original question.
 - *Clarification (written before any set-4 dev result was seen; the GPU runs are still going):* the InfoVQA candidate pool is every system in the Holm families of sets 3 and 4: B_vr, C_sel, C_vlm, E_ens, CQ, F_cq, TM, F_tm, F_q8, B_vr8. Q8 alone is descriptive and not in the pool. Ties are broken by approximate sequential query latency. Implemented in `scripts/run_posthoc4_dev.py --stage candidate`.
+
+### 2026-11-16 — Post-hoc set 4: GPU runs and dev selection (test not touched)
+- Type: runs (registry rows 64–66). All Colab runs succeeded on the first attempt.
+- **Dev nDCG@5** (ColPali 0.5804):
+
+  | System | Dev nDCG@5 | Setting |
+  |---|---|---|
+  | Tomoro ColQwen3-4B alone (TM) | **0.6749** | — |
+  | F_tm = RRF(ColPali, TM) | 0.6486 | k = 5 |
+  | B_vr8 (Reranker-8B on ColPali's top N) | 0.6304 | N = 10 |
+  | F_cq = RRF(ColPali, ColQwen2.5) | 0.6266 | k = 5 |
+  | ColQwen2.5 alone (CQ) | 0.6254 | — |
+  | F_q8 = RRF(ColPali, Q8) | 0.5937 | k = 1 |
+  | Qwen3-VL-Embedding-8B alone (Q8) | 0.5434 | — |
+
+  B_vr8 by N: 0.5804 / 0.6130 / 0.6304 for N = 1 / 5 / 10, against 0.6231 for the 2B reranker at N = 10.
+- **InfoVQA candidate (rule fixed beforehand): TM.**
+- *Interpretation (dev only):* newer retrievers trained on more data are clearly better on dev. Fusing them with ColPali lands between the two inputs, so ColPali pulls the stronger model down. This is the "unequal inputs" pattern again, now from the other side.
+- Frozen in `configs/posthoc4_test_evaluation.yaml`; the dry run on dev reproduces every selection.

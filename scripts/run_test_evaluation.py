@@ -40,6 +40,16 @@ DEFAULT_COMPONENTS = {"A": "results/bm25_docvqa/metrics.json", "B": "results/col
 
 def check_frozen_settings(systems: dict, mode: str = "main") -> None:
     """Fail loudly if the config differs from what was selected on dev."""
+    if mode == "posthoc4":
+        d = REPO_ROOT / "results/posthoc4"
+        ret = json.loads((d / "dev_selection_retrievers.json").read_text())["systems"]
+        rr8 = json.loads((d / "dev_selection_rerank8b.json").read_text())["systems"]["B_vr8"]
+        for sid in ("F_cq", "F_tm", "F_q8"):
+            if systems[sid]["k"] != ret[sid]["selected_k"]:
+                raise SystemExit(f"{sid}: k {systems[sid]['k']} != dev selection {ret[sid]['selected_k']}")
+        if systems["B_vr8"]["n"] != rr8["selected_n"]:
+            raise SystemExit(f"B_vr8: N {systems['B_vr8']['n']} != dev selection {rr8['selected_n']}")
+        return
     if mode == "posthoc3":
         d = REPO_ROOT / "results/posthoc3"
         sel = json.loads((d / "dev_selection_selective.json").read_text())["systems"]["C_sel"]

@@ -1,0 +1,53 @@
+# POST-HOC set 4 test evaluation (pre-registered 2026-11-16; FIFTH use of the DocVQA test split). Exploratory.
+# Settings come from results/posthoc4/dev_selection_{retrievers,rerank8b}.json; the script refuses other values.
+
+title: "POST-HOC set 4 test-split results (exploratory; main test run was 2026-11-04)"
+frozen_check: posthoc4
+
+data:
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  split: test
+
+splits: results/splits/docvqa_split.json
+tags: results/splits/docvqa_query_tags.csv
+
+scores:
+  B: results/colpali_v1.3_docvqa/scores.npz
+  CQ: results/colqwen25_docvqa/scores.npz
+  TM: results/tomoro_docvqa/scores.npz
+  Q8: results/qwen3vl_embedding8b_docvqa/scores.npz
+  VR8: results/visual_reranker8b_docvqa/scores.npz     # NaN outside ColPali's top 10
+
+component_metrics:
+  B: results/colpali_v1.3_docvqa/metrics.json
+  CQ: results/colqwen25_docvqa/metrics.json
+  TM: results/tomoro_docvqa/metrics.json
+  Q8: results/qwen3vl_embedding8b_docvqa/metrics.json
+  VR8: results/visual_reranker8b_docvqa/metrics.json
+
+systems:
+  B:     {name: "B: ColPali v1.3",                                  kind: single, scores: B, role: "baseline"}
+  Q8:    {name: "Q8: Qwen3-VL-Embedding-8B",                         kind: single, scores: Q8, role: "post-hoc 4: descriptive"}
+  CQ:    {name: "CQ: ColQwen2.5 (v0.2)",                             kind: single, scores: CQ, role: "post-hoc 4: stronger retriever"}
+  TM:    {name: "TM: Tomoro ColQwen3-4B",                            kind: single, scores: TM, role: "post-hoc 4: stronger retriever"}
+  F_cq:  {name: "F_cq: RRF(ColPali, ColQwen2.5)",                    kind: rrf, inputs: [B, CQ], k: 5, role: "post-hoc 4: second visual retriever"}
+  F_tm:  {name: "F_tm: RRF(ColPali, Tomoro)",                        kind: rrf, inputs: [B, TM], k: 5, role: "post-hoc 4: second visual retriever"}
+  F_q8:  {name: "F_q8: RRF(ColPali, Qwen3-VL-Embedding-8B)",         kind: rrf, inputs: [B, Q8], k: 1, role: "post-hoc 4: second visual retriever"}
+  B_vr8: {name: "B_vr8: ColPali top-N reranked by Qwen3-VL-Reranker-8B", kind: rerank, first: B, second: VR8, n: 10, role: "post-hoc 4: visual reranker"}
+
+baseline: B
+compare_to_baseline: [CQ, F_cq, TM, F_tm, F_q8, B_vr8]     # Holm over these six
+extra_pairs: [[Q8, B], [TM, CQ]]
+pairs_title: "Pairs (post-hoc set 4): Qwen3-VL-Embedding-8B vs ColPali; Tomoro vs ColQwen2.5"
+headroom_pairs: [[CQ, B], [TM, B]]
+
+statistics:
+  metric: ndcg_at_5
+  bootstrap_resamples: 10000
+  permutations: 10000
+  alpha: 0.05
+  seed: 0
+  multiple_comparisons: holm
+
+output_dir: results/posthoc4

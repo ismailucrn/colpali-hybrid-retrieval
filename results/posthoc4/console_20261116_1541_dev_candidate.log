@@ -1,0 +1,12 @@
+B (ColPali) dev nDCG@5 = 0.5804
+  TM     dev nDCG@5 0.6749  latency ~68 ms  <- candidate
+  F_tm   dev nDCG@5 0.6486  latency ~120 ms
+  B_vr8  dev nDCG@5 0.6304  latency ~7462 ms
+  B_vr   dev nDCG@5 0.6299  latency ~7177 ms
+  F_cq   dev nDCG@5 0.6266  latency ~216 ms
+  CQ     dev nDCG@5 0.6254  latency ~164 ms
+  F_q8   dev nDCG@5 0.5937  latency ~128 ms
+  C_sel  dev nDCG@5 0.5846  latency ~51 ms
+  E_ens  dev nDCG@5 0.5733  latency ~103 ms
+  C_vlm  dev nDCG@5 0.5578  latency ~51 ms
+wrote results/posthoc4/dev_selection_candidate.json

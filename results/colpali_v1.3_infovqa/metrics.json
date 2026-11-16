@@ -1,0 +1,184 @@
+{
+  "timestamp_utc": "2026-11-16T14:41:57+00:00",
+  "config_path": "configs/posthoc4_docvqa.yaml",
+  "config": {
+    "tasks": {
+      "docvqa": {
+        "dataset": "vidore/docvqa_test_subsampled",
+        "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+        "split": "test"
+      },
+      "infovqa": {
+        "dataset": "vidore/infovqa_test_subsampled",
+        "revision": "f793e830aaeae1ceb8a2df626fc555b3fd04d3db",
+        "split": "test"
+      }
+    },
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "seed": 0,
+    "scores": {
+      "B": "results/colpali_v1.3_docvqa/scores.npz"
+    },
+    "multivector": {
+      "colpali": {
+        "family": "colpali_engine",
+        "model": "vidore/colpali-v1.3",
+        "revision": "b5c6dd62125326e6f0b540c1f7b36e901cdc0a11",
+        "base_revision": "30ab955d073de4a91dc5a288e8c97226647e3e5a",
+        "model_class": "ColPali",
+        "processor_class": "ColPaliProcessor",
+        "batch_size": 4,
+        "output_dirs": {
+          "infovqa": "results/colpali_v1.3_infovqa"
+        }
+      },
+      "colqwen25": {
+        "family": "colpali_engine",
+        "model": "vidore/colqwen2.5-v0.2",
+        "revision": "dcbe8d9cede518bce830488364ba0e40c873645b",
+        "base_revision": "92908120384b7a2110c5beda3ab29cbdb2c08e49",
+        "model_class": "ColQwen2_5",
+        "processor_class": "ColQwen2_5_Processor",
+        "batch_size": 4,
+        "output_dirs": {
+          "docvqa": "results/colqwen25_docvqa",
+          "infovqa": "results/colqwen25_infovqa"
+        }
+      },
+      "tomoro": {
+        "family": "sentence_transformers",
+        "model": "TomoroAI/tomoro-colqwen3-embed-4b",
+        "revision": "13517a29e8c5e408f7f2684337ed407df3acb212",
+        "batch_size": 4,
+        "output_dirs": {
+          "docvqa": "results/tomoro_docvqa",
+          "infovqa": "results/tomoro_infovqa"
+        }
+      }
+    },
+    "embedding8b": {
+      "model": "Qwen/Qwen3-VL-Embedding-8B",
+      "revision": "2c4565515e0f265c6511776e7193b22c0968ddc7",
+      "query_instruction": "Retrieve the document page image that answers the question.",
+      "batch_size": 2,
+      "dtype": "bfloat16",
+      "output_dirs": {
+        "docvqa": "results/qwen3vl_embedding8b_docvqa",
+        "infovqa": "results/qwen3vl_embedding8b_infovqa"
+      }
+    },
+    "reranker8b": {
+      "model": "Qwen/Qwen3-VL-Reranker-8B",
+      "revision": "b212dc8c91a8164aef1ea2de9c1a867611e75c04",
+      "instruction": "Given a question, retrieve the document page image that answers it.",
+      "pool_first": "B",
+      "pool_top": 10,
+      "dtype": "bfloat16",
+      "latency": {
+        "n_queries": 20,
+        "n_values": [
+          5,
+          10
+        ]
+      },
+      "n_grid": [
+        1,
+        5,
+        10
+      ],
+      "first_scores": {
+        "docvqa": "results/colpali_v1.3_docvqa/scores.npz",
+        "infovqa": "results/colpali_v1.3_infovqa/scores.npz"
+      },
+      "output_dirs": {
+        "docvqa": "results/visual_reranker8b_docvqa",
+        "infovqa": "results/visual_reranker8b_infovqa"
+      }
+    },
+    "rrf": {
+      "k_grid": [
+        1,
+        5,
+        10,
+        20,
+        40,
+        60,
+        80,
+        100,
+        200,
+        500
+      ],
+      "tie_break": "closest_to_60"
+    },
+    "fresh_task": {
+      "task": "infovqa",
+      "published_colpali_v1_3_ndcg_at_5": 0.85716,
+      "candidate_rule": "highest DocVQA dev nDCG@5 among set-3 and set-4 systems; ties -> lower query latency"
+    },
+    "output_dir": "results/posthoc4"
+  },
+  "seed": 0,
+  "git_commit": "6091e78f4565331f2d6d8b169175719adb730e54",
+  "git_dirty": false,
+  "python": "3.13.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cuda",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "gpu_name": "NVIDIA L4",
+    "gpu_total_memory_mb": 22563.125,
+    "cuda_version": "13.0"
+  },
+  "command": "scripts/run_posthoc4_gpu.py --stage multivector --model colpali --task infovqa",
+  "label": "POST-HOC set 4 (pre-registered 2026-11-16)",
+  "task": "infovqa",
+  "dataset": {
+    "dataset": "vidore/infovqa_test_subsampled",
+    "revision": "f793e830aaeae1ceb8a2df626fc555b3fd04d3db",
+    "split": "test"
+  },
+  "n_queries": 494,
+  "n_pages": 500,
+  "system": "vidore/colpali-v1.3",
+  "family": "colpali_engine",
+  "timings": {
+    "index_pages_s": 110.913537099,
+    "index_per_page_s": 0.221827074198
+  },
+  "latency": {
+    "n": 50,
+    "median_ms": 141.56292849997953,
+    "mean_ms": 143.88180878000185,
+    "p95_ms": 161.95663375002593,
+    "note": "encode one query + MaxSim against all stored pages (CPU scoring for colpali_engine)"
+  },
+  "index": {
+    "vectors_per_page_min_max": [
+      1031,
+      1031
+    ],
+    "dim": 128,
+    "size_mb": 125.8544921875,
+    "note": "page vectors at bf16 (2 bytes)"
+  },
+  "peak_memory": {
+    "peak_allocated_mb": 16190.38525390625,
+    "peak_reserved_mb": 16886.0,
+    "method": "torch.cuda.max_memory_*"
+  }
+}
