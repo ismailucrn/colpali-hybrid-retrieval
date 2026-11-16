@@ -31,7 +31,6 @@ import numpy as np
 import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from scripts.run_fusion_dev import load_scores  # noqa: E402
 from src.data import load_task  # noqa: E402
 from src.fusion import ranks_from_scores  # noqa: E402
 from src.runinfo import REPO_ROOT, MemoryTracker, collect_metadata  # noqa: E402
@@ -65,6 +64,14 @@ def load_helper(repo: str, revision: str, filename: str):
 def fail_on_errors(errors: "ErrorCounter") -> None:
     if errors.messages:
         raise SystemExit(f"{len(errors.messages)} helper errors (inputs replaced by NULL); first: {errors.messages[0]}")
+
+
+def load_scores(path: str, queries: list[str], page_ids: list[str]) -> np.ndarray:
+    """Same check as scripts/run_fusion_dev.load_scores, without importing the evaluator (not installed with vLLM)."""
+    saved = np.load(REPO_ROOT / path, allow_pickle=False)
+    if list(saved["queries"]) != queries or list(saved["page_ids"]) != page_ids:
+        raise SystemExit(f"{path}: query/page order does not match the dataset")
+    return saved["scores"].astype(np.float64)
 
 
 def latency_stats(times_s: list[float]) -> dict:

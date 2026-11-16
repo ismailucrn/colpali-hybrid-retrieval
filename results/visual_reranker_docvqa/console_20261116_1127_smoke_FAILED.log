@@ -1,0 +1,21 @@
+# Colab L4, notebook notebooks/posthoc3_qwen3vl_colab.ipynb, commit f1d8acf, smoke-test cell (embed --limit 8, rerank --limit 2).
+# Copied from the notebook page; download/reconstruction progress lines and some intermediate traceback frames (torch/transformers wrappers) removed. Embed smoke passed; rerank smoke FAILED.
+stage embed: 8 queries, 8 pages -> /content/colpali-hybrid-retrieval/results/qwen3vl_embedding_docvqa_smoke
+Loading weights: 100% 625/625 [00:00<00:00, 4348.62it/s]
+pages (8, 2048), queries (8, 2048); index 5.8 s; query latency median 45.1 ms
+wrote results/qwen3vl_embedding_docvqa_smoke
+stage rerank: 2 queries, 500 pages -> /content/colpali-hybrid-retrieval/results/visual_reranker_docvqa_smoke
+Loading weights: 100% 625/625 [00:00<00:00, 4778.85it/s]
+/usr/local/lib/python3.13/dist-packages/transformers/tokenization_utils_base.py:2387: UserWarning: `max_length` is ignored when `padding`=`True` and there is no truncation strategy. To pad to max length, use `padding='max_length'`.
+Traceback (most recent call last):
+  File "/content/colpali-hybrid-retrieval/scripts/run_posthoc3_gpu.py", line 146, in stage_rerank
+    scores[i, top] = score_pages(q, top)
+  File "/content/colpali-hybrid-retrieval/scripts/run_posthoc3_gpu.py", line 140, in score_pages
+    return model.process({"instruction": r["instruction"], "query": {"text": q},
+  File "/root/.cache/huggingface/hub/models--Qwen--Qwen3-VL-Reranker-2B/snapshots/4bd860ac4f15ad1897a214615cccc700f8f71818/scripts/qwen3_vl_reranker.py", line 106, in compute_scores
+    batch_scores = self.model(**inputs).last_hidden_state[:, -1]
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 1113, in compute_3d_position_ids
+    position_ids, rope_deltas = self.get_rope_index(
+  File "/usr/local/lib/python3.13/dist-packages/transformers/models/qwen3_vl/modeling_qwen3_vl.py", line 982, in get_rope_index
+    input_token_type = input_token_type[attention_mask[batch_idx].bool()]
+TypeError: only integer tensors of a single element can be converted to an index
