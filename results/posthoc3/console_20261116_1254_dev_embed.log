@@ -1,0 +1,13 @@
+B (ColPali) dev nDCG@5 = 0.5804
+Q3E (Qwen3-VL-Embedding-2B) dev 0.5028
+  E_ens k=1    dev nDCG@5 0.5733  <- selected
+  E_ens k=5    dev nDCG@5 0.5701
+  E_ens k=10   dev nDCG@5 0.5699
+  E_ens k=20   dev nDCG@5 0.5630
+  E_ens k=40   dev nDCG@5 0.5560
+  E_ens k=60   dev nDCG@5 0.5543
+  E_ens k=80   dev nDCG@5 0.5538
+  E_ens k=100  dev nDCG@5 0.5538
+  E_ens k=200  dev nDCG@5 0.5538
+  E_ens k=500  dev nDCG@5 0.5555
+wrote results/posthoc3/dev_selection_embed.json

@@ -135,7 +135,7 @@ def main() -> None:
         "peak_memory": memory.report(),
     })
     (out_dir / "metrics.json").write_text(json.dumps(record, indent=2))
-    print(f"\nwrote {out_dir}/{{scores.npz, metrics.json, per_query.csv}}")
+    print(f"\nwrote {out_dir}/{{scores.npz, metrics.json{'' if dev_only else ', per_query.csv'}}}")
 
 
 if __name__ == "__main__":

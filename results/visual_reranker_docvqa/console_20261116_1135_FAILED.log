@@ -1,0 +1,5 @@
+# Colab L4, notebook notebooks/posthoc3_qwen3vl_colab.ipynb, commit f1d8acf, full reranker cell
+# (`python scripts/run_posthoc3_gpu.py --stage rerank`), run by "Run all" after the smoke test had already failed.
+# FAILED at the first query with the same error as the smoke test (console_20261116_1127_smoke_FAILED.log):
+#   TypeError: only integer tensors of a single element can be converted to an index  (transformers qwen3_vl get_rope_index)
+# The notebook output was overwritten when the cell was re-run with the fix (760a98f), so only this summary is kept.

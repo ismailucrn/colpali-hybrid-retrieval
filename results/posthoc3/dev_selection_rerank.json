@@ -1,0 +1,169 @@
+{
+  "timestamp_utc": "2026-11-16T12:54:07+00:00",
+  "config_path": "configs/posthoc3_docvqa.yaml",
+  "config": {
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "seed": 0,
+    "scores": {
+      "A": "results/bm25_docvqa/scores.npz",
+      "B": "results/colpali_v1.3_docvqa/scores.npz"
+    },
+    "reranker": {
+      "model": "Qwen/Qwen3-VL-Reranker-2B",
+      "revision": "4bd860ac4f15ad1897a214615cccc700f8f71818",
+      "instruction": "Given a question, retrieve the document page image that answers it.",
+      "pool_first": "B",
+      "pool_top": 20,
+      "batch_size": 4,
+      "dtype": "bfloat16",
+      "latency": {
+        "n_queries": 20,
+        "n_values": [
+          5,
+          10,
+          20
+        ]
+      },
+      "output_dir": "results/visual_reranker_docvqa",
+      "n_grid": [
+        1,
+        5,
+        10,
+        20
+      ],
+      "tie_break": "smaller_n"
+    },
+    "selective": {
+      "fused": {
+        "inputs": [
+          "A",
+          "B"
+        ],
+        "k": 1
+      },
+      "confidence_of": "A",
+      "tau_quantiles": [
+        0.5,
+        0.75,
+        0.9,
+        0.95,
+        0.99
+      ],
+      "tie_break": "larger_tau"
+    },
+    "ocr": {
+      "model": "Qwen/Qwen3.5-4B",
+      "revision": "851bf6e806efd8d0a36b00ddf55e13ccb7b8cd0a",
+      "fallback_model": "Qwen/Qwen3-VL-4B-Instruct",
+      "fallback_revision": "ebb281ec70b05090aa6165b016eac8ec08e71b17",
+      "prompt": "Transcribe all text on this page in natural reading order as plain text. Output only the text.",
+      "max_new_tokens": 2048,
+      "temperature": 0.0,
+      "max_model_len": 16384,
+      "output_dir": "results/vlm_ocr_docvqa",
+      "bm25_output_dir": "results/bm25_vlm_docvqa"
+    },
+    "embedding": {
+      "model": "Qwen/Qwen3-VL-Embedding-2B",
+      "revision": "9f2f7e710d6d81056aa5c0a4f04764fec6bb7bda",
+      "query_instruction": "Retrieve the document page image that answers the question.",
+      "batch_size": 8,
+      "dtype": "bfloat16",
+      "output_dir": "results/qwen3vl_embedding_docvqa"
+    },
+    "rrf": {
+      "k_grid": [
+        1,
+        5,
+        10,
+        20,
+        40,
+        60,
+        80,
+        100,
+        200,
+        500
+      ],
+      "tie_break": "closest_to_60"
+    },
+    "output_dir": "results/posthoc3"
+  },
+  "seed": 0,
+  "git_commit": "760a98f958368144ce93f6c3601aca954d757e57",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_posthoc3_dev.py --stage rerank",
+  "label": "POST-HOC set 3 (exploratory, pre-registered in e70f2a7), dev split only",
+  "dev_n_queries": 226,
+  "B_dev_ndcg_at_5": 0.5804297695980011,
+  "systems": {
+    "B_vr": {
+      "first": "B",
+      "selected_n": 20,
+      "dev_ndcg_at_5_by_n": {
+        "1": 0.5804297695980011,
+        "5": 0.6052015009530973,
+        "10": 0.6230842512853619,
+        "20": 0.6298549157414561
+      },
+      "selected_dev_metrics": {
+        "ndcg_at_1": 0.5663716814159292,
+        "recall_at_1": 0.5663716814159292,
+        "precision_at_1": 0.5663716814159292,
+        "map_at_1": 0.5663716814159292,
+        "mrr_at_1": 0.5663716814159292,
+        "ndcg_at_3": 0.6170971075379286,
+        "recall_at_3": 0.6504424778761062,
+        "precision_at_3": 0.2168141592920354,
+        "map_at_3": 0.605457227138643,
+        "mrr_at_3": 0.605457227138643,
+        "ndcg_at_5": 0.6298549157414561,
+        "recall_at_5": 0.6814159292035398,
+        "precision_at_5": 0.13628318584070795,
+        "map_at_5": 0.6125368731563422,
+        "mrr_at_5": 0.6125368731563422,
+        "ndcg_at_10": 0.6430306124528933,
+        "recall_at_10": 0.7212389380530974,
+        "precision_at_10": 0.07212389380530972,
+        "map_at_10": 0.6181380811911785,
+        "mrr_at_10": 0.6181380811911785,
+        "ndcg_at_20": 0.6506077911397871,
+        "recall_at_20": 0.7522123893805309,
+        "precision_at_20": 0.03761061946902655,
+        "map_at_20": 0.6200778076747281,
+        "mrr_at_20": 0.6200778076747281,
+        "ndcg_at_50": 0.6559990070443237,
+        "recall_at_50": 0.7787610619469026,
+        "precision_at_50": 0.015575221238938052,
+        "map_at_50": 0.6209939339203592,
+        "mrr_at_50": 0.6209939339203592,
+        "ndcg_at_100": 0.6632415190997483,
+        "recall_at_100": 0.8230088495575221,
+        "precision_at_100": 0.008230088495575221,
+        "map_at_100": 0.6216490397983395,
+        "mrr_at_100": 0.6216490397983395,
+        "n_queries": 226
+      }
+    }
+  }
+}

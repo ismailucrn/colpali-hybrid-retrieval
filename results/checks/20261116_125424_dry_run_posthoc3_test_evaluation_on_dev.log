@@ -1,0 +1,82 @@
+# POST-HOC set 3 test-split results (exploratory; main test run was 2026-11-04) (n = 226 queries), nDCG@5 unless stated
+
+| System | Role | nDCG@5 [95% CI] | Recall@5 | Recall@10 | nDCG@10 | MRR@10 | Δ vs B [95% CI] | p (perm.) | p (Holm) | W/T/L vs B |
+|---|---|---|---|---|---|---|---|---|---|---|
+| A: BM25 (Tesseract text) | reference | 0.3995 [0.3403, 0.4613] | 0.4558 | 0.4823 | 0.4082 | 0.3842 | – | – | – | – |
+| B: ColPali v1.3 | baseline | 0.5804 [0.5204, 0.6406] | 0.6460 | 0.6991 | 0.5976 | 0.5658 | – | – | – | – |
+| A_vlm: BM25 over Qwen3.5-4B transcription | post-hoc 3: H3 component | 0.4459 [0.3856, 0.5070] | 0.5088 | 0.5354 | 0.4541 | 0.4279 | – | – | – | – |
+| Q3E: Qwen3-VL-Embedding-2B | post-hoc 3: H4 component | 0.5028 [0.4416, 0.5646] | 0.5619 | 0.6195 | 0.5215 | 0.4907 | – | – | – | – |
+| C: RRF(BM25, ColPali) | main C (frozen 2026-11-04) | 0.5335 [0.4737, 0.5927] | 0.6150 | 0.6814 | 0.5545 | 0.5146 | – | – | – | – |
+| C_sel: C where BM25 margin >= tau, else B | post-hoc 3: H2 | 0.5846 [0.5247, 0.6448] | 0.6460 | 0.6991 | 0.6017 | 0.5713 | +0.0042 [+0.0000, +0.0108] | 0.4995 | 0.9989 | 2/224/0 |
+| B_vr: ColPali top-N reranked by Qwen3-VL-Reranker-2B | post-hoc 3: H1 | 0.6299 [0.5707, 0.6882] | 0.6814 | 0.7212 | 0.6430 | 0.6181 | +0.0494 [+0.0179, +0.0836] | 0.0031 | 0.0124 | 31/179/16 |
+| C_vlm: RRF(A_vlm, ColPali) | post-hoc 3: H3 | 0.5578 [0.4964, 0.6173] | 0.6239 | 0.6770 | 0.5747 | 0.5426 | -0.0226 [-0.0449, -0.0003] | 0.0472 | 0.1416 | 14/180/32 |
+| E_ens: RRF(Q3E, ColPali) | post-hoc 3: H4 | 0.5733 [0.5142, 0.6324] | 0.6460 | 0.7035 | 0.5920 | 0.5567 | -0.0071 [-0.0299, +0.0170] | 0.5625 | 0.9989 | 14/182/30 |
+
+## Pairs (post-hoc set 3): VLM transcription vs Tesseract for BM25; Qwen3-VL embedding vs ColPali
+
+| Pair | Δ [95% CI] | p (perm.) | W/T/L |
+|---|---|---|---|
+| A_vlm vs A | +0.0463 [+0.0156, +0.0792] | 0.0041 | 22/190/14 |
+| Q3E vs B | -0.0777 [-0.1204, -0.0357] | 0.0008 | 17/164/45 |
+
+## By query type (exploratory, uncorrected)
+
+| System | exact (n=93) | general (n=115) | visual (n=18) |
+|---|---|---|---|
+| A: BM25 (Tesseract text) | 0.644 | 0.256 | 0.056 |
+| B: ColPali v1.3 | 0.828 | 0.411 | 0.385 |
+| A_vlm: BM25 over Qwen3.5-4B transcription | 0.691 | 0.308 | 0.056 |
+| Q3E: Qwen3-VL-Embedding-2B | 0.730 | 0.347 | 0.325 |
+| C: RRF(BM25, ColPali) | 0.786 | 0.374 | 0.251 |
+| C_sel: C where BM25 margin >= tau, else B | 0.834 (Δ +0.006, p=1.000) | 0.414 (Δ +0.003, p=1.000) | 0.385 (Δ +0.000, p=1.000) |
+| B_vr: ColPali top-N reranked by Qwen3-VL-Reranker-2B | 0.854 (Δ +0.025, p=0.161) | 0.495 (Δ +0.085, p=0.002) | 0.333 (Δ -0.052, p=0.501) |
+| C_vlm: RRF(A_vlm, ColPali) | 0.808 (Δ -0.021, p=0.169) | 0.398 (Δ -0.012, p=0.499) | 0.286 (Δ -0.099, p=0.062) |
+| E_ens: RRF(Q3E, ColPali) | 0.813 (Δ -0.016, p=0.319) | 0.408 (Δ -0.002, p=0.898) | 0.392 (Δ +0.007, p=1.000) |
+
+## Post-hoc: without duplicated query texts (n = 217)
+
+| System | nDCG@5 | Δ vs B |
+|---|---|---|
+| A: BM25 (Tesseract text) | 0.4161 | – |
+| B: ColPali v1.3 | 0.6045 | – |
+| A_vlm: BM25 over Qwen3.5-4B transcription | 0.4644 | – |
+| Q3E: Qwen3-VL-Embedding-2B | 0.5172 | – |
+| C: RRF(BM25, ColPali) | 0.5556 | – |
+| C_sel: C where BM25 margin >= tau, else B | 0.6088 | +0.0043 |
+| B_vr: ColPali top-N reranked by Qwen3-VL-Reranker-2B | 0.6514 | +0.0469 |
+| C_vlm: RRF(A_vlm, ColPali) | 0.5809 | -0.0236 |
+| E_ens: RRF(Q3E, ColPali) | 0.5925 | -0.0120 |
+
+## Resources (per system; components measured on different devices, see note)
+
+| System | Index time (s) | Index size (MB) | Query latency, sequential (ms) | parallel (ms) | Fusion overhead (ms) |
+|---|---|---|---|---|---|
+| A: BM25 (Tesseract text) | 0.35 | 0.63 | 0.12 | 0.12 | 0.000 |
+| B: ColPali v1.3 | 111.70 | 125.85 | 51.30 | 51.30 | 0.000 |
+| A_vlm: BM25 over Qwen3.5-4B transcription | 0.46 | 0.60 | 0.13 | 0.13 | 0.000 |
+| Q3E: Qwen3-VL-Embedding-2B | 286.29 | 3.91 | 51.69 | 51.69 | 0.000 |
+| C: RRF(BM25, ColPali) | 112.04 | 126.48 | 51.56 | 51.43 | 0.134 |
+| C_sel: C where BM25 margin >= tau, else B | 112.04 | 126.48 | 51.56 | 51.43 | 0.134 |
+| B_vr: ColPali top-N reranked by Qwen3-VL-Reranker-2B | 111.70 | 125.85 | 7177.05 | 7177.05 | 0.000 |
+| C_vlm: RRF(A_vlm, ColPali) | 112.15 | 126.45 | 51.56 | 51.43 | 0.131 |
+| E_ens: RRF(Q3E, ColPali) | 397.99 | 129.76 | 103.13 | 51.83 | 0.135 |
+
+Component latencies were measured on different devices (ColPali: L4 GPU; BGE-M3: Mac MPS; BM25 and fusion: Mac CPU). Sequential = sum of components + fusion; parallel = slowest component + fusion.
+
+## Top-5 headroom: A_vlm vs B
+
+| Group | A_vlm_hit | B_hit | A_vlm_only | B_only |
+|---|---|---|---|---|
+| all (n=226) | 115 | 146 | 5 | 36 |
+| exact (n=93) | 71 | 81 | 1 | 11 |
+| general (n=115) | 43 | 57 | 4 | 18 |
+| visual (n=18) | 1 | 8 | 0 | 7 |
+
+## Top-5 headroom: Q3E vs B
+
+| Group | Q3E_hit | B_hit | Q3E_only | B_only |
+|---|---|---|---|---|
+| all (n=226) | 127 | 146 | 8 | 27 |
+| exact (n=93) | 72 | 81 | 0 | 9 |
+| general (n=115) | 46 | 57 | 5 | 16 |
+| visual (n=18) | 9 | 8 | 3 | 2 |

@@ -29,3 +29,4 @@ YZM5110_Research_Project*.pdf
 # Test cache
 .pytest_cache/
 results/*_smoke/
+results/vlm_ocr_docvqa/page_texts.json

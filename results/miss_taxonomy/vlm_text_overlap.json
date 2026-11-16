@@ -1,0 +1,52 @@
+{
+  "timestamp_utc": "2026-11-16T12:26:51+00:00",
+  "config_path": "none",
+  "config": {},
+  "seed": 0,
+  "git_commit": "760a98f958368144ce93f6c3601aca954d757e57",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/vlm_text_overlap.py",
+  "label": "descriptive (post-hoc set 3, H3); ColPali ranks unchanged; no system evaluated",
+  "dev": {
+    "n_misses": 80,
+    "n_hits": 146,
+    "tesseract": {
+      "no_overlap_misses": 52,
+      "no_overlap_hits": 26
+    },
+    "qwen3.5": {
+      "no_overlap_misses": 50,
+      "no_overlap_hits": 18
+    },
+    "misses_no_overlap_tesseract_but_overlap_qwen": 2
+  },
+  "test": {
+    "n_misses": 78,
+    "n_hits": 147,
+    "tesseract": {
+      "no_overlap_misses": 58,
+      "no_overlap_hits": 19
+    },
+    "qwen3.5": {
+      "no_overlap_misses": 53,
+      "no_overlap_hits": 11
+    },
+    "misses_no_overlap_tesseract_but_overlap_qwen": 5
+  }
+}

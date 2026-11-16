@@ -26,6 +26,7 @@ from src.data import load_task  # noqa: E402
 from src.evaluation import evaluate, scores_to_run, subset  # noqa: E402
 from src.fusion import convex_combination, rrf, weighted_rrf  # noqa: E402
 from src.rerank import rerank_top_n  # noqa: E402
+from src.selective import gated, relative_margin  # noqa: E402
 from src.runinfo import REPO_ROOT, collect_metadata  # noqa: E402
 from src.stats import bootstrap_ci, holm, paired_bootstrap_ci, paired_permutation_test  # noqa: E402
 
@@ -39,6 +40,21 @@ DEFAULT_COMPONENTS = {"A": "results/bm25_docvqa/metrics.json", "B": "results/col
 
 def check_frozen_settings(systems: dict, mode: str = "main") -> None:
     """Fail loudly if the config differs from what was selected on dev."""
+    if mode == "posthoc3":
+        d = REPO_ROOT / "results/posthoc3"
+        sel = json.loads((d / "dev_selection_selective.json").read_text())["systems"]["C_sel"]
+        rer = json.loads((d / "dev_selection_rerank.json").read_text())["systems"]["B_vr"]
+        ocr = json.loads((d / "dev_selection_ocr.json").read_text())["systems"]["C_vlm"]
+        emb = json.loads((d / "dev_selection_embed.json").read_text())["systems"]["E_ens"]
+        checks = {"C_sel tau": (systems["C_sel"]["tau"], sel["selected_tau"]),
+                  "C_sel k": (systems[systems["C_sel"]["fused"]]["k"], sel["fused_k"]),
+                  "B_vr N": (systems["B_vr"]["n"], rer["selected_n"]),
+                  "C_vlm k": (systems["C_vlm"]["k"], ocr["selected_k"]),
+                  "E_ens k": (systems["E_ens"]["k"], emb["selected_k"])}
+        for name, (got, want) in checks.items():
+            if got != want:
+                raise SystemExit(f"{name}: config {got} != dev selection {want}")
+        return
     if mode == "posthoc2":
         hyb = json.loads((REPO_ROOT / "results/posthoc2/dev_selection_hybrid.json").read_text())["systems"]
         rer = json.loads((REPO_ROOT / "results/posthoc2/dev_selection_rerank.json").read_text())["systems"]
@@ -76,6 +92,11 @@ def build_scores(systems: dict, base: dict[str, np.ndarray], page_ids: list[str]
     for sid, cfg in systems.items():
         if cfg["kind"] == "single":
             scores[sid] = base[cfg["scores"]]
+            continue
+        if cfg["kind"] == "gate":  # post-hoc set 3 (H2): fused ranking only where the text retriever is confident
+            conf = relative_margin(base[cfg["confidence_of"]])
+            scores[sid] = gated(scores[cfg["fused"]], scores[cfg["base"]], conf, cfg["tau"])
+            fusion_ms[sid] = fusion_ms.get(cfg["fused"], 0.0)
             continue
         if cfg["kind"] == "rerank":  # post-hoc set 2: first stage (a base score or an earlier system), top N reordered
             first = scores[cfg["first"]] if cfg["first"] in scores else base[cfg["first"]]

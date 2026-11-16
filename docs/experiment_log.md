@@ -378,3 +378,12 @@ Chronological record of every run and decision. One entry per run or decision; n
   - H3: A_vlm > A, but C_vlm ≤ B. The `no_overlap` share among ColPali's misses drops only a little, because the taxonomy points to the queries, not the OCR.
   - H4: Q3E misses more than half of ColPali's misses too, and E_ens is within ±2 points of B.
   - What would change our reading: C_vlm > B would mean OCR quality was the bottleneck for fusion. B_vr ≤ B would mean even reading the image cannot resolve the under-specified queries.
+
+### 2026-11-16 — Post-hoc set 3: GPU runs and dev selection (test not touched)
+- Type: runs (registry rows 50–59). Colab L4. Two failed attempts were fixed in code, not in settings: the transformers-5 `mm_token_type_ids` padding in the reranker helper, and a missing `pytrec_eval` import in the vLLM runtime.
+- **H4 (Q3E):** dev nDCG@5 0.5028 (B 0.5804). E_ens = RRF(Q3E, B): k = 1, dev 0.5733.
+- **H3 (Qwen3.5-4B transcription):** 500 pages, 0 empty, 11 pages hit the 2,048-token cap; 1,187 s on L4. A_vlm dev 0.4459 vs A 0.3995 (+4.6 pt). C_vlm: k = 1, dev 0.5578 (< B). Descriptive check: with the cleaner text, no query word on the gold page still holds for 53 of 78 test misses (58 with Tesseract) and 50 of 80 dev misses (52). For hits it falls from 19 to 11 and from 26 to 18.
+- **H1 (Qwen3-VL-Reranker-2B on ColPali's top N):** dev 0.5804 / 0.6052 / 0.6231 / 0.6299 for N = 1 / 5 / 10 / 20 → N = 20. Cost: about 7.1 s per query at N = 20 on L4 (one pair per forward pass, as in the model's helper).
+- **H2 (selective fusion):** τ = 0.590 (0.9 quantile), fuses on 23 dev queries; dev 0.5846.
+- *Interpretation (dev only):* only the visual reranker moves dev clearly. This is the one attempt that reads the page **image** against the question. The text-side attempts (cleaner OCR, gating) stay at or below ColPali, as pre-registered.
+- Frozen in `configs/posthoc3_test_evaluation.yaml`; the dry run on dev reproduces every selection.

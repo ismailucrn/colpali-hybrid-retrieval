@@ -1,0 +1,13 @@
+B (ColPali) dev nDCG@5 = 0.5804
+A (BM25, Tesseract) dev 0.3995; A_vlm dev 0.4459
+  C_vlm k=1    dev nDCG@5 0.5578  <- selected
+  C_vlm k=5    dev nDCG@5 0.5327
+  C_vlm k=10   dev nDCG@5 0.5191
+  C_vlm k=20   dev nDCG@5 0.5109
+  C_vlm k=40   dev nDCG@5 0.5002
+  C_vlm k=60   dev nDCG@5 0.4977
+  C_vlm k=80   dev nDCG@5 0.4960
+  C_vlm k=100  dev nDCG@5 0.4960
+  C_vlm k=200  dev nDCG@5 0.4958
+  C_vlm k=500  dev nDCG@5 0.4958
+wrote results/posthoc3/dev_selection_ocr.json

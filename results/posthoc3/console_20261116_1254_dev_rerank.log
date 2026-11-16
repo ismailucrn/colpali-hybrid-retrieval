@@ -1,0 +1,6 @@
+B (ColPali) dev nDCG@5 = 0.5804
+  B_vr N=1   dev nDCG@5 0.5804
+  B_vr N=5   dev nDCG@5 0.6052
+  B_vr N=10  dev nDCG@5 0.6231
+  B_vr N=20  dev nDCG@5 0.6299  <- selected
+wrote results/posthoc3/dev_selection_rerank.json

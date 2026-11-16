@@ -1,0 +1,15 @@
+# Colab L4 (second runtime), notebook notebooks/posthoc3_vlm_ocr_colab.ipynb, commit 78d1996. Copied from the notebook page.
+# FAILED before the model was loaded: the vLLM runtime does not install pytrec_eval, which the GPU script imported
+# indirectly (scripts.run_fusion_dev -> src.evaluation). Fixed in 760a98f. Not a Qwen3.5 failure (the model never ran).
+[pip install vllm==0.33.0 datasets==4.8.5 pyyaml: only dependency-resolver warnings about preinstalled Colab packages]
+$ python scripts/run_posthoc3_gpu.py --stage ocr --limit 4
+Traceback (most recent call last):
+  File "/content/colpali-hybrid-retrieval/scripts/run_posthoc3_gpu.py", line 34, in <module>
+    from scripts.run_fusion_dev import load_scores  # noqa: E402
+  File "/content/colpali-hybrid-retrieval/scripts/run_fusion_dev.py", line 23, in <module>
+    from src.evaluation import evaluate, scores_to_run, subset  # noqa: E402
+  File "/content/colpali-hybrid-retrieval/src/evaluation.py", line 12, in <module>
+    import pytrec_eval
+ModuleNotFoundError: No module named 'pytrec_eval'
+$ python scripts/run_posthoc3_gpu.py --stage ocr
+(same ModuleNotFoundError)

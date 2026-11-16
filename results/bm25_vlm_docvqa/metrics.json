@@ -1,0 +1,124 @@
+{
+  "timestamp_utc": "2026-11-16T12:26:15+00:00",
+  "config_path": "configs/bm25_vlm_docvqa.yaml",
+  "config": {
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "text_dataset": "vidore/docvqa_test_subsampled_tesseract",
+      "text_revision": "9a183a7237d678eaaf68dc0f640a42f46016802f",
+      "text_json": "results/vlm_ocr_docvqa/page_texts.json",
+      "split": "test"
+    },
+    "dev_only": true,
+    "system_name": "A_vlm: BM25 over Qwen3.5-4B transcription",
+    "splits": "results/splits/docvqa_split.json",
+    "latency": {
+      "n_queries": 451,
+      "warmup": 5
+    },
+    "seed": 0,
+    "output_dir": "results/bm25_vlm_docvqa"
+  },
+  "seed": 0,
+  "git_commit": "760a98f958368144ce93f6c3601aca954d757e57",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_bm25.py --config configs/bm25_vlm_docvqa.yaml",
+  "system": "A_vlm: BM25 over Qwen3.5-4B transcription",
+  "tokenizer": "official",
+  "resolved": {
+    "dataset_sha": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+    "text_dataset_sha": "9a183a7237d678eaaf68dc0f640a42f46016802f"
+  },
+  "task": {
+    "n_queries": 451,
+    "n_pages": 500,
+    "n_duplicated_query_texts": 22,
+    "n_empty_pages": 0,
+    "n_empty_queries": 2
+  },
+  "metrics": null,
+  "metrics_dev": {
+    "ndcg_at_1": 0.37168141592920356,
+    "recall_at_1": 0.37168141592920356,
+    "precision_at_1": 0.37168141592920356,
+    "map_at_1": 0.37168141592920356,
+    "mrr_at_1": 0.37168141592920356,
+    "ndcg_at_3": 0.43673489732933163,
+    "recall_at_3": 0.48672566371681414,
+    "precision_at_3": 0.1622418879056047,
+    "map_at_3": 0.41961651917404136,
+    "mrr_at_3": 0.41961651917404136,
+    "ndcg_at_5": 0.44587531896070004,
+    "recall_at_5": 0.5088495575221239,
+    "precision_at_5": 0.10176991150442476,
+    "map_at_5": 0.42470501474926253,
+    "mrr_at_5": 0.42470501474926253,
+    "ndcg_at_10": 0.45411112069411663,
+    "recall_at_10": 0.5353982300884956,
+    "precision_at_10": 0.053539823008849546,
+    "map_at_10": 0.42789893243433064,
+    "mrr_at_10": 0.42789893243433064,
+    "ndcg_at_20": 0.4594737476487272,
+    "recall_at_20": 0.5575221238938053,
+    "precision_at_20": 0.02787610619469026,
+    "map_at_20": 0.4292598871138694,
+    "mrr_at_20": 0.4292598871138694,
+    "ndcg_at_50": 0.47692487936815725,
+    "recall_at_50": 0.6460176991150443,
+    "precision_at_50": 0.012920353982300885,
+    "map_at_50": 0.43201016027491057,
+    "mrr_at_50": 0.43201016027491057,
+    "ndcg_at_100": 0.4892682425771559,
+    "recall_at_100": 0.7212389380530974,
+    "precision_at_100": 0.007212389380530973,
+    "map_at_100": 0.4331432612095132,
+    "mrr_at_100": 0.4331432612095132,
+    "n_queries": 226
+  },
+  "metrics_without_duplicated_queries_posthoc": null,
+  "published": {
+    "ndcg_at_5_paper_table2_bm25_unstructured_ocr": 0.368
+  },
+  "timings": {
+    "data_load_s": 3.5410086659976514,
+    "index_pages_s": 0.45701770899177063,
+    "index_per_page_s": 0.0009140354179835412,
+    "score_all_s": 0.06514429199160077
+  },
+  "latency": {
+    "n_queries": 451,
+    "warmup": 5,
+    "mean_ms": 0.14100199057555401,
+    "median_ms": 0.1267909974558279,
+    "p95_ms": 0.2320835046702996,
+    "note": "tokenise one query + BM25 scores for all pages, CPU, 1 thread"
+  },
+  "index": {
+    "n_pages": 500,
+    "total_tokens": 60173,
+    "vocabulary_size": 12122,
+    "pickled_size_mb": 0.5956315994262695,
+    "note": "pickled BM25Okapi object (term frequencies + idf) as a proxy for index size"
+  },
+  "peak_memory": {
+    "peak_process_rss_mb": 810.109375,
+    "method": "resource.getrusage ru_maxrss"
+  }
+}

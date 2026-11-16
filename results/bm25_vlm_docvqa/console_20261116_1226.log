@@ -1,0 +1,7 @@
+451 queries, 500 pages, 0 pages with empty OCR text
+dev (226 queries): nDCG@5 = 0.4459
+queries with no tokens left after preprocessing: 2
+timings: {"data_load_s": 3.541, "index_pages_s": 0.457, "index_per_page_s": 0.001, "score_all_s": 0.065}
+latency per query (median): 0.13 ms; index: {'n_pages': 500, 'total_tokens': 60173, 'vocabulary_size': 12122, 'pickled_size_mb': 0.5956315994262695, 'note': 'pickled BM25Okapi object (term frequencies + idf) as a proxy for index size'}
+
+wrote /Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval/results/bm25_vlm_docvqa/{scores.npz, metrics.json, per_query.csv}
