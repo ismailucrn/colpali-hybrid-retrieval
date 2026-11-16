@@ -1,0 +1,129 @@
+repo:   /Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval @ 726b778
+python: Python 3.11.16 (/Users/ismail/Desktop/master/multimodal/colpali-hybrid-retrieval/.venv/bin/python)
+clone:  /var/folders/nh/6rr8fmbx7gs01rbm1n984w6h0000gn/T/tmp.EU1x6OMuVV/repo
+== scripts/run_bm25.py --config configs/bm25_docvqa.yaml
+== scripts/make_split.py --seed 0 --dev-fraction 0.5
+== scripts/run_fusion_dev.py --config configs/fusion_docvqa.yaml
+== scripts/run_weighted_fusion_dev.py --config configs/fusion_weighted_docvqa.yaml
+== scripts/run_test_evaluation.py --config configs/test_evaluation.yaml
+== scripts/failure_analysis.py
+== scripts/run_bm25.py --config configs/bm25_codes_docvqa.yaml
+== scripts/run_cc_fusion_dev.py --config configs/fusion_cc_docvqa.yaml
+== scripts/run_test_evaluation.py --config configs/posthoc_test_evaluation.yaml
+== scripts/run_posthoc2_dev.py --stage hybrid
+== scripts/run_posthoc2_dev.py --stage rerank
+== scripts/run_test_evaluation.py --config configs/posthoc2_test_evaluation.yaml
+== scripts/ocr_quality.py
+== scripts/checks/bge_empty_pages.py
+== scripts/miss_taxonomy.py
+== scripts/run_posthoc3_dev.py --stage selective
+== scripts/run_posthoc3_dev.py --stage rerank
+== scripts/run_posthoc3_dev.py --stage ocr
+== scripts/run_posthoc3_dev.py --stage embed
+== scripts/run_test_evaluation.py --config configs/posthoc3_test_evaluation.yaml
+== scripts/posthoc3_rerank_flow.py
+== scripts/run_posthoc4_dev.py --stage retrievers
+== scripts/run_posthoc4_dev.py --stage rerank8b
+== scripts/run_posthoc4_dev.py --stage candidate
+== scripts/run_test_evaluation.py --config configs/posthoc4_test_evaluation.yaml
+== scripts/evaluate_fresh_task.py
+== scripts/run_posthoc5.py --stage bm25
+== scripts/run_posthoc5.py --stage fusion
+== scripts/run_posthoc5.py --stage router
+== scripts/make_figures.py
+== scripts/make_report_tables.py
+== -m pytest -q tests
+== compare with committed outputs
+OK   results/bm25_docvqa/metrics.json
+OK   results/splits/docvqa_split.json
+OK   results/fusion_docvqa/dev_selection.json
+OK   results/fusion_docvqa/dev_selection_weighted.json
+OK   results/test_evaluation/metrics.json
+OK   results/failure_analysis/analysis.json
+OK   results/bm25_codes_docvqa/metrics.json
+OK   results/posthoc_extensions/dev_selection_cc.json
+OK   results/posthoc_extensions/metrics.json
+OK   results/posthoc2/dev_selection_hybrid.json
+OK   results/posthoc2/dev_selection_rerank.json
+OK   results/posthoc2/metrics.json
+OK   results/ocr_quality/ocr_quality.json
+OK   results/checks/bge_empty_pages.json
+OK   results/miss_taxonomy/taxonomy.json
+OK   results/posthoc3/dev_selection_selective.json
+OK   results/posthoc3/dev_selection_rerank.json
+OK   results/posthoc3/dev_selection_ocr.json
+OK   results/posthoc3/dev_selection_embed.json
+OK   results/posthoc3/metrics.json
+OK   results/posthoc3/rerank_flow.json
+OK   results/posthoc4/dev_selection_retrievers.json
+OK   results/posthoc4/dev_selection_rerank8b.json
+OK   results/posthoc4/dev_selection_candidate.json
+OK   results/posthoc4/metrics.json
+OK   results/posthoc4/fresh_task_infovqa.json
+OK   results/posthoc5/fusion.json
+OK   results/posthoc5/router.json
+OK   results/bm25_infovqa/metrics.json
+OK   results/bm25_arxivqa/metrics.json
+OK   results/bm25_tabfquad/metrics.json
+OK   results/bm25_tatdqa/metrics.json
+OK   results/bm25_shiftproject/metrics.json
+OK   results/bm25_synth_energy/metrics.json
+OK   results/bm25_synth_ai/metrics.json
+OK   results/bm25_synth_gov/metrics.json
+OK   results/bm25_synth_health/metrics.json
+OK   results/bm25_docvqa/per_query.csv
+OK   results/splits/docvqa_query_tags.csv
+OK   results/test_evaluation/per_query.csv
+OK   results/failure_analysis/changed_queries.csv
+OK   results/failure_analysis/examples.md
+OK   results/bm25_codes_docvqa/per_query.csv
+OK   results/posthoc_extensions/per_query.csv
+OK   results/posthoc2/per_query.csv
+OK   results/ocr_quality/page_quality.csv
+OK   results/miss_taxonomy/misses.csv
+OK   results/miss_taxonomy/examples.md
+OK   results/posthoc3/per_query.csv
+OK   results/posthoc4/per_query.csv
+OK   results/posthoc4/per_query_infovqa.csv
+OK   results/posthoc5/per_query_infovqa.csv
+OK   results/posthoc5/per_query_arxivqa.csv
+OK   results/posthoc5/per_query_tabfquad.csv
+OK   results/posthoc5/per_query_tatdqa.csv
+OK   results/posthoc5/per_query_shiftproject.csv
+OK   results/posthoc5/per_query_synth_energy.csv
+OK   results/posthoc5/per_query_synth_ai.csv
+OK   results/posthoc5/per_query_synth_gov.csv
+OK   results/posthoc5/per_query_synth_health.csv
+OK   results/posthoc5/router_infovqa.csv
+OK   results/posthoc5/router_arxivqa.csv
+OK   results/posthoc5/router_tabfquad.csv
+OK   results/posthoc5/router_tatdqa.csv
+OK   results/posthoc5/router_shiftproject.csv
+OK   results/posthoc5/router_synth_energy.csv
+OK   results/posthoc5/router_synth_ai.csv
+OK   results/posthoc5/router_synth_gov.csv
+OK   results/posthoc5/router_synth_health.csv
+OK   results/posthoc5/router_docvqa.csv
+OK   report/generated/numbers.tex (timing macros ignored)
+OK   report/generated/tab_cascade.tex
+OK   report/generated/tab_dev.tex
+OK   report/generated/tab_headroom.tex
+OK   report/generated/tab_misses.tex
+OK   report/generated/tab_ocr.tex
+OK   report/generated/tab_posthoc.tex
+OK   report/generated/tab_posthoc2.tex
+OK   report/generated/tab_posthoc3.tex
+OK   report/generated/tab_posthoc4.tex
+OK   report/generated/tab_posthoc5.tex
+OK   report/generated/tab_reproduction.tex
+OK   report/generated/tab_router.tex
+OK   report/generated/tab_test.tex
+OK   report/generated/tab_type.tex
+OK   report/generated/tab_wtl.tex
+OK   results/figures/fig1_test_ndcg5.png (pixels)
+OK   results/figures/fig2_dev_k_sweep.png (pixels)
+OK   results/figures/fig3_dev_weighted_rrf.png (pixels)
+OK   results/figures/fig4_test_by_type.png (pixels)
+OK   results/figures/fig5_headroom.png (pixels)
+OK   results/figures/fig6_overlap.png (pixels)
+RESULT: all quality outputs reproduced exactly
