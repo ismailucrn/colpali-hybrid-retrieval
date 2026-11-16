@@ -42,6 +42,17 @@ JSON_FILES = [
     "results/posthoc4/dev_selection_candidate.json",
     "results/posthoc4/metrics.json",
     "results/posthoc4/fresh_task_infovqa.json",
+    "results/posthoc5/fusion.json",
+    "results/posthoc5/router.json",
+    "results/bm25_infovqa/metrics.json",
+    "results/bm25_arxivqa/metrics.json",
+    "results/bm25_tabfquad/metrics.json",
+    "results/bm25_tatdqa/metrics.json",
+    "results/bm25_shiftproject/metrics.json",
+    "results/bm25_synth_energy/metrics.json",
+    "results/bm25_synth_ai/metrics.json",
+    "results/bm25_synth_gov/metrics.json",
+    "results/bm25_synth_health/metrics.json",
 ]
 TEXT_FILES = [
     "results/bm25_docvqa/per_query.csv",
@@ -58,10 +69,29 @@ TEXT_FILES = [
     "results/posthoc3/per_query.csv",
     "results/posthoc4/per_query.csv",
     "results/posthoc4/per_query_infovqa.csv",
+    "results/posthoc5/per_query_infovqa.csv",
+    "results/posthoc5/per_query_arxivqa.csv",
+    "results/posthoc5/per_query_tabfquad.csv",
+    "results/posthoc5/per_query_tatdqa.csv",
+    "results/posthoc5/per_query_shiftproject.csv",
+    "results/posthoc5/per_query_synth_energy.csv",
+    "results/posthoc5/per_query_synth_ai.csv",
+    "results/posthoc5/per_query_synth_gov.csv",
+    "results/posthoc5/per_query_synth_health.csv",
+    "results/posthoc5/router_infovqa.csv",
+    "results/posthoc5/router_arxivqa.csv",
+    "results/posthoc5/router_tabfquad.csv",
+    "results/posthoc5/router_tatdqa.csv",
+    "results/posthoc5/router_shiftproject.csv",
+    "results/posthoc5/router_synth_energy.csv",
+    "results/posthoc5/router_synth_ai.csv",
+    "results/posthoc5/router_synth_gov.csv",
+    "results/posthoc5/router_synth_health.csv",
+    "results/posthoc5/router_docvqa.csv",
 ]
 # keys that legitimately change between runs (anywhere in the JSON tree)
 VOLATILE = {"timestamp_utc", "git_commit", "git_dirty", "python", "packages", "hardware", "command", "timings",
-            "latency", "peak_memory", "resources", "config_path",
+            "latency", "peak_memory", "resources", "config_path", "feature_ms_per_query",
             "tokenizer"}  # run metadata added 2026-11-11 (records which BM25 tokenizer a run used; official = default)
 # report macros/tables that hold timings
 VOLATILE_MACROS = ("latA", "latB", "latBGE", "fusionOverhead", "idxB", "peakGPU")

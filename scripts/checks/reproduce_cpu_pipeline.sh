@@ -50,6 +50,9 @@ run scripts/run_posthoc4_dev.py --stage rerank8b
 run scripts/run_posthoc4_dev.py --stage candidate
 run scripts/run_test_evaluation.py --config configs/posthoc4_test_evaluation.yaml # post-hoc set 4 test
 run scripts/evaluate_fresh_task.py                                               # post-hoc set 4, InfoVQA
+run scripts/run_posthoc5.py --stage bm25    # post-hoc set 5 (reads query/OCR columns from the Hub)
+run scripts/run_posthoc5.py --stage fusion  # post-hoc set 5, committed ColPali scores (Colab, not repeated)
+run scripts/run_posthoc5.py --stage router
 run scripts/make_figures.py
 run scripts/make_report_tables.py
 run -m pytest -q tests
