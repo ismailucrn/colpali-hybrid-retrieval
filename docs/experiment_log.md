@@ -471,7 +471,7 @@ Chronological record of every run and decision. One entry per run or decision; n
   | System | nDCG@5 | Δ vs B | p_Holm |
   |---|---|---|---|
   | TM | 0.636 | +0.066 | 0.002 |
-  | CQ | 0.618 | +0.048 | 0.032 |
+  | CQ | 0.618 | +0.048 | 0.031 |
   | F_tm | 0.613 | +0.043 | 0.0006 |
   | F_cq | 0.613 | +0.043 | 0.001 |
   | B_vr8 | 0.602 | +0.032 | 0.048 |

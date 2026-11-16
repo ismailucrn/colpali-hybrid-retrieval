@@ -135,6 +135,11 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 - **Post-hoc set 2 (15 Nov, user request, pre-registered in `92c2163`, exploratory):** text RAG stack T_hyb = RRF(BM25, BGE-M3) k=5 ≈ BM25; + cross-encoder `bge-reranker-v2-m3` (top 50, MPS) T_rr 0.438, still −13.1 pt vs ColPali (p_Holm 0.0003); cross-encoder on ColPali's candidates selects N=1 (no reranking) on dev; BM25→ColPali cascade below ColPali for every N; dictionary-based OCR proxy uncorrelated with success. Diagnostic: 4 empty-OCR pages dominate BGE-M3's top 5 (388/451 queries) → BGE-M3 alone understated; D and T_hyb unchanged on dev. Report §7.7, slide 15. Local venv: `.venv` (Python 3.11, torch 2.13.0, rebuilt 15 Nov).
 - **Miss taxonomy (16 Nov, descriptive, plan `fe3533b`):** 58/78 test misses have no query word in the gold page's OCR (hits 19/147); mostly under-specified layout questions. `results/miss_taxonomy/`, report §7.8.
 - **Post-hoc set 3 (16 Nov, user request, pre-registered `e70f2a7`, 4th use of test, exploratory):** newest Qwen models on Colab L4. B_vr (Qwen3-VL-Reranker-2B on ColPali top 20) dev +4.9 → test +1.1 (p_Holm 0.92, ~7 s/query); C_sel −0.2; A_vlm (BM25 over Qwen3.5-4B transcription) +4.6 over A, but C_vlm −3.5 (p_Holm 0.011); E_ens (Qwen3-VL-Embedding-2B) −1.2. With VLM text 53/78 misses still lack overlap. `results/posthoc3/`, report §7.9, slides 16–17. `page_texts.json` kept local (dataset content), sha256 in registry row 54. Colab downloads triggered by Claude did not arrive; the user re-clicked them.
+- **Post-hoc set 4 (16 Nov, user request, pre-registered `6091e78`, 5th use of DocVQA test + InfoVQA confirmation):**
+  - DocVQA test: Tomoro ColQwen3-4B +6.6 (p_Holm 0.002); ColQwen2.5 +4.8 (0.031); F_tm / F_cq +4.3 (<0.001); Reranker-8B on ColPali top 10 +3.2 (0.048); F_q8 n.s.
+  - InfoVQA (frozen candidate TM, fresh task): +8.5, p 0.0001. ColPali InfoVQA 0.8569 vs card 0.85716.
+  - First confirmed improvement, but it comes from a better visual retriever, not from text fusion.
+  - `results/posthoc4/`, report §7.10, slide 18.
 - **Open:** report/slide TODOs that need the user (name/ID, presentation date, ±2 tolerance confirmation, literature cell checks, App. A.3 count, AI-use self-verification, tag hash); `v1.0-submission` tag after the final edits.
 
 ## Timeline (compressed, from 3 November)

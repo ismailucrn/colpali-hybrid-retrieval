@@ -2,7 +2,7 @@
 # Fresh-clone reproduction check of everything that runs on CPU.
 #
 # Clones the committed HEAD of this repository into a temporary directory, re-runs the CPU pipeline
-# (BM25, split, dev selection, single test evaluation, failure analysis, post-hoc sets 1-3, figures, report
+# (BM25, split, dev selection, single test evaluation, failure analysis, post-hoc sets 1-4, figures, report
 # tables) from the committed score matrices, and compares the outputs with the committed ones
 # (scripts/checks/compare_results.py). Not re-run: ColPali and BGE-M3 encoding and the cross-encoder
 # (need a GPU / torch), the Qwen3-VL/Qwen3.5 Colab stages, A_vlm (its transcription is not committed)
@@ -45,6 +45,11 @@ run scripts/run_posthoc3_dev.py --stage ocr       # uses the committed A_vlm sco
 run scripts/run_posthoc3_dev.py --stage embed     # uses the committed Qwen3-VL embedding scores
 run scripts/run_test_evaluation.py --config configs/posthoc3_test_evaluation.yaml # post-hoc set 3 test
 run scripts/posthoc3_rerank_flow.py                                              # post-hoc set 3, descriptive
+run scripts/run_posthoc4_dev.py --stage retrievers  # post-hoc set 4, dev (committed Colab scores)
+run scripts/run_posthoc4_dev.py --stage rerank8b
+run scripts/run_posthoc4_dev.py --stage candidate
+run scripts/run_test_evaluation.py --config configs/posthoc4_test_evaluation.yaml # post-hoc set 4 test
+run scripts/evaluate_fresh_task.py                                               # post-hoc set 4, InfoVQA
 run scripts/make_figures.py
 run scripts/make_report_tables.py
 run -m pytest -q tests

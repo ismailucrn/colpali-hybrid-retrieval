@@ -87,18 +87,25 @@ These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Plan
 - Visual reranker: the only thing that reads the page image against the question. Dev +4.9 points, but on test only +1.1 and not significant. It fixed 10 misses but pushed 8 correct pages out of the top 5. It also costs about 7 seconds per query.
 - Say it plainly: the dev gain did not replicate. That is why we choose settings on dev and look at test only once.
 
-**18 · Cost.**
+**18 · Post-hoc set 4: stronger visual models, and a fresh-task check.**
+- We asked: if text cannot help, can a better *image* model? Again pre-registered, dev selection, one test run (the fifth on DocVQA, so exploratory).
+- Two newer ColPali-style retrievers beat ColPali on DocVQA test: Tomoro ColQwen3-4B by about 6.6 points, ColQwen2.5 by about 4.8. Fusing either one with ColPali also helps (about +4.3), but less than the stronger model alone. The 8B Qwen reranker gives +3.2, just significant.
+- Key point: because the DocVQA test set had been used so often, a rule fixed beforehand picked one candidate (Tomoro), and we tested it once on InfoVQA, a task we had never used. It gains 8.5 points there (p = 0.0001). As a bonus, ColPali reproduces its published InfoVQA score exactly (0.857).
+- How to read it: fusion helps when the second ranking is visual and strong, and hurts when it is text. That is the same unequal-inputs story from the other side.
+- Caveat to say aloud: these models were trained on more data, and we did not check training-data overlap.
+
+**19 · Cost.**
 - Fusion is almost free: a fraction of a millisecond and a sub-MB index. So the obstacle is quality, not cost.
 - Caveat: the components were measured on different devices.
 
-**19 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
+**20 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
 
-**20 · Conclusions.**
+**21 · Conclusions.**
 - The reproduction holds. Fusion hurts, and the control shows it is not specific to BM25.
 - The literature is consistent with this: fusion fails with unequal inputs and helped where the text was clean and equally strong.
 - Open question: would better text extraction change this?
 
-**21 · Reproducibility and AI use.**
+**22 · Reproducibility and AI use.**
 - Everything is re-runnable on a laptop from the committed score matrices, and a fresh clone reproduces all outputs exactly.
 - State plainly what the AI did and what you did and verified.
 
@@ -127,4 +134,6 @@ These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Plan
 - **Did you use the test set too often?**
   Four times, each with settings frozen beforehand and labelled exploratory after the first. That is a limitation: one of the four results could be noise. The main conclusion rests on the first, pre-registered run.
 - **What did the AI do?**
-  See slide 21 and `docs/ai_usage.md`: code, Colab driving, literature extraction and drafting. You made the design decisions, approved every run and verified *(fill in what you checked)*.
+  See slide 22 and `docs/ai_usage.md`: code, Colab driving, literature extraction and drafting. You made the design decisions, approved every run and verified *(fill in what you checked)*.
+- **So did you find an improvement or not?**
+  For the project's question (does a *text* signal help ColPali?): no, across four sets. For "can retrieval here be improved at all?": yes. A newer visual retriever is better, and it holds on a fresh task where its settings were frozen in advance. Fusion with ColPali helps only when the second model is visual and strong.

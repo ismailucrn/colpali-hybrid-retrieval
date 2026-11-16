@@ -59,6 +59,7 @@ Two post-hoc checks, pre-registered after the main test run, support this readin
 A second post-hoc set tests a full text RAG retrieval stack. BM25 + BGE-M3 hybrid retrieval followed by a cross-encoder reranker reaches \testTrr{}, still \deltaTrr{} below ColPali. Reranking ColPali's own candidates with the same cross-encoder lowers dev nDCG@5 at every depth, so dev selects no reranking.
 Most of ColPali's remaining misses are layout questions with no query word on the gold page.
 A third post-hoc set targets the misses directly. It tests a Qwen3-VL visual reranker on ColPali's top 20, selective fusion, BM25 over a Qwen3.5 transcription, and a Qwen3-VL embedding ensemble. None improves reliably on test. The visual reranker gains \deltaBvr{} ($p_\text{Holm}$ \pHolmBvr{}) after \deltaBvrDevPts{} points on dev, and fusing the cleaner transcription still hurts (\deltaCvlm{}).
+A fourth set tests newer visual models. A newer ColPali-style retriever (Tomoro ColQwen3-4B) beats ColPali on DocVQA test (\deltaTM{}, $p_\text{Holm}$ \pHolmTM{}), and so does fusing it with ColPali (\deltaFtm{}). Its gain holds when it is evaluated once, frozen, on a task not used for any choice (InfoVQA, \infoDelta{}, $p$ = \infoP{}). Fusion helps when the second ranking is visual and strong, and it hurts when the second ranking is text-based.
 \end{abstract}
 
 \paragraph{How to read this report.} The assignment asks to keep four kinds of statements apart. We label them where it matters: \Pub{} = reported by the cited authors; \Mea{} = obtained by us (every such number is generated from a committed file in \file{results/} by \file{scripts/make\_report\_tables.py}); \Int{} = our reading of a paper or result; \Hyp{} = expected but not tested.
@@ -627,7 +628,51 @@ All three Qwen models are Apache-2.0 and ran on a Colab L4. Whether their traini
 
 \paragraph{Reading.} \Int{} The text-side attempts behave as pre-registered: cleaner OCR makes BM25 better, but it neither creates headroom nor makes fusion help. The residual misses are mostly under-specified questions, not OCR failures. Reading the image against the question is the only direction with a positive sign. On this test split, at this cost, its gain cannot be distinguished from zero.
 
-\paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali. Post-hoc, neither score-level fusion nor a better BM25 tokenizer changes this, and neither does a text RAG stack with a cross-encoder reranker. Post-hoc set 3 found no reliable improvement either. Selective fusion, fusion over a cleaner VLM transcription and a second visual retriever do not help, and a visual reranker's dev gain did not replicate on test.
+\subsection{Post-hoc set 4: stronger visual models, with a confirmation on a fresh task (exploratory)}
+\label{sec:posthoc4}
+Set 3 left one direction open: models that read the page \emph{image} better. We therefore tested newer models, with design and expectations committed before any run (16 November):
+\begin{itemize}
+  \item two newer ColPali-style multi-vector retrievers, \texttt{vidore/colqwen2.5-v0.2} (CQ) and the community model \texttt{TomoroAI/tomoro-colqwen3-embed-4b} (TM), each alone and fused with ColPali by RRF (F$_\text{cq}$, F$_\text{tm}$);
+  \item \texttt{Qwen3-VL-Embedding-8B} fused with ColPali (F$_\text{q8}$);
+  \item \texttt{Qwen3-VL-Reranker-8B} on ColPali's top $N \in \{1, 5, 10\}$ (B$_\text{vr8}$).
+\end{itemize}
+Settings were chosen on DocVQA dev, and the DocVQA test split was evaluated once (its fifth use).
+Because repeated use of one test split weakens any single result, we added a \textbf{confirmatory} step. A pre-registered rule picked one candidate (the highest DocVQA dev nDCG@5 among the systems of sets 3 and 4). That candidate was evaluated once, unchanged, on a task we had not used before: ViDoRe InfoVQA, full query set.
+
+\paragraph{Dev selection.} \Mea{} Every new visual model except Q8 is above ColPali on dev (Table~\ref{tab:posthoc4}). TM alone is highest (\devTM{} vs \devB{}), so the rule selected \candidate{}. Fusing with ColPali places each fusion \emph{between} its inputs: F$_\text{tm}$ reaches \devFtm{}, which is below TM alone.
+
+\paragraph{DocVQA test.} \Mea{}
+\begin{itemize}
+  \item TM: \testTM{}, $\Delta$ \deltaTM{} (CI \deltaTMCI{}, $p_\text{Holm}$ \pHolmTM{}).
+  \item CQ: \testCQ{}, $\Delta$ \deltaCQ{} ($p_\text{Holm}$ \pHolmCQ{}).
+  \item Fusing either one with ColPali also helps significantly: F$_\text{tm}$ \deltaFtm{}, F$_\text{cq}$ \deltaFcq{} (both $p_\text{Holm}$ $<$0.001).
+  \item The 8B reranker gains \deltaBvreight{} ($p_\text{Holm}$ \pHolmBvreight{}).
+  \item F$_\text{q8}$ is not significant (\deltaFqeight{}).
+  \item TM finds the gold page where ColPali misses on \headOnlyTM{} queries, and ColPali does so where TM misses on \headBOnlyTM{}. For BM25 the first count is \headallAnotB{}.
+\end{itemize}
+
+\paragraph{InfoVQA confirmation.} \Mea{}
+\begin{itemize}
+  \item ColPali reproduces its model card on this task: \infoB{} vs \infoPub{}.
+  \item The frozen candidate TM reaches \infoTM{}: $\Delta$ \infoDelta{} (CI \infoDeltaCI{}, $p$ = \infoP{}, W/T/L \infoWTL{}).
+  \item This is the first improvement in this project that holds on data not used for any choice.
+\end{itemize}
+
+\begin{table}[!htbp]\centering\small
+\input{generated/tab_posthoc4.tex}
+\caption{\Mea{} Post-hoc set 4 on DocVQA, and the frozen candidate on InfoVQA (\file{results/posthoc4/}).}\label{tab:posthoc4}
+\end{table}
+
+\paragraph{Reading.} \Int{}
+\begin{itemize}
+  \item The improvement comes from a \emph{better visual retriever}. These newer ColPali-style models are built on Qwen VLMs and trained on more data. \Pub{} Tomoro's model card lists the ColPali training set and VisRAG data among its sources, with no independent check.
+  \item This answers ``how can retrieval on this task be improved?''. It does not show that ColPali was used wrongly.
+  \item For the project's own question, the contrast across sets is informative. Adding a second \emph{visual} ranking to ColPali by RRF helps significantly. Every \emph{text} ranking we tried, however strong as a text system, did not.
+  \item This matches the unequal-inputs reading of fusion~\cite{bruch}: fusion helps when the second ranking is at least as strong as the first, and it costs quality when the second ranking is much weaker. Even the helpful fusions stay below the stronger model alone.
+\end{itemize}
+We did not check whether DocVQA or InfoVQA test pages appear in these models' training data. Their InfoVQA and DocVQA scores may therefore be optimistic, as ColPali's may be.
+
+\paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali. Post-hoc, neither score-level fusion nor a better BM25 tokenizer changes this, and neither does a text RAG stack with a cross-encoder reranker. Post-hoc set 3 found no reliable improvement either. Selective fusion, fusion over a cleaner VLM transcription and a second visual retriever do not help, and a visual reranker's dev gain did not replicate on test. Post-hoc set 4 does find an improvement. It comes from newer and stronger visual retrievers, and from fusing them with ColPali; it holds on a fresh task (InfoVQA, \infoDelta{}).
 
 % =====================================================================================================
 \section{Limitations, conclusions and open questions}
@@ -639,6 +684,7 @@ All three Qwen models are Apache-2.0 and ran on a Colab L4. Whether their traini
   \item \textbf{Small test set.} 225 queries; 17 visual queries. Per-type results are exploratory, and the confidence intervals are wide (about $\pm$0.06 nDCG@5 per system).
   \item \textbf{Fusion functions.} Our main analysis used rank fusion. Score-level convex combination and a code-preserving tokenizer were tested only post-hoc (Section~\ref{sec:posthoc}), with one normalisation (min-max) and one tokenizer design. Other score normalisations, learned fusion and query-dependent weights remain untested.
   \item \textbf{Post-hoc set 2 is post-hoc and partly cross-device.} The text RAG stack, the cross-encoder and the OCR analysis were added on 15 November, after the main test run, at our own initiative to answer an obvious objection. They were pre-registered before running, but the test split had already been used twice. We tested one reranker, one pool size and one OCR proxy, and the proxy is crude. The cross-encoder ran on Apple MPS, so its latency is not comparable with ColPali's L4 numbers.
+  \item \textbf{Post-hoc set 4 used the DocVQA test split a fifth time}, and the stronger retrievers were trained on more and different data (partly unverified). The InfoVQA confirmation guards against test-split reuse only for the one frozen candidate. It does not guard against training-data overlap, which we did not check for any model.
   \item \textbf{Post-hoc set 3 used the test split a fourth time.} Each set was pre-registered and tuned on dev only, but four looks at the same 225 queries raise the chance that some test difference is noise. The visual reranker's dev gain shrinking on test is a concrete example. Only one size of each Qwen model was tried, the reranker depth grid stopped at 20, and the VLM transcription was not checked against ground truth.
   \item \textbf{Empty OCR pages in BGE-M3.} Four pages have no OCR text, and their empty-string embedding ranks high for most queries. This understates BGE-M3 alone; on dev it barely affects D and T$_\text{hyb}$ (Section~\ref{sec:posthoc2}). Found after the experiments; not corrected on test.
   \item \textbf{Official BM25 preprocessing in the main run.} It drops stopwords such as ``no'' and non-alphanumeric tokens such as ``2-26''. We kept it for comparability with the paper; its effect was checked post-hoc (Section~\ref{sec:posthoc}).
@@ -652,6 +698,7 @@ All three Qwen models are Apache-2.0 and ran on a Colab L4. Whether their traini
 \begin{itemize}
   \item \Mea{} ColPali's DocVQA result is reproducible with the authors' code and checkpoint (\fullB{} vs \pubCard{}).
   \item \Mea{} Adding BM25 through RRF significantly \emph{hurts} it (\deltaC{} nDCG@5 on test). A dense-text control hurts equally. The best dev-tuned weighting only ties. Post-hoc, score-level fusion selects ColPali alone on dev, and a better BM25 tokenizer improves BM25 but adds no query that ColPali misses. A text RAG stack (hybrid + cross-encoder reranker) stays \deltaTrr{} below ColPali, and reranking ColPali's candidates with the cross-encoder is rejected on dev. With a much cleaner Qwen3.5 transcription, BM25 improves by \deltaAvlmA{}, yet fusing it with ColPali still hurts (\deltaCvlm{}). A Qwen3-VL visual reranker gains \deltaBvr{} on test (not significant).
+  \item \Mea{} What does improve retrieval here is a stronger visual model. Tomoro ColQwen3-4B gains \deltaTM{} on DocVQA test and \infoDelta{} on InfoVQA, where it was evaluated once and frozen. Fusing such a model with ColPali also helps (\deltaFtm{}), but less than the stronger model alone.
   \item \Int{} On this task ColPali already reads the lexical anchors that BM25 depends on, and reads them better than Tesseract OCR does. Equal-weight rank fusion with a much weaker second ranking therefore mostly imports that ranking's errors. This is consistent with the conditions under which fusion is reported to fail in text IR~\cite{bruch}, and with the cases where text + visual fusion did help having clean text and comparably strong inputs~\cite{irpapers}.
 \end{itemize}
 

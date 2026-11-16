@@ -35,6 +35,10 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
   - Selective fusion (BM25 only when confident): −0.002.
   - BM25 over a Qwen3.5-4B transcription is +0.046 over Tesseract BM25, yet fusing it with ColPali gives −0.035 (p_Holm 0.011).
   - RRF(Qwen3-VL-Embedding-2B, ColPali): −0.012.
+- **Post-hoc set 4** (exploratory, pre-registered 16 Nov, `results/posthoc4/summary.md`):
+  - On DocVQA test (fifth use), newer ColPali-style retrievers beat ColPali: Tomoro ColQwen3-4B 0.636 (+0.066, p_Holm 0.002) and ColQwen2.5 0.618 (+0.048, p_Holm 0.03).
+  - RRF of ColPali with either one gives +0.043 (p_Holm < 0.001). Qwen3-VL-Reranker-8B on ColPali's top 10 gives +0.032 (p_Holm 0.048).
+  - **Confirmation on a fresh task:** the candidate picked by a rule fixed in advance (Tomoro) was evaluated once and frozen on ViDoRe InfoVQA: 0.942 vs ColPali 0.857 (+0.085, p 0.0001). On the same task ColPali reproduces its model card (0.857).
 
 ## Systems
 
@@ -48,6 +52,7 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
 | post-hoc | Score-level convex combination (C_cc, D_cc); code-preserving BM25 tokenizer (A_code, C_code) | Exploratory checks of two alternative explanations, pre-registered after the main test run |
 | post-hoc 2 | T_hyb = RRF(BM25, BGE-M3); T_rr = T_hyb reranked by a cross-encoder; B_ce = ColPali reranked by it; BM25 → ColPali cascade; OCR-quality proxy | A full text RAG retrieval stack and a strong text signal on ColPali, pre-registered 15 Nov |
 | post-hoc 3 | B_vr = ColPali top 20 reranked by Qwen3-VL-Reranker-2B (page images); C_sel = selective fusion; A_vlm / C_vlm = BM25 over a Qwen3.5-4B transcription and its RRF with ColPali; Q3E / E_ens = Qwen3-VL-Embedding-2B and its RRF with ColPali | Four improvement attempts aimed at ColPali's misses, pre-registered 16 Nov |
+| post-hoc 4 | CQ = ColQwen2.5, TM = Tomoro ColQwen3-4B (alone and RRF with ColPali); F_q8 = RRF(ColPali, Qwen3-VL-Embedding-8B); B_vr8 = ColPali top 10 reranked by Qwen3-VL-Reranker-8B; InfoVQA confirmation of the frozen best candidate | Stronger visual models, pre-registered 16 Nov |
 
 - **Primary metric:** nDCG@5. We also report Recall@5/10, nDCG@10, MRR@10 and resource cost (indexing time, index size, query latency, peak memory).
 - **Pre-registered predictions and protocol:** `CLAUDE.md` and `docs/experiment_log.md`.
@@ -155,6 +160,12 @@ python scripts/run_posthoc3_dev.py --stage embed                                
 python scripts/vlm_text_overlap.py                                                     # post-hoc 3: taxonomy with VLM text
 python scripts/run_test_evaluation.py --config configs/posthoc3_test_evaluation.yaml   # post-hoc 3: test, once
 python scripts/posthoc3_rerank_flow.py                                                 # post-hoc 3: reranker fixed/broken
+# GPU (Colab L4): notebooks/posthoc4_retrievers_colab.ipynb, notebooks/posthoc4_reranker8b_colab.ipynb
+python scripts/run_posthoc4_dev.py --stage retrievers                                  # post-hoc 4: k on dev
+python scripts/run_posthoc4_dev.py --stage rerank8b                                    # post-hoc 4: N on dev
+python scripts/run_posthoc4_dev.py --stage candidate                                   # post-hoc 4: InfoVQA candidate
+python scripts/run_test_evaluation.py --config configs/posthoc4_test_evaluation.yaml   # post-hoc 4: test, once
+python scripts/evaluate_fresh_task.py                                                  # post-hoc 4: InfoVQA, once
 python scripts/make_figures.py                                                         # results/figures/
 python scripts/make_report_tables.py                                                   # report/generated/
 (cd report && tectonic main.tex)                                                       # report/main.pdf
@@ -174,6 +185,7 @@ python scripts/make_report_tables.py                                            
 | Table: post-hoc extensions (report §7.6) | `run_bm25.py` (codes), `run_cc_fusion_dev.py`, `run_test_evaluation.py` (post-hoc config) | `results/bm25_codes_docvqa/`, `results/posthoc_extensions/` |
 | Tables: post-hoc set 2, cascade, OCR quality (report §7.7) | `run_posthoc2_dev.py`, `run_reranker.py`, `run_test_evaluation.py` (posthoc2 config), `ocr_quality.py`, `checks/bge_empty_pages.py` | `results/posthoc2/`, `results/reranker_docvqa/`, `results/ocr_quality/`, `results/checks/bge_empty_pages.json` |
 | Tables: ColPali's misses; post-hoc set 3 (report §7.8–7.9) | `miss_taxonomy.py`, `vlm_text_overlap.py`, `run_posthoc3_gpu.py` (Colab), `run_bm25.py` (VLM config), `run_posthoc3_dev.py`, `run_test_evaluation.py` (posthoc3 config), `posthoc3_rerank_flow.py` | `results/miss_taxonomy/`, `results/posthoc3/`, `results/visual_reranker_docvqa/`, `results/qwen3vl_embedding_docvqa/`, `results/vlm_ocr_docvqa/`, `results/bm25_vlm_docvqa/` |
+| Table: post-hoc set 4 + InfoVQA confirmation (report §7.10) | `run_posthoc4_gpu.py` (Colab), `run_posthoc4_dev.py`, `run_test_evaluation.py` (posthoc4 config), `evaluate_fresh_task.py` | `results/posthoc4/`, `results/{colqwen25,tomoro,qwen3vl_embedding8b}_{docvqa,infovqa}/`, `results/visual_reranker8b_docvqa/`, `results/colpali_v1.3_infovqa/` |
 
 Figure files (`results/figures/`, made by `make_figures.py`):
 

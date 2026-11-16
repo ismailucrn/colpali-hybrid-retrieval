@@ -37,6 +37,11 @@ JSON_FILES = [
     "results/posthoc3/dev_selection_embed.json",
     "results/posthoc3/metrics.json",
     "results/posthoc3/rerank_flow.json",
+    "results/posthoc4/dev_selection_retrievers.json",
+    "results/posthoc4/dev_selection_rerank8b.json",
+    "results/posthoc4/dev_selection_candidate.json",
+    "results/posthoc4/metrics.json",
+    "results/posthoc4/fresh_task_infovqa.json",
 ]
 TEXT_FILES = [
     "results/bm25_docvqa/per_query.csv",
@@ -51,6 +56,8 @@ TEXT_FILES = [
     "results/miss_taxonomy/misses.csv",
     "results/miss_taxonomy/examples.md",
     "results/posthoc3/per_query.csv",
+    "results/posthoc4/per_query.csv",
+    "results/posthoc4/per_query_infovqa.csv",
 ]
 # keys that legitimately change between runs (anywhere in the JSON tree)
 VOLATILE = {"timestamp_utc", "git_commit", "git_dirty", "python", "packages", "hardware", "command", "timings",

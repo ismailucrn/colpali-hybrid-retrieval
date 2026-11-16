@@ -1,0 +1,19 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lllll}
+\toprule
+System (post-hoc set 4) & dev nDCG@5 & test nDCG@5 [95\% CI] & $\Delta$ vs B [95\% CI] & $p_\mathrm{Holm}$ \\
+\midrule
+B: ColPali v1.3 & 0.580 & 0.570 [0.510, 0.627] & -- & -- \\
+Q8: Qwen3-VL-Embedding-8B (descriptive) & 0.543 & 0.501 [0.439, 0.561] & -- & -- \\
+CQ: ColQwen2.5 (v0.2) & 0.625 & 0.618 [0.558, 0.675] & +0.048 [+0.011, +0.086] & 0.031 \\
+TM: Tomoro ColQwen3-4B & 0.675 & 0.636 [0.578, 0.693] & +0.066 [+0.030, +0.103] & 0.002 \\
+F$_\text{cq}$: RRF(ColPali, ColQwen2.5), $k{=}5$ & 0.627 & 0.613 [0.554, 0.669] & +0.043 [+0.020, +0.067] & $<$0.001 \\
+F$_\text{tm}$: RRF(ColPali, Tomoro), $k{=}5$ & 0.649 & 0.613 [0.554, 0.669] & +0.043 [+0.022, +0.064] & $<$0.001 \\
+F$_\text{q8}$: RRF(ColPali, Q8), $k{=}1$ & 0.594 & 0.555 [0.494, 0.613] & $-$0.015 [$-$0.034, +0.004] & 0.118 \\
+B$_\text{vr8}$: ColPali top-10 reranked by Qwen3-VL-Reranker-8B & 0.630 & 0.602 [0.542, 0.660] & +0.032 [+0.005, +0.061] & 0.048 \\
+\midrule \multicolumn{5}{l}{\emph{Fresh task, frozen candidate (InfoVQA, 494 queries)}} \\ ColPali v1.3 (model card 0.857) & -- & 0.857 [0.828, 0.884] & -- & -- \\
+TM: Tomoro ColQwen3-4B & -- & 0.942 [0.924, 0.959] & +0.085 [+0.062, +0.109] & $<$0.001 (single test) \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize DocVQA test split, 225 queries, evaluated once with settings chosen on dev (fifth use of the test split, exploratory). Holm correction over CQ, F$_\text{cq}$, TM, F$_\text{tm}$, F$_\text{q8}$, B$_\text{vr8}$ vs B. Bottom rows: the candidate chosen by a pre-registered rule on DocVQA dev, evaluated once and unchanged on InfoVQA.}

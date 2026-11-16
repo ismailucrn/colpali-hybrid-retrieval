@@ -338,6 +338,17 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
+\begin{frame}{Post-hoc set 4: stronger visual models --- and a fresh-task check}
+\small Pre-registered 16 Nov; dev selection; DocVQA test once (5th use); \textbf{frozen candidate re-tested on InfoVQA}.\\[4pt]
+{\scriptsize\input{../report/generated/tab_posthoc4.tex}}
+\vspace{2pt}
+\begin{itemize}
+  \item \Mea{} Tomoro ColQwen3-4B: DocVQA test \deltaTM{} ($p_\text{Holm}$ \pHolmTM{}); \textbf{InfoVQA \infoDelta{}} ($p$ \infoP{}) --- holds on unseen data
+  \item \Int{} fusion helps when the 2nd ranking is \emph{visual and strong}, hurts when it is text --- unequal inputs again
+\end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
 \begin{frame}{Cost: fusion is cheap --- quality is the obstacle}
 \centering
 {\scriptsize\input{../report/generated/tab_resources.tex}}
@@ -357,7 +368,7 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
   \item One task (DocVQA), one OCR (Tesseract), one checkpoint (v1.3)
   \item \Pub{} DocVQA is in ColPali's training data (split not stated) --- favours ColPali vs zero-shot text baselines
   \item Test set: \nTest{} queries, only \nvisual{} visual --- wide CIs, per-type results exploratory
-  \item Score-level fusion, tokenizer, text RAG stack, rerankers, VLM OCR and OCR proxy tested only post-hoc, one design each; test split used four times
+  \item Score-level fusion, tokenizer, text RAG stack, rerankers, VLM OCR, stronger retrievers and OCR proxy tested only post-hoc, one design each; DocVQA test split used five times (InfoVQA check for one candidate)
   \item BGE-M3 alone understated: empty-OCR pages rank high (\emptyTopFive{}/\nQueries{} queries); D, T$_\text{hyb}$ unaffected on dev
   \item Main run keeps the official BM25 preprocessing (drops ``no'', ``2-26'') for comparability
   \item Resource numbers from three devices (L4, M5 MPS, M5 CPU)
@@ -370,6 +381,7 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \begin{itemize}
   \item \Mea{} ColPali's DocVQA result reproduces with the authors' code and checkpoint.
   \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties; post-hoc, score-level fusion picks ColPali alone, a better tokenizer adds no headroom, a text RAG stack with a cross-encoder stays \deltaTrr{} below ColPali; cleaner VLM OCR, selective fusion and a Qwen3-VL reranker/ensemble do not improve reliably.
+  \item \Mea{} A stronger visual retriever (Tomoro ColQwen3-4B) does: \deltaTM{} on DocVQA, \infoDelta{} on InfoVQA (frozen, unseen task).
   \item \Int{} On DocVQA, ColPali already reads the lexical anchors BM25 needs --- better than Tesseract OCR does. Fusion with a much weaker ranking imports its errors.
   \item \Int{} Consistent with when fusion fails in text IR (unequal inputs) and when text + visual fusion helped (clean text, equal strength).
 \end{itemize}
