@@ -1,0 +1,1071 @@
+{
+  "timestamp_utc": "2026-11-16T15:42:22+00:00",
+  "config_path": "configs/posthoc4_test_evaluation.yaml",
+  "config": {
+    "title": "POST-HOC set 4 test-split results (exploratory; main test run was 2026-11-04)",
+    "frozen_check": "posthoc4",
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "tags": "results/splits/docvqa_query_tags.csv",
+    "scores": {
+      "B": "results/colpali_v1.3_docvqa/scores.npz",
+      "CQ": "results/colqwen25_docvqa/scores.npz",
+      "TM": "results/tomoro_docvqa/scores.npz",
+      "Q8": "results/qwen3vl_embedding8b_docvqa/scores.npz",
+      "VR8": "results/visual_reranker8b_docvqa/scores.npz"
+    },
+    "component_metrics": {
+      "B": "results/colpali_v1.3_docvqa/metrics.json",
+      "CQ": "results/colqwen25_docvqa/metrics.json",
+      "TM": "results/tomoro_docvqa/metrics.json",
+      "Q8": "results/qwen3vl_embedding8b_docvqa/metrics.json",
+      "VR8": "results/visual_reranker8b_docvqa/metrics.json"
+    },
+    "systems": {
+      "B": {
+        "name": "B: ColPali v1.3",
+        "kind": "single",
+        "scores": "B",
+        "role": "baseline"
+      },
+      "Q8": {
+        "name": "Q8: Qwen3-VL-Embedding-8B",
+        "kind": "single",
+        "scores": "Q8",
+        "role": "post-hoc 4: descriptive"
+      },
+      "CQ": {
+        "name": "CQ: ColQwen2.5 (v0.2)",
+        "kind": "single",
+        "scores": "CQ",
+        "role": "post-hoc 4: stronger retriever"
+      },
+      "TM": {
+        "name": "TM: Tomoro ColQwen3-4B",
+        "kind": "single",
+        "scores": "TM",
+        "role": "post-hoc 4: stronger retriever"
+      },
+      "F_cq": {
+        "name": "F_cq: RRF(ColPali, ColQwen2.5)",
+        "kind": "rrf",
+        "inputs": [
+          "B",
+          "CQ"
+        ],
+        "k": 5,
+        "role": "post-hoc 4: second visual retriever"
+      },
+      "F_tm": {
+        "name": "F_tm: RRF(ColPali, Tomoro)",
+        "kind": "rrf",
+        "inputs": [
+          "B",
+          "TM"
+        ],
+        "k": 5,
+        "role": "post-hoc 4: second visual retriever"
+      },
+      "F_q8": {
+        "name": "F_q8: RRF(ColPali, Qwen3-VL-Embedding-8B)",
+        "kind": "rrf",
+        "inputs": [
+          "B",
+          "Q8"
+        ],
+        "k": 1,
+        "role": "post-hoc 4: second visual retriever"
+      },
+      "B_vr8": {
+        "name": "B_vr8: ColPali top-N reranked by Qwen3-VL-Reranker-8B",
+        "kind": "rerank",
+        "first": "B",
+        "second": "VR8",
+        "n": 10,
+        "role": "post-hoc 4: visual reranker"
+      }
+    },
+    "baseline": "B",
+    "compare_to_baseline": [
+      "CQ",
+      "F_cq",
+      "TM",
+      "F_tm",
+      "F_q8",
+      "B_vr8"
+    ],
+    "extra_pairs": [
+      [
+        "Q8",
+        "B"
+      ],
+      [
+        "TM",
+        "CQ"
+      ]
+    ],
+    "pairs_title": "Pairs (post-hoc set 4): Qwen3-VL-Embedding-8B vs ColPali; Tomoro vs ColQwen2.5",
+    "headroom_pairs": [
+      [
+        "CQ",
+        "B"
+      ],
+      [
+        "TM",
+        "B"
+      ]
+    ],
+    "statistics": {
+      "metric": "ndcg_at_5",
+      "bootstrap_resamples": 10000,
+      "permutations": 10000,
+      "alpha": 0.05,
+      "seed": 0,
+      "multiple_comparisons": "holm"
+    },
+    "output_dir": "results/posthoc4"
+  },
+  "seed": 0,
+  "git_commit": "751d0b94f379a668080ed2ea6c6055c0e47b0d7e",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/run_test_evaluation.py --config configs/posthoc4_test_evaluation.yaml",
+  "n_test_queries": 225,
+  "results": {
+    "B": {
+      "name": "B: ColPali v1.3",
+      "role": "baseline",
+      "metrics": {
+        "ndcg_at_5": 0.5698845531501103,
+        "recall_at_5": 0.6533333333333333,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.5788816778359264,
+        "mrr_at_10": 0.5459365079365079
+      },
+      "ndcg_at_5_ci95": [
+        0.5104222964046498,
+        0.6274600432665112
+      ]
+    },
+    "Q8": {
+      "name": "Q8: Qwen3-VL-Embedding-8B",
+      "role": "post-hoc 4: descriptive",
+      "metrics": {
+        "ndcg_at_5": 0.500937272219835,
+        "recall_at_5": 0.5644444444444444,
+        "recall_at_10": 0.64,
+        "ndcg_at_10": 0.5268519323490566,
+        "mrr_at_10": 0.49134744268077596
+      },
+      "ndcg_at_5_ci95": [
+        0.439385915714473,
+        0.5606088691376572
+      ]
+    },
+    "CQ": {
+      "name": "CQ: ColQwen2.5 (v0.2)",
+      "role": "post-hoc 4: stronger retriever",
+      "metrics": {
+        "ndcg_at_5": 0.617725241520139,
+        "recall_at_5": 0.6888888888888889,
+        "recall_at_10": 0.7422222222222222,
+        "ndcg_at_10": 0.6349204632787966,
+        "mrr_at_10": 0.6015643738977072
+      },
+      "ndcg_at_5_ci95": [
+        0.5582621553441122,
+        0.675214214700084
+      ]
+    },
+    "TM": {
+      "name": "TM: Tomoro ColQwen3-4B",
+      "role": "post-hoc 4: stronger retriever",
+      "metrics": {
+        "ndcg_at_5": 0.6359660898962585,
+        "recall_at_5": 0.7155555555555555,
+        "recall_at_10": 0.7822222222222223,
+        "ndcg_at_10": 0.6581180545831289,
+        "mrr_at_10": 0.6191869488536155
+      },
+      "ndcg_at_5_ci95": [
+        0.5777379969521957,
+        0.6926421066374827
+      ]
+    },
+    "F_cq": {
+      "name": "F_cq: RRF(ColPali, ColQwen2.5)",
+      "role": "post-hoc 4: second visual retriever",
+      "metrics": {
+        "ndcg_at_5": 0.6125170774952979,
+        "recall_at_5": 0.6933333333333334,
+        "recall_at_10": 0.7333333333333333,
+        "ndcg_at_10": 0.6258905009762421,
+        "mrr_at_10": 0.5914056437389771
+      },
+      "ndcg_at_5_ci95": [
+        0.5543160855836782,
+        0.6689452739609847
+      ]
+    },
+    "F_tm": {
+      "name": "F_tm: RRF(ColPali, Tomoro)",
+      "role": "post-hoc 4: second visual retriever",
+      "metrics": {
+        "ndcg_at_5": 0.6128913717332758,
+        "recall_at_5": 0.7022222222222222,
+        "recall_at_10": 0.7688888888888888,
+        "ndcg_at_10": 0.6345488818740906,
+        "mrr_at_10": 0.5920970017636685
+      },
+      "ndcg_at_5_ci95": [
+        0.5540647957513655,
+        0.6692707163234749
+      ]
+    },
+    "F_q8": {
+      "name": "F_q8: RRF(ColPali, Qwen3-VL-Embedding-8B)",
+      "role": "post-hoc 4: second visual retriever",
+      "metrics": {
+        "ndcg_at_5": 0.5545524416106894,
+        "recall_at_5": 0.6355555555555555,
+        "recall_at_10": 0.6933333333333334,
+        "ndcg_at_10": 0.5739604384645636,
+        "mrr_at_10": 0.5362081128747795
+      },
+      "ndcg_at_5_ci95": [
+        0.4944379941718517,
+        0.6131941132529789
+      ]
+    },
+    "B_vr8": {
+      "name": "B_vr8: ColPali top-N reranked by Qwen3-VL-Reranker-8B",
+      "role": "post-hoc 4: visual reranker",
+      "metrics": {
+        "ndcg_at_5": 0.6018169656409507,
+        "recall_at_5": 0.6666666666666666,
+        "recall_at_10": 0.68,
+        "ndcg_at_10": 0.6063630716577271,
+        "mrr_at_10": 0.5820846560846561
+      },
+      "ndcg_at_5_ci95": [
+        0.5416208771808529,
+        0.6598425636942661
+      ]
+    }
+  },
+  "vs_baseline": {
+    "CQ": {
+      "delta": 0.04784068837002864,
+      "delta_ci95": [
+        0.011084346841691618,
+        0.08565199226286024
+      ],
+      "p_permutation": 0.010498950104989501,
+      "wins": 36,
+      "ties": 166,
+      "losses": 23,
+      "n": 225,
+      "p_holm": 0.0314968503149685
+    },
+    "F_cq": {
+      "delta": 0.042632524345187606,
+      "delta_ci95": [
+        0.020257519987543965,
+        0.06727428536398926
+      ],
+      "p_permutation": 0.00019998000199980003,
+      "wins": 32,
+      "ties": 183,
+      "losses": 10,
+      "n": 225,
+      "p_holm": 0.000999900009999
+    },
+    "TM": {
+      "delta": 0.06608153674614808,
+      "delta_ci95": [
+        0.029754068056472384,
+        0.10329398685428065
+      ],
+      "p_permutation": 0.0005999400059994001,
+      "wins": 39,
+      "ties": 168,
+      "losses": 18,
+      "n": 225,
+      "p_holm": 0.0023997600239976003
+    },
+    "F_tm": {
+      "delta": 0.04300681858316549,
+      "delta_ci95": [
+        0.022300881697408265,
+        0.06439996721719747
+      ],
+      "p_permutation": 9.999000099990002e-05,
+      "wins": 31,
+      "ties": 186,
+      "losses": 8,
+      "n": 225,
+      "p_holm": 0.0005999400059994001
+    },
+    "F_q8": {
+      "delta": -0.015332111539420955,
+      "delta_ci95": [
+        -0.033789409256736944,
+        0.003994233107123435
+      ],
+      "p_permutation": 0.11848815118488151,
+      "wins": 9,
+      "ties": 187,
+      "losses": 29,
+      "n": 225,
+      "p_holm": 0.11848815118488151
+    },
+    "B_vr8": {
+      "delta": 0.03193241249084039,
+      "delta_ci95": [
+        0.0049996847679598345,
+        0.060688989735386306
+      ],
+      "p_permutation": 0.023897610238976102,
+      "wins": 29,
+      "ties": 175,
+      "losses": 21,
+      "n": 225,
+      "p_holm": 0.047795220477952205
+    }
+  },
+  "pairs": {
+    "Q8 vs B": {
+      "delta": -0.06894728093027536,
+      "delta_ci95": [
+        -0.10728084540848731,
+        -0.032056852748220885
+      ],
+      "p_permutation": 0.0006999300069993001,
+      "wins": 19,
+      "ties": 161,
+      "losses": 45,
+      "n": 225
+    },
+    "TM vs CQ": {
+      "delta": 0.018240848376119435,
+      "delta_ci95": [
+        -0.01708400982160184,
+        0.05478948652486957
+      ],
+      "p_permutation": 0.33896610338966104,
+      "wins": 33,
+      "ties": 167,
+      "losses": 25,
+      "n": 225
+    }
+  },
+  "by_type": {
+    "exact": {
+      "n": 93,
+      "systems": {
+        "B": {
+          "mean": 0.8334165941373893,
+          "ci95": [
+            0.7648675107577976,
+            0.8951186253652829
+          ]
+        },
+        "Q8": {
+          "mean": 0.7489747179339493,
+          "ci95": [
+            0.664083572193741,
+            0.8296198792242718
+          ]
+        },
+        "CQ": {
+          "mean": 0.8743570665544184,
+          "ci95": [
+            0.8141918554580801,
+            0.9277380867521389
+          ]
+        },
+        "TM": {
+          "mean": 0.8724008392883219,
+          "ci95": [
+            0.8095772752344,
+            0.9297950946786254
+          ]
+        },
+        "F_cq": {
+          "mean": 0.8664258945768702,
+          "ci95": [
+            0.802164808708976,
+            0.9237504424163273
+          ]
+        },
+        "F_tm": {
+          "mean": 0.8607695376947966,
+          "ci95": [
+            0.7977234924874231,
+            0.9176494278594706
+          ]
+        },
+        "F_q8": {
+          "mean": 0.8114458172353061,
+          "ci95": [
+            0.7399096773756321,
+            0.8780092030827994
+          ]
+        },
+        "B_vr8": {
+          "mean": 0.8953970423405072,
+          "ci95": [
+            0.8367284805215699,
+            0.9464091010852057
+          ]
+        }
+      },
+      "vs_baseline": {
+        "CQ": {
+          "delta": 0.040940472417028945,
+          "delta_ci95": [
+            0.008803629898890252,
+            0.07567100916997417
+          ],
+          "p_permutation": 0.0192980701929807,
+          "wins": 13,
+          "ties": 76,
+          "losses": 4,
+          "n": 93
+        },
+        "F_cq": {
+          "delta": 0.033009300439480686,
+          "delta_ci95": [
+            0.013377171465988344,
+            0.05686544852732163
+          ],
+          "p_permutation": 0.0005999400059994001,
+          "wins": 11,
+          "ties": 82,
+          "losses": 0,
+          "n": 93
+        },
+        "TM": {
+          "delta": 0.0389842451509325,
+          "delta_ci95": [
+            0.0052538767482984885,
+            0.0770270086045879
+          ],
+          "p_permutation": 0.03469653034696531,
+          "wins": 11,
+          "ties": 78,
+          "losses": 4,
+          "n": 93
+        },
+        "F_tm": {
+          "delta": 0.027352943557407004,
+          "delta_ci95": [
+            0.008663260838513619,
+            0.0493295430287925
+          ],
+          "p_permutation": 0.008399160083991601,
+          "wins": 10,
+          "ties": 82,
+          "losses": 1,
+          "n": 93
+        },
+        "F_q8": {
+          "delta": -0.02197077690208338,
+          "delta_ci95": [
+            -0.048597939867100634,
+            0.004803344355785633
+          ],
+          "p_permutation": 0.11118888111188881,
+          "wins": 2,
+          "ties": 80,
+          "losses": 11,
+          "n": 93
+        },
+        "B_vr8": {
+          "delta": 0.06198044820311761,
+          "delta_ci95": [
+            0.022166213981804895,
+            0.1082612498695031
+          ],
+          "p_permutation": 0.0032996700329967,
+          "wins": 13,
+          "ties": 76,
+          "losses": 4,
+          "n": 93
+        }
+      }
+    },
+    "general": {
+      "n": 115,
+      "systems": {
+        "B": {
+          "mean": 0.39090801475525816,
+          "ci95": [
+            0.3126633545313733,
+            0.46754768142554776
+          ]
+        },
+        "Q8": {
+          "mean": 0.34169024325619707,
+          "ci95": [
+            0.2637849339929903,
+            0.41827817670072476
+          ]
+        },
+        "CQ": {
+          "mean": 0.4317842573188205,
+          "ci95": [
+            0.34731012364066216,
+            0.5148419144324995
+          ]
+        },
+        "TM": {
+          "mean": 0.48102693033694344,
+          "ci95": [
+            0.39618693532414734,
+            0.5628076588532698
+          ]
+        },
+        "F_cq": {
+          "mean": 0.437857931394439,
+          "ci95": [
+            0.3564213594585258,
+            0.5167339361176532
+          ]
+        },
+        "F_tm": {
+          "mean": 0.45293158371502673,
+          "ci95": [
+            0.3708786702360549,
+            0.5316249234948182
+          ]
+        },
+        "F_q8": {
+          "mean": 0.37988370205419075,
+          "ci95": [
+            0.29832432287845323,
+            0.45776529087933704
+          ]
+        },
+        "B_vr8": {
+          "mean": 0.3887497023780292,
+          "ci95": [
+            0.3088094498513036,
+            0.46894758981797036
+          ]
+        }
+      },
+      "vs_baseline": {
+        "CQ": {
+          "delta": 0.04087624256356232,
+          "delta_ci95": [
+            -0.016234157664832816,
+            0.10021213036884538
+          ],
+          "p_permutation": 0.17198280171982802,
+          "wins": 18,
+          "ties": 81,
+          "losses": 16,
+          "n": 115
+        },
+        "F_cq": {
+          "delta": 0.046949916639180925,
+          "delta_ci95": [
+            0.010477086643317488,
+            0.08803790589991062
+          ],
+          "p_permutation": 0.016698330166983303,
+          "wins": 17,
+          "ties": 90,
+          "losses": 8,
+          "n": 115
+        },
+        "TM": {
+          "delta": 0.0901189155816853,
+          "delta_ci95": [
+            0.03084029757340052,
+            0.15554933261132017
+          ],
+          "p_permutation": 0.0037996200379962005,
+          "wins": 24,
+          "ties": 78,
+          "losses": 13,
+          "n": 115
+        },
+        "F_tm": {
+          "delta": 0.06202356895976855,
+          "delta_ci95": [
+            0.027862680927833512,
+            0.09844684818770236
+          ],
+          "p_permutation": 0.00039996000399960006,
+          "wins": 20,
+          "ties": 89,
+          "losses": 6,
+          "n": 115
+        },
+        "F_q8": {
+          "delta": -0.011024312701067357,
+          "delta_ci95": [
+            -0.03898704760654893,
+            0.01935935907307378
+          ],
+          "p_permutation": 0.46765323467653236,
+          "wins": 6,
+          "ties": 94,
+          "losses": 15,
+          "n": 115
+        },
+        "B_vr8": {
+          "delta": -0.002158312377228939,
+          "delta_ci95": [
+            -0.03683802333511261,
+            0.032810868722821684
+          ],
+          "p_permutation": 0.9006099390060994,
+          "wins": 12,
+          "ties": 88,
+          "losses": 15,
+          "n": 115
+        }
+      }
+    },
+    "visual": {
+      "n": 17,
+      "systems": {
+        "B": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.14705882352941177,
+            0.5448152651260538
+          ]
+        },
+        "Q8": {
+          "mean": 0.22128585336134796,
+          "ci95": [
+            0.058823529411764705,
+            0.4054581918067278
+          ]
+        },
+        "CQ": {
+          "mean": 0.4716342682827058,
+          "ci95": [
+            0.26575191534152937,
+            0.6775166212238823
+          ]
+        },
+        "TM": {
+          "mean": 0.39064677553504124,
+          "ci95": [
+            0.21720800383625344,
+            0.5692518350256595
+          ]
+        },
+        "F_cq": {
+          "mean": 0.40500424296662446,
+          "ci95": [
+            0.22898760357143366,
+            0.5855526807270132
+          ]
+        },
+        "F_tm": {
+          "mean": 0.33893291218487737,
+          "ci95": [
+            0.16226978019433128,
+            0.5294117647058824
+          ]
+        },
+        "F_q8": {
+          "mean": 0.33077721313468833,
+          "ci95": [
+            0.1547605737394975,
+            0.5190274011051628
+          ]
+        },
+        "B_vr8": {
+          "mean": 0.43709862106314074,
+          "ci95": [
+            0.23121626812196427,
+            0.6470588235294118
+          ]
+        }
+      },
+      "vs_baseline": {
+        "CQ": {
+          "delta": 0.13270135609782846,
+          "delta_ci95": [
+            -0.08861064808823417,
+            0.37465119096638483
+          ],
+          "p_permutation": 0.3478652134786521,
+          "wins": 5,
+          "ties": 9,
+          "losses": 3,
+          "n": 17
+        },
+        "F_cq": {
+          "delta": 0.06607133078174714,
+          "delta_ci95": [
+            -0.0375674637560714,
+            0.18371838960527653
+          ],
+          "p_permutation": 0.31396860313968605,
+          "wins": 4,
+          "ties": 11,
+          "losses": 2,
+          "n": 17
+        },
+        "TM": {
+          "delta": 0.05171386335016385,
+          "delta_ci95": [
+            -0.11660102583494122,
+            0.19831873803947228
+          ],
+          "p_permutation": 0.5669433056694331,
+          "wins": 4,
+          "ties": 12,
+          "losses": 1,
+          "n": 17
+        },
+        "F_tm": {
+          "delta": 0.0,
+          "delta_ci95": [
+            -0.08823529411764706,
+            0.08823529411764706
+          ],
+          "p_permutation": 1.0,
+          "wins": 1,
+          "ties": 15,
+          "losses": 1,
+          "n": 17
+        },
+        "F_q8": {
+          "delta": -0.008155699050189051,
+          "delta_ci95": [
+            -0.0732857425375789,
+            0.06422214580718322
+          ],
+          "p_permutation": 0.7459254074592541,
+          "wins": 1,
+          "ties": 13,
+          "losses": 3,
+          "n": 17
+        },
+        "B_vr8": {
+          "delta": 0.09816570887826341,
+          "delta_ci95": [
+            -0.045269213966157136,
+            0.2647058823529412
+          ],
+          "p_permutation": 0.31496850314968505,
+          "wins": 4,
+          "ties": 11,
+          "losses": 2,
+          "n": 17
+        }
+      }
+    }
+  },
+  "posthoc_without_duplicated_queries": {
+    "n": 212,
+    "systems": {
+      "B": 0.5976709523489095,
+      "Q8": 0.5195720751783869,
+      "CQ": 0.6408360829644331,
+      "TM": 0.6660637614123756,
+      "F_cq": 0.640268648886751,
+      "F_tm": 0.6397213045850856,
+      "F_q8": 0.5811919483526428,
+      "B_vr8": 0.6319723618450024
+    },
+    "vs_baseline": {
+      "CQ": {
+        "delta": 0.0431651306155235,
+        "delta_ci95": [
+          0.004554917013243264,
+          0.08267379757663842
+        ],
+        "p_permutation": 0.031996800319968,
+        "wins": 33,
+        "ties": 156,
+        "losses": 23,
+        "n": 212
+      },
+      "F_cq": {
+        "delta": 0.042597696537841324,
+        "delta_ci95": [
+          0.018579459827685437,
+          0.06811086361346494
+        ],
+        "p_permutation": 0.0005999400059994001,
+        "wins": 29,
+        "ties": 173,
+        "losses": 10,
+        "n": 212
+      },
+      "TM": {
+        "delta": 0.06839280906346591,
+        "delta_ci95": [
+          0.03111448813823502,
+          0.1066943852908675
+        ],
+        "p_permutation": 0.0005999400059994001,
+        "wins": 38,
+        "ties": 158,
+        "losses": 16,
+        "n": 212
+      },
+      "F_tm": {
+        "delta": 0.042050352236176036,
+        "delta_ci95": [
+          0.021514123449453967,
+          0.06408438708470252
+        ],
+        "p_permutation": 0.00029997000299970003,
+        "wins": 29,
+        "ties": 175,
+        "losses": 8,
+        "n": 212
+      },
+      "F_q8": {
+        "delta": -0.01647900399626682,
+        "delta_ci95": [
+          -0.036294376268643354,
+          0.003333597729662447
+        ],
+        "p_permutation": 0.10948905109489052,
+        "wins": 8,
+        "ties": 175,
+        "losses": 29,
+        "n": 212
+      },
+      "B_vr8": {
+        "delta": 0.034301409496092894,
+        "delta_ci95": [
+          0.006029554276476579,
+          0.06415501017833923
+        ],
+        "p_permutation": 0.0217978202179782,
+        "wins": 28,
+        "ties": 165,
+        "losses": 19,
+        "n": 212
+      }
+    }
+  },
+  "resources": {
+    "components": {
+      "B": {
+        "device": "cuda (NVIDIA L4)",
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_median_ms": 51.29878100001406,
+        "peak_memory_mb": 16188.8076171875,
+        "peak_memory_kind": "peak_allocated_mb"
+      },
+      "CQ": {
+        "device": "cuda (NVIDIA L4)",
+        "index_time_s": 213.52241003000017,
+        "index_size_mb": 92.5537109375,
+        "query_latency_median_ms": 164.47059200004333,
+        "peak_memory_mb": 9126.8671875,
+        "peak_memory_kind": "peak_allocated_mb"
+      },
+      "TM": {
+        "device": "cuda (NVIDIA L4)",
+        "index_time_s": 256.97520619700003,
+        "index_size_mb": 372.6385498046875,
+        "query_latency_median_ms": 68.43837149995124,
+        "peak_memory_mb": 9912.67041015625,
+        "peak_memory_kind": "peak_allocated_mb"
+      },
+      "Q8": {
+        "device": "cuda (NVIDIA L4)",
+        "index_time_s": 574.5507377839999,
+        "index_size_mb": 7.8125,
+        "query_latency_median_ms": 76.71758599985878,
+        "peak_memory_mb": 16783.9267578125,
+        "peak_memory_kind": "peak_allocated_mb"
+      },
+      "VR8": {
+        "device": "cuda",
+        "index_time_s": 0.0,
+        "index_size_mb": 0.0,
+        "latency_by_n_ms": {
+          "5": 3710.0396089997503,
+          "10": 7410.7036215000335
+        },
+        "peak_memory_mb": 15856.8837890625,
+        "peak_memory_kind": "peak_allocated_mb"
+      }
+    },
+    "systems": {
+      "B": {
+        "components": [
+          "B"
+        ],
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_sequential_ms": 51.29878100001406,
+        "query_latency_parallel_ms": 51.29878100001406,
+        "fusion_overhead_ms": 0.0
+      },
+      "Q8": {
+        "components": [
+          "Q8"
+        ],
+        "index_time_s": 574.5507377839999,
+        "index_size_mb": 7.8125,
+        "query_latency_sequential_ms": 76.71758599985878,
+        "query_latency_parallel_ms": 76.71758599985878,
+        "fusion_overhead_ms": 0.0
+      },
+      "CQ": {
+        "components": [
+          "CQ"
+        ],
+        "index_time_s": 213.52241003000017,
+        "index_size_mb": 92.5537109375,
+        "query_latency_sequential_ms": 164.47059200004333,
+        "query_latency_parallel_ms": 164.47059200004333,
+        "fusion_overhead_ms": 0.0
+      },
+      "TM": {
+        "components": [
+          "TM"
+        ],
+        "index_time_s": 256.97520619700003,
+        "index_size_mb": 372.6385498046875,
+        "query_latency_sequential_ms": 68.43837149995124,
+        "query_latency_parallel_ms": 68.43837149995124,
+        "fusion_overhead_ms": 0.0
+      },
+      "F_cq": {
+        "components": [
+          "B",
+          "CQ"
+        ],
+        "index_time_s": 325.21754751900016,
+        "index_size_mb": 218.408203125,
+        "query_latency_sequential_ms": 215.90270699698522,
+        "query_latency_parallel_ms": 164.60392599697116,
+        "fusion_overhead_ms": 0.13333399692783132
+      },
+      "F_tm": {
+        "components": [
+          "B",
+          "TM"
+        ],
+        "index_time_s": 368.670343686,
+        "index_size_mb": 498.4930419921875,
+        "query_latency_sequential_ms": 119.87256849033656,
+        "query_latency_parallel_ms": 68.5737874903225,
+        "fusion_overhead_ms": 0.13541599037125707
+      },
+      "F_q8": {
+        "components": [
+          "B",
+          "Q8"
+        ],
+        "index_time_s": 686.2458752729999,
+        "index_size_mb": 133.6669921875,
+        "query_latency_sequential_ms": 128.14970050203556,
+        "query_latency_parallel_ms": 76.8509195020215,
+        "fusion_overhead_ms": 0.13333350216271356
+      },
+      "B_vr8": {
+        "components": [
+          "B",
+          "VR8"
+        ],
+        "index_time_s": 111.69513748899999,
+        "index_size_mb": 125.8544921875,
+        "query_latency_sequential_ms": 7462.0024025000475,
+        "query_latency_parallel_ms": 7462.0024025000475,
+        "fusion_overhead_ms": 0.0
+      }
+    },
+    "note": "Component latencies were measured on different devices (ColPali: L4 GPU; BGE-M3: Mac MPS; BM25 and fusion: Mac CPU). Sequential = sum of components + fusion; parallel = slowest component + fusion."
+  },
+  "headroom_at_5": {
+    "CQ vs B": {
+      "all": {
+        "n": 225,
+        "CQ_hit": 155,
+        "B_hit": 147,
+        "CQ_only": 16,
+        "B_only": 8
+      },
+      "exact": {
+        "n": 93,
+        "CQ_hit": 87,
+        "B_hit": 84,
+        "CQ_only": 4,
+        "B_only": 1
+      },
+      "general": {
+        "n": 115,
+        "CQ_hit": 58,
+        "B_hit": 56,
+        "CQ_only": 8,
+        "B_only": 6
+      },
+      "visual": {
+        "n": 17,
+        "CQ_hit": 10,
+        "B_hit": 7,
+        "CQ_only": 4,
+        "B_only": 1
+      }
+    },
+    "TM vs B": {
+      "all": {
+        "n": 225,
+        "TM_hit": 161,
+        "B_hit": 147,
+        "TM_only": 22,
+        "B_only": 8
+      },
+      "exact": {
+        "n": 93,
+        "TM_hit": 86,
+        "B_hit": 84,
+        "TM_only": 3,
+        "B_only": 1
+      },
+      "general": {
+        "n": 115,
+        "TM_hit": 65,
+        "B_hit": 56,
+        "TM_only": 15,
+        "B_only": 6
+      },
+      "visual": {
+        "n": 17,
+        "TM_hit": 10,
+        "B_hit": 7,
+        "TM_only": 4,
+        "B_only": 1
+      }
+    }
+  }
+}

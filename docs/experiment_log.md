@@ -463,3 +463,33 @@ Chronological record of every run and decision. One entry per run or decision; n
 - **InfoVQA candidate (rule fixed beforehand): TM.**
 - *Interpretation (dev only):* newer retrievers trained on more data are clearly better on dev. Fusing them with ColPali lands between the two inputs, so ColPali pulls the stronger model down. This is the "unequal inputs" pattern again, now from the other side.
 - Frozen in `configs/posthoc4_test_evaluation.yaml`; the dry run on dev reproduces every selection.
+
+### 2026-11-16 — Post-hoc set 4: DocVQA test run (fifth use) and InfoVQA confirmation
+- Type: runs (registry rows 67–68), `751d0b9`.
+- **DocVQA test, n = 225** (B 0.570; Holm over six comparisons):
+
+  | System | nDCG@5 | Δ vs B | p_Holm |
+  |---|---|---|---|
+  | TM | 0.636 | +0.066 | 0.002 |
+  | CQ | 0.618 | +0.048 | 0.032 |
+  | F_tm | 0.613 | +0.043 | 0.0006 |
+  | F_cq | 0.613 | +0.043 | 0.001 |
+  | B_vr8 | 0.602 | +0.032 | 0.048 |
+  | F_q8 | 0.555 | −0.015 | 0.12 |
+
+  - Descriptive: Q8 0.501 (−0.069 vs B). TM vs CQ +0.018 (p 0.34, n.s.).
+  - Top-5 headroom: TM finds the gold page where ColPali misses on 22 queries, ColPali where TM misses on 8. For CQ the counts are 16 and 8.
+- **InfoVQA confirmation** (fresh task, frozen candidate, one comparison, 494 queries):
+  - ColPali reproduces its model card (0.8569 vs 0.85716).
+  - TM 0.9419: Δ +0.0850 [+0.0623, +0.1091], p = 0.0001, W/T/L 77/405/12.
+  - The card self-reports TM at 0.9429 on InfoVQA, close to our value.
+- **Verdict on the pre-registered expectations:**
+  - Stronger retrievers above ColPali on dev: held, and on test.
+  - F_cq / F_tm close to the stronger component: partly. They sit between the inputs, below TM alone on dev and test.
+  - B_vr8 ≥ B_vr on dev: held (0.630 vs 0.623 at N = 10). It is also significant on test (+0.032, p_Holm 0.048), unlike the 2B reranker in set 3.
+  - InfoVQA gain smaller than the DocVQA dev gain: held (+8.5 vs +9.4 pt). The gain is confirmed with p = 0.0001, the first confirmed improvement in this project.
+- *Interpretation:*
+  - The improvement comes from a **better visual retriever**, not from adding a signal to ColPali. Tomoro and ColQwen2.5 are newer ColPali-style models built on Qwen VLMs and trained on more data. Tomoro's card lists the ColPali training set and VisRAG data among its sources (self-reported, not verified).
+  - This answers "how can we improve page retrieval here?" but not the project's original question.
+  - On the original question, adding a second *visual* model to ColPali by RRF helps significantly (F_cq, F_tm), while adding *text* signals (sets 1–3) never did. Fusion helps when the second input is at least as strong as ColPali, and hurts when it is much weaker. This matches the unequal-inputs reading from Bruch et al. that the report already uses.
+  - Caveat: we did not check whether DocVQA or InfoVQA test pages overlap with these models' training data.

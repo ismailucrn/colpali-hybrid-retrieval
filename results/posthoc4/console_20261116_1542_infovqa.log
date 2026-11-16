@@ -1,0 +1,2 @@
+Generating test split:   0%|          | 0/500 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 500/500 [00:00<00:00, 4101.26 examples/s]Generating test split: 100%|██████████| 500/500 [00:00<00:00, 4091.39 examples/s]
+InfoVQA (494 queries): ColPali 0.8569 (published 0.85716); TM (alone) 0.9419; delta +0.0850 [+0.0623, +0.1091], p = 0.0001, W/T/L 77/405/12

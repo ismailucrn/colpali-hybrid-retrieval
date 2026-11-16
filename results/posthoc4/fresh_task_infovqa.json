@@ -1,0 +1,253 @@
+{
+  "timestamp_utc": "2026-11-16T15:42:32+00:00",
+  "config_path": "configs/posthoc4_docvqa.yaml",
+  "config": {
+    "tasks": {
+      "docvqa": {
+        "dataset": "vidore/docvqa_test_subsampled",
+        "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+        "split": "test"
+      },
+      "infovqa": {
+        "dataset": "vidore/infovqa_test_subsampled",
+        "revision": "f793e830aaeae1ceb8a2df626fc555b3fd04d3db",
+        "split": "test"
+      }
+    },
+    "data": {
+      "dataset": "vidore/docvqa_test_subsampled",
+      "revision": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "split": "test"
+    },
+    "splits": "results/splits/docvqa_split.json",
+    "seed": 0,
+    "scores": {
+      "B": "results/colpali_v1.3_docvqa/scores.npz"
+    },
+    "multivector": {
+      "colpali": {
+        "family": "colpali_engine",
+        "model": "vidore/colpali-v1.3",
+        "revision": "b5c6dd62125326e6f0b540c1f7b36e901cdc0a11",
+        "base_revision": "30ab955d073de4a91dc5a288e8c97226647e3e5a",
+        "model_class": "ColPali",
+        "processor_class": "ColPaliProcessor",
+        "batch_size": 4,
+        "output_dirs": {
+          "infovqa": "results/colpali_v1.3_infovqa"
+        }
+      },
+      "colqwen25": {
+        "family": "colpali_engine",
+        "model": "vidore/colqwen2.5-v0.2",
+        "revision": "dcbe8d9cede518bce830488364ba0e40c873645b",
+        "base_revision": "92908120384b7a2110c5beda3ab29cbdb2c08e49",
+        "model_class": "ColQwen2_5",
+        "processor_class": "ColQwen2_5_Processor",
+        "batch_size": 4,
+        "output_dirs": {
+          "docvqa": "results/colqwen25_docvqa",
+          "infovqa": "results/colqwen25_infovqa"
+        }
+      },
+      "tomoro": {
+        "family": "sentence_transformers",
+        "model": "TomoroAI/tomoro-colqwen3-embed-4b",
+        "revision": "13517a29e8c5e408f7f2684337ed407df3acb212",
+        "batch_size": 4,
+        "output_dirs": {
+          "docvqa": "results/tomoro_docvqa",
+          "infovqa": "results/tomoro_infovqa"
+        }
+      }
+    },
+    "embedding8b": {
+      "model": "Qwen/Qwen3-VL-Embedding-8B",
+      "revision": "2c4565515e0f265c6511776e7193b22c0968ddc7",
+      "query_instruction": "Retrieve the document page image that answers the question.",
+      "batch_size": 2,
+      "dtype": "bfloat16",
+      "output_dirs": {
+        "docvqa": "results/qwen3vl_embedding8b_docvqa",
+        "infovqa": "results/qwen3vl_embedding8b_infovqa"
+      }
+    },
+    "reranker8b": {
+      "model": "Qwen/Qwen3-VL-Reranker-8B",
+      "revision": "b212dc8c91a8164aef1ea2de9c1a867611e75c04",
+      "instruction": "Given a question, retrieve the document page image that answers it.",
+      "pool_first": "B",
+      "pool_top": 10,
+      "dtype": "bfloat16",
+      "latency": {
+        "n_queries": 20,
+        "n_values": [
+          5,
+          10
+        ]
+      },
+      "n_grid": [
+        1,
+        5,
+        10
+      ],
+      "first_scores": {
+        "docvqa": "results/colpali_v1.3_docvqa/scores.npz",
+        "infovqa": "results/colpali_v1.3_infovqa/scores.npz"
+      },
+      "output_dirs": {
+        "docvqa": "results/visual_reranker8b_docvqa",
+        "infovqa": "results/visual_reranker8b_infovqa"
+      }
+    },
+    "rrf": {
+      "k_grid": [
+        1,
+        5,
+        10,
+        20,
+        40,
+        60,
+        80,
+        100,
+        200,
+        500
+      ],
+      "tie_break": "closest_to_60"
+    },
+    "fresh_task": {
+      "task": "infovqa",
+      "published_colpali_v1_3_ndcg_at_5": 0.85716,
+      "candidate_rule": "highest DocVQA dev nDCG@5 among set-3 and set-4 systems; ties -> lower query latency"
+    },
+    "output_dir": "results/posthoc4"
+  },
+  "seed": 0,
+  "git_commit": "751d0b94f379a668080ed2ea6c6055c0e47b0d7e",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/evaluate_fresh_task.py",
+  "label": "POST-HOC set 4: confirmation on a fresh task (pre-registered), one comparison, evaluated once",
+  "task": {
+    "dataset": "vidore/infovqa_test_subsampled",
+    "revision": "f793e830aaeae1ceb8a2df626fc555b3fd04d3db",
+    "split": "test"
+  },
+  "n_queries": 494,
+  "n_pages": 500,
+  "candidate": "TM",
+  "setting": "alone",
+  "B": {
+    "metrics": {
+      "ndcg_at_1": 0.7935222672064778,
+      "recall_at_1": 0.7935222672064778,
+      "precision_at_1": 0.7935222672064778,
+      "map_at_1": 0.7935222672064778,
+      "mrr_at_1": 0.7935222672064778,
+      "ndcg_at_3": 0.8469720113215746,
+      "recall_at_3": 0.8866396761133604,
+      "precision_at_3": 0.2955465587044534,
+      "map_at_3": 0.8333333333333334,
+      "mrr_at_3": 0.8333333333333334,
+      "ndcg_at_5": 0.8569015177828048,
+      "recall_at_5": 0.9109311740890689,
+      "precision_at_5": 0.18218623481781376,
+      "map_at_5": 0.8387989203778677,
+      "mrr_at_5": 0.8387989203778677,
+      "ndcg_at_10": 0.8646847200818706,
+      "recall_at_10": 0.9352226720647774,
+      "precision_at_10": 0.09352226720647774,
+      "map_at_10": 0.841968703810809,
+      "mrr_at_10": 0.841968703810809,
+      "ndcg_at_20": 0.8693807737049413,
+      "recall_at_20": 0.9534412955465587,
+      "precision_at_20": 0.047672064777327945,
+      "map_at_20": 0.8433074261705922,
+      "mrr_at_20": 0.8433074261705922,
+      "ndcg_at_50": 0.8727001541166372,
+      "recall_at_50": 0.9696356275303644,
+      "precision_at_50": 0.01939271255060729,
+      "map_at_50": 0.8438811841629865,
+      "mrr_at_50": 0.8438811841629865,
+      "ndcg_at_100": 0.8752881027631892,
+      "recall_at_100": 0.9858299595141701,
+      "precision_at_100": 0.0098582995951417,
+      "map_at_100": 0.8440976781745387,
+      "mrr_at_100": 0.8440976781745387,
+      "n_queries": 494
+    },
+    "ndcg_at_5_ci95": [
+      0.8283320419452455,
+      0.8838581040938516
+    ]
+  },
+  "candidate_metrics": {
+    "metrics": {
+      "ndcg_at_1": 0.9068825910931174,
+      "recall_at_1": 0.9068825910931174,
+      "precision_at_1": 0.9068825910931174,
+      "map_at_1": 0.9068825910931174,
+      "mrr_at_1": 0.9068825910931174,
+      "ndcg_at_3": 0.9351496888736274,
+      "recall_at_3": 0.9554655870445344,
+      "precision_at_3": 0.31848852901484476,
+      "map_at_3": 0.9281376518218624,
+      "mrr_at_3": 0.9281376518218624,
+      "ndcg_at_5": 0.9419467839402456,
+      "recall_at_5": 0.97165991902834,
+      "precision_at_5": 0.19433198380566802,
+      "map_at_5": 0.9319838056680162,
+      "mrr_at_5": 0.9319838056680162,
+      "ndcg_at_10": 0.9467005279180079,
+      "recall_at_10": 0.9858299595141701,
+      "precision_at_10": 0.09858299595141701,
+      "map_at_10": 0.9340442452284556,
+      "mrr_at_10": 0.9340442452284556,
+      "ndcg_at_20": 0.947724734445963,
+      "recall_at_20": 0.9898785425101214,
+      "precision_at_20": 0.04949392712550608,
+      "map_at_20": 0.9343237902448428,
+      "mrr_at_20": 0.9343237902448428,
+      "ndcg_at_50": 0.9485172863773933,
+      "recall_at_50": 0.9939271255060729,
+      "precision_at_50": 0.019878542510121458,
+      "map_at_50": 0.9344446703966829,
+      "mrr_at_50": 0.9344446703966829,
+      "ndcg_at_100": 0.9491703645349382,
+      "recall_at_100": 0.9979757085020243,
+      "precision_at_100": 0.009979757085020243,
+      "map_at_100": 0.9345005368350547,
+      "mrr_at_100": 0.9345005368350547,
+      "n_queries": 494
+    },
+    "ndcg_at_5_ci95": [
+      0.9237112623550897,
+      0.9588151587648308
+    ]
+  },
+  "delta": 0.08504526615744079,
+  "delta_ci95": [
+    0.06234760153889042,
+    0.10908158024395594
+  ],
+  "p_permutation": 9.999000099990002e-05,
+  "wins": 77,
+  "ties": 405,
+  "losses": 12,
+  "published_colpali_v1_3_ndcg_at_5": 0.85716
+}
