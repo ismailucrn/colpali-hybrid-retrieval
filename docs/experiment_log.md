@@ -416,3 +416,30 @@ Chronological record of every run and decision. One entry per run or decision; n
   - H3 (A_vlm > A, but C_vlm ≤ B): held. C_vlm is significantly below B. The `no_overlap` share among misses dropped only a little (58 → 53).
   - H4 (Q3E misses most of ColPali's misses; E_ens within ±2 pt): held. E_ens is −1.2 pt, and Q3E finds only 6 of ColPali's misses.
 - *Interpretation:* better text and a second visual retriever do not help, as predicted. Reading the image against the question (H1) is the only direction with a positive sign. It costs about 7 s per query, and on this test split its gain is not distinguishable from zero. The main conclusion is unchanged: on this task we found no change that reliably beats ColPali alone.
+
+### 2026-11-16 — Pre-registration: post-hoc set 4 (stronger models) + confirmation on a fresh task (written before any of these models was run)
+- Type: plan. User request after set 3: "try better models anyway". The models and the protocol were chosen by the user (dev selection + one test run + confirmation on a new task). Exploratory on DocVQA: this is the **fifth use** of the DocVQA test split. The fresh-task check is the only confirmatory element.
+- Models (revisions pinned now; none gated):
+  - `vidore/colqwen2.5-v0.2` @ `dcbe8d9cede518bce830488364ba0e40c873645b` (MIT; base `vidore/colqwen2.5-base` @ `92908120384b7a2110c5beda3ab29cbdb2c08e49`). Run via colpali-engine `ColQwen2_5`, as for ColPali.
+  - `TomoroAI/tomoro-colqwen3-embed-4b` @ `13517a29e8c5e408f7f2684337ed407df3acb212` (Apache-2.0, community model). Run via Sentence Transformers `MultiVectorEncoder` (trust_remote_code), as in its card. *Unverified/self-reported:* card DocVQA nDCG@5 0.6624; trained on the ColPali training set, among other data.
+  - `Qwen/Qwen3-VL-Embedding-8B` @ `2c4565515e0f265c6511776e7193b22c0968ddc7` (Apache-2.0), same helper and instruction as the 2B model in set 3.
+  - `Qwen/Qwen3-VL-Reranker-8B` @ `b212dc8c91a8164aef1ea2de9c1a867611e75c04` (Apache-2.0), same helper, fix and instruction as the 2B model in set 3. For cost (about 4× the 2B model), the pool is ColPali's top **10**.
+- Systems on DocVQA (settings on dev, rules as in sets 2–3):
+  - `CQ` = ColQwen2.5 alone; `F_cq` = RRF(ColPali, ColQwen2.5).
+  - `TM` = Tomoro alone; `F_tm` = RRF(ColPali, Tomoro).
+  - `Q8` = Qwen3-VL-Embedding-8B alone (descriptive); `F_q8` = RRF(ColPali, Q8).
+  - For every RRF: k from {1, 5, 10, 20, 40, 60, 80, 100, 200, 500}, ties closest to 60.
+  - `B_vr8` = ColPali's top N reranked by the 8B reranker, N ∈ {1, 5, 10}, ties to the smaller N.
+- Test (once): Holm over CQ, F_cq, TM, F_tm, F_q8, B_vr8 vs B (paired permutation, bootstrap CIs). Descriptive: Q8 vs B; top-5 headroom CQ vs B and TM vs B.
+- **Fresh-task confirmation (the only confirmatory test):**
+  - Task: `vidore/infovqa_test_subsampled` @ `f793e830aaeae1ceb8a2df626fc555b3fd04d3db`, chosen now, before any run on it. Reasons: annotator-written single-page VQA questions like DocVQA, 500 rows, same cost.
+  - Published ColPali v1.3 (model card `results.json`, self-reported): nDCG@5 0.85716.
+  - Candidate: the single set-3/set-4 system with the **highest DocVQA dev nDCG@5** (ties → lower query latency). It is evaluated frozen (same k / N, no tuning) on the full InfoVQA query set, official protocol, against ColPali v1.3. One paired comparison, two-sided, α = 0.05.
+  - Retriever scores on InfoVQA may be computed in the same Colab run, but only the frozen candidate and ColPali are evaluated. A reranker candidate is run on InfoVQA only if it is selected.
+- **Expectations (hypotheses):**
+  - The stronger retrievers (CQ, TM) score above ColPali on dev. Tomoro's card reports a higher DocVQA score.
+  - F_cq / F_tm are close to the stronger component, because both inputs are strong and visual.
+  - B_vr8 ≥ B_vr (2B) on dev.
+  - On InfoVQA the candidate's gain is smaller than on DocVQA dev (regression to the mean). A gain that holds there with p < 0.05 would be the first confirmed improvement in this project.
+- What would change our reading: a significant gain on InfoVQA → "a stronger/second visual model helps". No gain → the DocVQA dev gains were selection noise.
+- Interpretation caveat, fixed now: replacing ColPali with a newer retriever answers "is there a better retriever?", not the project's question "does a second signal help ColPali?". Only F_cq, F_tm, F_q8 and B_vr8 speak to the original question.

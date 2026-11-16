@@ -1,0 +1,75 @@
+# POST-HOC set 4 (pre-registered 2026-11-16 in docs/experiment_log.md, before any run): stronger models on DocVQA,
+# plus a frozen confirmation on a fresh task (InfoVQA). GPU stages: scripts/run_posthoc4_gpu.py (Colab L4).
+# Dev selection: scripts/run_posthoc4_dev.py. Test: scripts/run_test_evaluation.py --config configs/posthoc4_test_evaluation.yaml.
+
+tasks:
+  docvqa:  {dataset: vidore/docvqa_test_subsampled,  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6, split: test}
+  infovqa: {dataset: vidore/infovqa_test_subsampled, revision: f793e830aaeae1ceb8a2df626fc555b3fd04d3db, split: test}
+
+data:   # DocVQA, as in every earlier config
+  dataset: vidore/docvqa_test_subsampled
+  revision: 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6
+  split: test
+
+splits: results/splits/docvqa_split.json
+seed: 0
+
+scores:
+  B: results/colpali_v1.3_docvqa/scores.npz
+
+multivector:
+  colpali:      # only for the fresh task (DocVQA scores already exist)
+    family: colpali_engine
+    model: vidore/colpali-v1.3
+    revision: b5c6dd62125326e6f0b540c1f7b36e901cdc0a11
+    base_revision: 30ab955d073de4a91dc5a288e8c97226647e3e5a
+    model_class: ColPali
+    processor_class: ColPaliProcessor
+    batch_size: 4
+    output_dirs: {infovqa: results/colpali_v1.3_infovqa}
+  colqwen25:
+    family: colpali_engine
+    model: vidore/colqwen2.5-v0.2
+    revision: dcbe8d9cede518bce830488364ba0e40c873645b
+    base_revision: 92908120384b7a2110c5beda3ab29cbdb2c08e49
+    model_class: ColQwen2_5
+    processor_class: ColQwen2_5_Processor
+    batch_size: 4
+    output_dirs: {docvqa: results/colqwen25_docvqa, infovqa: results/colqwen25_infovqa}
+  tomoro:
+    family: sentence_transformers
+    model: TomoroAI/tomoro-colqwen3-embed-4b
+    revision: 13517a29e8c5e408f7f2684337ed407df3acb212
+    batch_size: 4
+    output_dirs: {docvqa: results/tomoro_docvqa, infovqa: results/tomoro_infovqa}
+
+embedding8b:
+  model: Qwen/Qwen3-VL-Embedding-8B
+  revision: 2c4565515e0f265c6511776e7193b22c0968ddc7
+  query_instruction: "Retrieve the document page image that answers the question."
+  batch_size: 2
+  dtype: bfloat16
+  output_dirs: {docvqa: results/qwen3vl_embedding8b_docvqa, infovqa: results/qwen3vl_embedding8b_infovqa}
+
+reranker8b:
+  model: Qwen/Qwen3-VL-Reranker-8B
+  revision: b212dc8c91a8164aef1ea2de9c1a867611e75c04
+  instruction: "Given a question, retrieve the document page image that answers it."
+  pool_first: B
+  pool_top: 10
+  dtype: bfloat16
+  latency: {n_queries: 20, n_values: [5, 10]}
+  n_grid: [1, 5, 10]
+  first_scores: {docvqa: results/colpali_v1.3_docvqa/scores.npz, infovqa: results/colpali_v1.3_infovqa/scores.npz}
+  output_dirs: {docvqa: results/visual_reranker8b_docvqa, infovqa: results/visual_reranker8b_infovqa}
+
+rrf:
+  k_grid: [1, 5, 10, 20, 40, 60, 80, 100, 200, 500]
+  tie_break: closest_to_60
+
+fresh_task:
+  task: infovqa
+  published_colpali_v1_3_ndcg_at_5: 0.85716   # model card results.json (self-reported)
+  candidate_rule: "highest DocVQA dev nDCG@5 among set-3 and set-4 systems; ties -> lower query latency"
+
+output_dir: results/posthoc4
