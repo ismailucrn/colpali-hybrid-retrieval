@@ -131,6 +131,21 @@ def stage_rerank(cfg: dict, task, out_dir: Path, record: dict) -> None:
     r = cfg["reranker"]
     helper, local, errors = load_helper(r["model"], r["revision"], "scripts/qwen3_vl_reranker.py")
     model = helper.Qwen3VLReranker(model_name_or_path=local, torch_dtype=getattr(torch, r["dtype"]))
+    # Compatibility fix (transformers >= 5): the helper pads `input_ids` itself but leaves the processor's
+    # `mm_token_type_ids` as an unpadded list, which Qwen3-VL's M-RoPE now requires as a tensor (smoke test,
+    # 2026-11-16: TypeError in get_rope_index). Rebuild it from the padded ids exactly as the processor defines it:
+    # 0 text, 1 image token, 2 video token. Nothing else in the helper changes.
+    proc = model.processor
+    image_id, video_id = proc.image_token_id, proc.video_token_id
+    original_tokenize = model.tokenize
+
+    def tokenize(pairs, **kwargs):
+        inputs = original_tokenize(pairs, **kwargs)
+        ids = inputs["input_ids"]
+        inputs["mm_token_type_ids"] = (ids == image_id).long() + 2 * (ids == video_id).long()
+        return inputs
+
+    model.tokenize = tokenize
     memory = MemoryTracker("cuda")
     first = load_scores(cfg["scores"][r["pool_first"]], task.queries_all, task.page_ids)[task.query_index]
     ranks = ranks_from_scores(first, task.page_ids)
