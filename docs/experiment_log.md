@@ -409,7 +409,7 @@ Chronological record of every run and decision. One entry per run or decision; n
   - Flow analysis (`results/posthoc3/rerank_flow.json`):
     - Dev: 11 ColPali misses fixed, 3 hits broken, rank-1 hits 115 → 128.
     - Test: 10 misses fixed, 8 hits broken, rank-1 hits 106 → 110.
-  - *Interpretation:* the reranker does reach misses on both splits (10–11 of 20–24 reachable). On test it also pushes more correct pages out of the top 5 and promotes fewer to rank 1. The dev gain was partly split-specific. N was the largest grid value and the dev curve was still rising, so selection on dev is a small source of optimism. Chance is the simplest explanation for the rest: the test CI includes the dev point estimate's lower region and zero.
+  - *Interpretation:* the reranker does reach misses on both splits (10–11 of 20–24 reachable). On test it also pushes more correct pages out of the top 5 and promotes fewer to rank 1. The dev gain was partly split-specific. N was the largest grid value and the dev curve was still rising, so selection on dev is a small source of optimism. The rest is compatible with chance: the dev CI [+1.8, +8.4] and the test CI [−1.8, +3.9] overlap, while the test CI includes zero and excludes the dev point estimate.
 - **Verdict on the pre-registered expectations:**
   - H1 (B_vr > B on test): **not supported**. The direction is positive but not significant, and the dev gain did not replicate.
   - H2 (C_sel ≈ B): held.
