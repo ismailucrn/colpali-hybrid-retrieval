@@ -387,3 +387,32 @@ Chronological record of every run and decision. One entry per run or decision; n
 - **H2 (selective fusion):** τ = 0.590 (0.9 quantile), fuses on 23 dev queries; dev 0.5846.
 - *Interpretation (dev only):* only the visual reranker moves dev clearly. This is the one attempt that reads the page **image** against the question. The text-side attempts (cleaner OCR, gating) stay at or below ColPali, as pre-registered.
 - Frozen in `configs/posthoc3_test_evaluation.yaml`; the dry run on dev reproduces every selection.
+
+### 2026-11-16 — Post-hoc set 3: single test run (fourth use of the test split)
+- Type: run (registry rows 60–61), `e24575c`, n = 225. nDCG@5:
+
+  | System | nDCG@5 | Δ vs B | 95% CI | p_Holm |
+  |---|---|---|---|---|
+  | B_vr (H1) | 0.581 | +0.011 | [−0.018, +0.039] | 0.92 |
+  | C_sel (H2) | 0.568 | −0.002 | [−0.007, 0.000] | 1.0 |
+  | C_vlm (H3) | 0.535 | −0.035 | [−0.057, −0.012] | 0.011 |
+  | E_ens (H4) | 0.558 | −0.012 | [−0.031, +0.008] | 0.71 |
+
+  B is 0.570.
+- Descriptive pairs:
+  - A_vlm 0.428 vs A 0.382: +0.046 [+0.019, +0.076], p 0.002. The cleaner text helps BM25 itself.
+  - Q3E 0.471 vs B: −0.099, p 0.0001.
+- Top-5 headroom: A_vlm finds the gold page where ColPali misses on 3 queries, the same as Tesseract BM25. Q3E does so on 6.
+- **H1 dev vs test:**
+  - Dev gain: +4.9 pt (dev CI of the paired Δ [+1.8, +8.4]).
+  - Test gain: +1.1 pt, not significant.
+  - Flow analysis (`results/posthoc3/rerank_flow.json`):
+    - Dev: 11 ColPali misses fixed, 3 hits broken, rank-1 hits 115 → 128.
+    - Test: 10 misses fixed, 8 hits broken, rank-1 hits 106 → 110.
+  - *Interpretation:* the reranker does reach misses on both splits (10–11 of 20–24 reachable). On test it also pushes more correct pages out of the top 5 and promotes fewer to rank 1. The dev gain was partly split-specific. N was the largest grid value and the dev curve was still rising, so selection on dev is a small source of optimism. Chance is the simplest explanation for the rest: the test CI includes the dev point estimate's lower region and zero.
+- **Verdict on the pre-registered expectations:**
+  - H1 (B_vr > B on test): **not supported**. The direction is positive but not significant, and the dev gain did not replicate.
+  - H2 (C_sel ≈ B): held.
+  - H3 (A_vlm > A, but C_vlm ≤ B): held. C_vlm is significantly below B. The `no_overlap` share among misses dropped only a little (58 → 53).
+  - H4 (Q3E misses most of ColPali's misses; E_ens within ±2 pt): held. E_ens is −1.2 pt, and Q3E finds only 6 of ColPali's misses.
+- *Interpretation:* better text and a second visual retriever do not help, as predicted. Reading the image against the question (H1) is the only direction with a positive sign. It costs about 7 s per query, and on this test split its gain is not distinguishable from zero. The main conclusion is unchanged: on this task we found no change that reliably beats ColPali alone.

@@ -1,0 +1,44 @@
+{
+  "timestamp_utc": "2026-11-16T12:55:55+00:00",
+  "config_path": "none",
+  "config": {},
+  "seed": 0,
+  "git_commit": "e24575c305542c2db929880e6d5c55c33fc251d8",
+  "git_dirty": true,
+  "python": "3.11.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cpu",
+    "platform": "macOS-27.2-arm64-arm-64bit",
+    "processor": "arm"
+  },
+  "command": "scripts/posthoc3_rerank_flow.py",
+  "label": "descriptive, after the post-hoc set 3 test run; B_vr N = 20 (frozen)",
+  "dev": {
+    "n": 226,
+    "B_misses": 80,
+    "B_misses_reachable_rank_6_to_N": 24,
+    "fixed": 11,
+    "broken": 3,
+    "rank1_B": 115,
+    "rank1_B_vr": 128
+  },
+  "test": {
+    "n": 225,
+    "B_misses": 78,
+    "B_misses_reachable_rank_6_to_N": 20,
+    "fixed": 10,
+    "broken": 8,
+    "rank1_B": 106,
+    "rank1_B_vr": 110
+  }
+}

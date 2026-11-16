@@ -1,0 +1,3 @@
+dev {"n": 226, "B_misses": 80, "B_misses_reachable_rank_6_to_N": 24, "fixed": 11, "broken": 3, "rank1_B": 115, "rank1_B_vr": 128}
+test {"n": 225, "B_misses": 78, "B_misses_reachable_rank_6_to_N": 20, "fixed": 10, "broken": 8, "rank1_B": 106, "rank1_B_vr": 110}
+wrote results/posthoc3/rerank_flow.json
