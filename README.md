@@ -29,6 +29,12 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
   - ColPali reordering BM25's top N (a cascade) stays below ColPali alone for every N up to 100.
   - A dictionary-based OCR-quality proxy does not correlate with any system's success.
   - Diagnostic: the 4 empty-OCR pages rank high in BGE-M3 for most queries, which understates BGE-M3 alone; D and the text hybrid are unaffected on dev (`results/checks/bge_empty_pages.json`).
+- **What ColPali misses** (descriptive, `results/miss_taxonomy/`): in 58 of its 78 test misses, no query word occurs in the gold page's text. These are mostly layout questions such as "What is the date of the letter?". With a cleaner Qwen3.5 transcription the count is still 53.
+- **Post-hoc set 3** (exploratory, pre-registered 16 Nov, newest Qwen models on Colab L4, `results/posthoc3/summary.md`): no attempt improves reliably on test.
+  - Qwen3-VL-Reranker-2B reading ColPali's top 20 page images: +0.049 on dev, but only +0.011 on test (p_Holm 0.92), at about 7 s per query.
+  - Selective fusion (BM25 only when confident): −0.002.
+  - BM25 over a Qwen3.5-4B transcription is +0.046 over Tesseract BM25, yet fusing it with ColPali gives −0.035 (p_Holm 0.011).
+  - RRF(Qwen3-VL-Embedding-2B, ColPali): −0.012.
 
 ## Systems
 
@@ -41,6 +47,7 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
 | E | RRF `k` sweep on dev, plus weighted RRF (C_w, D_w), dev-informed | Ablation |
 | post-hoc | Score-level convex combination (C_cc, D_cc); code-preserving BM25 tokenizer (A_code, C_code) | Exploratory checks of two alternative explanations, pre-registered after the main test run |
 | post-hoc 2 | T_hyb = RRF(BM25, BGE-M3); T_rr = T_hyb reranked by a cross-encoder; B_ce = ColPali reranked by it; BM25 → ColPali cascade; OCR-quality proxy | A full text RAG retrieval stack and a strong text signal on ColPali, pre-registered 15 Nov |
+| post-hoc 3 | B_vr = ColPali top 20 reranked by Qwen3-VL-Reranker-2B (page images); C_sel = selective fusion; A_vlm / C_vlm = BM25 over a Qwen3.5-4B transcription and its RRF with ColPali; Q3E / E_ens = Qwen3-VL-Embedding-2B and its RRF with ColPali | Four improvement attempts aimed at ColPali's misses, pre-registered 16 Nov |
 
 - **Primary metric:** nDCG@5. We also report Recall@5/10, nDCG@10, MRR@10 and resource cost (indexing time, index size, query latency, peak memory).
 - **Pre-registered predictions and protocol:** `CLAUDE.md` and `docs/experiment_log.md`.
@@ -138,12 +145,23 @@ python scripts/run_posthoc2_dev.py --stage rerank                               
 python scripts/run_test_evaluation.py --config configs/posthoc2_test_evaluation.yaml   # post-hoc 2: test, once
 python scripts/ocr_quality.py                                                          # post-hoc 2: OCR proxy (full set)
 python scripts/checks/bge_empty_pages.py                                               # diagnostic, dev only
+python scripts/miss_taxonomy.py                                                        # ColPali's misses, descriptive
+python scripts/run_posthoc3_dev.py --stage selective                                   # post-hoc 3: H2 tau on dev
+# GPU (Colab L4): notebooks/posthoc3_qwen3vl_colab.ipynb (embed + rerank), notebooks/posthoc3_vlm_ocr_colab.ipynb (ocr)
+python scripts/run_bm25.py --config configs/bm25_vlm_docvqa.yaml                       # post-hoc 3: A_vlm (needs page_texts.json, see below)
+python scripts/run_posthoc3_dev.py --stage rerank                                      # post-hoc 3: H1 N on dev
+python scripts/run_posthoc3_dev.py --stage ocr                                         # post-hoc 3: H3 k on dev
+python scripts/run_posthoc3_dev.py --stage embed                                       # post-hoc 3: H4 k on dev
+python scripts/vlm_text_overlap.py                                                     # post-hoc 3: taxonomy with VLM text
+python scripts/run_test_evaluation.py --config configs/posthoc3_test_evaluation.yaml   # post-hoc 3: test, once
+python scripts/posthoc3_rerank_flow.py                                                 # post-hoc 3: reranker fixed/broken
 python scripts/make_figures.py                                                         # results/figures/
 python scripts/make_report_tables.py                                                   # report/generated/
 (cd report && tectonic main.tex)                                                       # report/main.pdf
 (cd slides && tectonic slides.tex)                                                     # slides/slides.pdf
 ```
 
+- `results/vlm_ocr_docvqa/page_texts.json` (the Qwen3.5 transcription of the DocVQA pages) is not committed, because it is a copy of the dataset's page content; its sha256 is in `docs/run_registry.md` (row 54). The BM25 scores built from it (`results/bm25_vlm_docvqa/scores.npz`) are committed, so every post-hoc set 3 table re-runs on CPU without it. To rebuild A_vlm, run the OCR notebook first.
 - The test evaluation refuses to run if the fusion settings differ from the committed dev selections. Re-running it reproduces the committed numbers; it does not re-tune anything.
 - The report is built with [tectonic](https://tectonic-typesetting.github.io/) (a self-contained LaTeX engine). Every number in the report comes from `report/generated/`, which `scripts/make_report_tables.py` writes from `results/`.
 
@@ -155,6 +173,7 @@ python scripts/make_report_tables.py                                            
 | Table: headroom; report Figure 4; examples | `failure_analysis.py` | `results/failure_analysis/` |
 | Table: post-hoc extensions (report §7.6) | `run_bm25.py` (codes), `run_cc_fusion_dev.py`, `run_test_evaluation.py` (post-hoc config) | `results/bm25_codes_docvqa/`, `results/posthoc_extensions/` |
 | Tables: post-hoc set 2, cascade, OCR quality (report §7.7) | `run_posthoc2_dev.py`, `run_reranker.py`, `run_test_evaluation.py` (posthoc2 config), `ocr_quality.py`, `checks/bge_empty_pages.py` | `results/posthoc2/`, `results/reranker_docvqa/`, `results/ocr_quality/`, `results/checks/bge_empty_pages.json` |
+| Tables: ColPali's misses; post-hoc set 3 (report §7.8–7.9) | `miss_taxonomy.py`, `vlm_text_overlap.py`, `run_posthoc3_gpu.py` (Colab), `run_bm25.py` (VLM config), `run_posthoc3_dev.py`, `run_test_evaluation.py` (posthoc3 config), `posthoc3_rerank_flow.py` | `results/miss_taxonomy/`, `results/posthoc3/`, `results/visual_reranker_docvqa/`, `results/qwen3vl_embedding_docvqa/`, `results/vlm_ocr_docvqa/`, `results/bm25_vlm_docvqa/` |
 
 Figure files (`results/figures/`, made by `make_figures.py`):
 

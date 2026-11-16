@@ -1,0 +1,17 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lllll}
+\toprule
+System (post-hoc set 3) & dev nDCG@5 & test nDCG@5 [95\% CI] & $\Delta$ vs B [95\% CI] & $p_\mathrm{Holm}$ \\
+\midrule
+A: BM25 (Tesseract text) & 0.400 & 0.382 [0.323, 0.441] & -- & -- \\
+A$_\text{vlm}$: BM25 over Qwen3.5-4B transcription & 0.446 & 0.428 [0.365, 0.487] & -- & -- \\
+Q3E: Qwen3-VL-Embedding-2B & 0.503 & 0.471 [0.411, 0.531] & -- & -- \\
+B: ColPali v1.3 & 0.580 & 0.570 [0.510, 0.627] & -- & -- \\
+B$_\text{vr}$ (H1): ColPali top-20 reranked by Qwen3-VL-Reranker-2B & 0.630 & 0.581 [0.522, 0.639] & +0.011 [$-$0.018, +0.039] & 0.924 \\
+C$_\text{sel}$ (H2): C if BM25 margin $\geq$ 0.59, else B & 0.585 & 0.568 [0.508, 0.625] & $-$0.002 [$-$0.007, +0.000] & 1.000 \\
+C$_\text{vlm}$ (H3): RRF(A$_\text{vlm}$, ColPali), $k{=}1$ & 0.558 & 0.535 [0.474, 0.593] & $-$0.035 [$-$0.057, $-$0.012] & 0.011 \\
+E$_\text{ens}$ (H4): RRF(Q3E, ColPali), $k{=}1$ & 0.573 & 0.558 [0.497, 0.617] & $-$0.012 [$-$0.031, +0.008] & 0.710 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Test split, 225 queries, evaluated once with settings chosen on dev (fourth use of the test split, exploratory). Holm correction over B$_\text{vr}$, C$_\text{sel}$, C$_\text{vlm}$, E$_\text{ens}$ vs B. C is the main RRF(BM25, ColPali), $k{=}1$.}

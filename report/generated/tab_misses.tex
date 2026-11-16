@@ -1,0 +1,16 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lll}
+\toprule
+Flag (ColPali misses / hits) & dev (80 / 146) & test (78 / 147) \\
+\midrule
+query text on several pages & 9 / 0 & 10 / 3 \\
+gold-page OCR $<$ 20 tokens & 5 / 8 & 7 / 5 \\
+every query word on $\geq$ 25 pages & 10 / 3 & 12 / 13 \\
+no query word in gold-page OCR & 52 / 26 & 58 / 19 \\
+gold rank 6--10 & 12 / 0 & 6 / 0 \\
+BM25, BGE-M3 or T$_\text{rr}$ top 5 & 8 / 121 & 11 / 113 \\
+\midrule no query word in gold-page \emph{Qwen3.5} text & 50 / 18 & 53 / 11 \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Descriptive; flags fixed before counting. A miss is a query whose gold page is not in ColPali's top 5. Last row: same flag with the Qwen3.5-4B transcription (post-hoc set 3).}

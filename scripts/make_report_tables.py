@@ -165,6 +165,107 @@ def posthoc2(N: dict) -> None:
         N[f"ocrRho{key}CI"] = f"[{sgn(c['ci95'][0], 2)}, {sgn(c['ci95'][1], 2)}]"
 
 
+def missanalysis(N: dict) -> None:
+    """Descriptive taxonomy of ColPali's misses (plan fe3533b) and the VLM-text recount (post-hoc set 3)."""
+    tx = load("results/miss_taxonomy/taxonomy.json")
+    vo = load("results/miss_taxonomy/vlm_text_overlap.json")
+    rows = []
+    names = {"duplicate_text": "query text on several pages", "gold_ocr_short": "gold-page OCR $<$ 20 tokens",
+             "generic_query": "every query word on $\\geq$ 25 pages", "no_overlap": "no query word in gold-page OCR",
+             "near_miss": "gold rank 6--10", "text_finds_it": "BM25, BGE-M3 or T$_\\text{rr}$ top 5"}
+    for f, label in names.items():
+        rows.append(f"{label} & " + " & ".join(
+            f"{tx[sp]['flag_rate'][f]['misses']} / {tx[sp]['flag_rate'][f]['hits']}" for sp in ("dev", "test")))
+    rows.append(r"\midrule no query word in gold-page \emph{Qwen3.5} text & " + " & ".join(
+        f"{vo[sp]['qwen3.5']['no_overlap_misses']} / {vo[sp]['qwen3.5']['no_overlap_hits']}" for sp in ("dev", "test")))
+    table("tab_misses", "lll",
+          f"Flag (ColPali misses / hits) & dev ({tx['dev']['B_misses']} / {tx['dev']['B_hits']}) & "
+          f"test ({tx['test']['B_misses']} / {tx['test']['B_hits']})", rows,
+          "Descriptive; flags fixed before counting. A miss is a query whose gold page is not in ColPali's top 5. "
+          "Last row: same flag with the Qwen3.5-4B transcription (post-hoc set 3).")
+    for sp, key in (("dev", "Dev"), ("test", "Test")):
+        N[f"miss{key}"] = str(tx[sp]["B_misses"])
+        N[f"noOverlapMiss{key}"] = str(tx[sp]["flag_rate"]["no_overlap"]["misses"])
+        N[f"noOverlapHit{key}"] = str(tx[sp]["flag_rate"]["no_overlap"]["hits"])
+        N[f"noOverlapMissVlm{key}"] = str(vo[sp]["qwen3.5"]["no_overlap_misses"])
+        N[f"noOverlapHitVlm{key}"] = str(vo[sp]["qwen3.5"]["no_overlap_hits"])
+        N[f"textFinds{key}"] = str(tx[sp]["flag_rate"]["text_finds_it"]["misses"])
+        N[f"farMiss{key}"] = str(tx[sp]["gold_rank_of_misses"][">50"])
+
+
+def posthoc3(N: dict) -> None:
+    """POST-HOC set 3 (pre-registered 2026-11-16, commit e70f2a7): visual reranker, selective fusion, VLM OCR, Q3E."""
+    t = load("results/posthoc3/metrics.json")
+    ds = {k: load(f"results/posthoc3/dev_selection_{k}.json") for k in ("selective", "rerank", "ocr", "embed")}
+    fl = load("results/posthoc3/rerank_flow.json")
+    vr, oc, em = (load(f"results/{d}/metrics.json") for d in
+                  ("visual_reranker_docvqa", "vlm_ocr_docvqa", "qwen3vl_embedding_docvqa"))
+    R, V, P = t["results"], t["vs_baseline"], t["pairs"]
+    sel = ds["selective"]["systems"]["C_sel"]
+    n_vr = ds["rerank"]["systems"]["B_vr"]["selected_n"]
+    k_vlm, k_e = ds["ocr"]["systems"]["C_vlm"]["selected_k"], ds["embed"]["systems"]["E_ens"]["selected_k"]
+    tau_key = next(q for q, r in sel["sweep"].items() if r["tau"] == sel["selected_tau"])
+    N.update({
+        "tauSel": f"{sel['selected_tau']:.2f}", "tauSelQ": tau_key, "selDevFused": str(sel["sweep"][tau_key]["dev_queries_fused"]),
+        "devCsel": f3(sel["sweep"][tau_key]["dev_ndcg_at_5"]),
+        "nVr": str(n_vr), "devBvr": f3(ds["rerank"]["systems"]["B_vr"]["dev_ndcg_at_5_by_n"][str(n_vr)]),
+        "devBvrFive": f3(ds["rerank"]["systems"]["B_vr"]["dev_ndcg_at_5_by_n"]["5"]),
+        "devBvrTen": f3(ds["rerank"]["systems"]["B_vr"]["dev_ndcg_at_5_by_n"]["10"]),
+        "deltaBvrDevPts": f"{100 * (ds['rerank']['systems']['B_vr']['dev_ndcg_at_5_by_n'][str(n_vr)] - ds['rerank']['B_dev_ndcg_at_5']):+.1f}",
+        "kVlm": str(k_vlm), "devCvlm": f3(ds["ocr"]["systems"]["C_vlm"]["selected_dev_metrics"]["ndcg_at_5"]),
+        "devAvlm": f3(ds["ocr"]["A_vlm_dev_ndcg_at_5"]),
+        "kEens": str(k_e), "devEens": f3(ds["embed"]["systems"]["E_ens"]["selected_dev_metrics"]["ndcg_at_5"]),
+        "devQthreeE": f3(ds["embed"]["Q3E_dev_ndcg_at_5"]),
+        "vrPairs": f"{vr['pool']['pairs']:,}".replace(",", "{,}"), "vrScoreS": f"{vr['timings']['score_pool_s']:.0f}",
+        "vrLatTwenty": f"{vr['latency_by_n']['20']['median_ms'] / 1000:.1f}",
+        "vrLatFive": f"{vr['latency_by_n']['5']['median_ms'] / 1000:.1f}",
+        "vrMemGB": f"{vr['peak_memory']['peak_allocated_mb'] / 1024:.1f}",
+        "ocrS": f"{oc['timings']['transcribe_all_s']:.0f}", "ocrPerPage": f"{oc['timings']['per_page_s']:.1f}",
+        "ocrCapped": str(oc["output"]["stopped_at_max_tokens"]), "ocrWords": f"{oc['output']['median_words']:.0f}",
+        "qeIndexS": f"{em['timings']['index_pages_s']:.0f}", "qeLat": f"{em['latency']['median_ms']:.0f}",
+    })
+    for s, key in (("B_vr", "Bvr"), ("C_sel", "Csel"), ("C_vlm", "Cvlm"), ("E_ens", "Eens")):
+        N[f"test{key}"] = f3(R[s]["metrics"]["ndcg_at_5"])
+        N[f"delta{key}"] = sgn(V[s]["delta"])
+        N[f"delta{key}CI"] = sci(V[s]["delta_ci95"])
+        N[f"pHolm{key}"] = pval(V[s]["p_holm"])
+        N[f"wtl{key}"] = "{wins}/{ties}/{losses}".format(**V[s])
+    for s, key in (("A_vlm", "Avlm"), ("Q3E", "QthreeE")):
+        N[f"test{key}"] = f3(R[s]["metrics"]["ndcg_at_5"])
+    for pair, key in (("A_vlm vs A", "AvlmA"), ("Q3E vs B", "QthreeEB")):
+        N[f"delta{key}"] = sgn(P[pair]["delta"])
+        N[f"delta{key}CI"] = sci(P[pair]["delta_ci95"])
+        N[f"p{key}"] = pval(P[pair]["p_permutation"])
+    for pair, key in (("A_vlm vs B", "Avlm"), ("Q3E vs B", "QthreeE")):
+        h = t["headroom_at_5"][pair]["all"]
+        N[f"headOnly{key}"] = str(next(v for k, v in h.items() if k.endswith("_only") and not k.startswith("B_")))
+    for sp, key in (("dev", "Dev"), ("test", "Test")):
+        f = fl[sp]
+        N.update({f"vrReach{key}": str(f["B_misses_reachable_rank_6_to_N"]), f"vrFixed{key}": str(f["fixed"]),
+                  f"vrBroken{key}": str(f["broken"]), f"vrRankOneB{key}": str(f["rank1_B"]),
+                  f"vrRankOne{key}": str(f["rank1_B_vr"])})
+
+    labels = {"A": "A: BM25 (Tesseract text)", "A_vlm": "A$_\\text{vlm}$: BM25 over Qwen3.5-4B transcription",
+              "Q3E": "Q3E: Qwen3-VL-Embedding-2B", "B": "B: ColPali v1.3",
+              "B_vr": f"B$_\\text{{vr}}$ (H1): ColPali top-{n_vr} reranked by Qwen3-VL-Reranker-2B",
+              "C_sel": f"C$_\\text{{sel}}$ (H2): C if BM25 margin $\\geq$ {sel['selected_tau']:.2f}, else B",
+              "C_vlm": f"C$_\\text{{vlm}}$ (H3): RRF(A$_\\text{{vlm}}$, ColPali), $k{{=}}{k_vlm}$",
+              "E_ens": f"E$_\\text{{ens}}$ (H4): RRF(Q3E, ColPali), $k{{=}}{k_e}$"}
+    dev_of = {"A": f3(load("results/fusion_docvqa/dev_selection.json")["baselines_dev"]["C text component"]["ndcg_at_5"]),
+              "A_vlm": N["devAvlm"], "Q3E": N["devQthreeE"], "B": f3(ds["rerank"]["B_dev_ndcg_at_5"]),
+              "B_vr": N["devBvr"], "C_sel": N["devCsel"], "C_vlm": N["devCvlm"], "E_ens": N["devEens"]}
+    rows = []
+    for s in labels:
+        m = R[s]
+        tail = f"{sgn(V[s]['delta'])} {sci(V[s]['delta_ci95'])} & {pval(V[s]['p_holm'])}" if s in V else "-- & --"
+        rows.append(f"{labels[s]} & {dev_of[s]} & {f3(m['metrics']['ndcg_at_5'])} {ci(m['ndcg_at_5_ci95'])} & {tail}")
+    table("tab_posthoc3", "lllll",
+          r"System (post-hoc set 3) & dev nDCG@5 & test nDCG@5 [95\% CI] & $\Delta$ vs B [95\% CI] & $p_\mathrm{Holm}$", rows,
+          f"Test split, {t['n_test_queries']} queries, evaluated once with settings chosen on dev (fourth use of the test "
+          "split, exploratory). Holm correction over B$_\\text{vr}$, C$_\\text{sel}$, C$_\\text{vlm}$, E$_\\text{ens}$ vs B. "
+          "C is the main RRF(BM25, ColPali), $k{=}1$.")
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     full = {s: load(f"results/{d}/metrics.json") for s, d in
@@ -394,6 +495,8 @@ def main() -> None:
           "$\\alpha$ was selected on dev; $\\alpha{=}1$ means ColPali alone.")
 
     posthoc2(N)
+    missanalysis(N)
+    posthoc3(N)
 
     lines = ["% generated by scripts/make_report_tables.py -- do not edit"]
     lines += [f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in N.items()]

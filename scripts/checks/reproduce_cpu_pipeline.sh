@@ -2,10 +2,11 @@
 # Fresh-clone reproduction check of everything that runs on CPU.
 #
 # Clones the committed HEAD of this repository into a temporary directory, re-runs the CPU pipeline
-# (BM25, split, dev selection, single test evaluation, failure analysis, post-hoc sets 1 and 2, figures, report
+# (BM25, split, dev selection, single test evaluation, failure analysis, post-hoc sets 1-3, figures, report
 # tables) from the committed score matrices, and compares the outputs with the committed ones
 # (scripts/checks/compare_results.py). Not re-run: ColPali and BGE-M3 encoding and the cross-encoder
-# (need a GPU / torch); their committed score files are inputs.
+# (need a GPU / torch), the Qwen3-VL/Qwen3.5 Colab stages, A_vlm (its transcription is not committed)
+# and scripts/vlm_text_overlap.py (needs that transcription); their committed outputs are inputs.
 #
 # Usage:  bash scripts/checks/reproduce_cpu_pipeline.sh [python]
 #         python defaults to `python3`; it needs requirements-cpu.txt installed.
@@ -37,6 +38,13 @@ run scripts/run_posthoc2_dev.py --stage rerank    # uses the committed cross-enc
 run scripts/run_test_evaluation.py --config configs/posthoc2_test_evaluation.yaml # post-hoc set 2 test
 run scripts/ocr_quality.py                                                       # post-hoc set 2, OCR proxy
 run scripts/checks/bge_empty_pages.py                                            # diagnostic, dev only
+run scripts/miss_taxonomy.py                                                     # ColPali's misses, descriptive
+run scripts/run_posthoc3_dev.py --stage selective                               # post-hoc set 3, dev
+run scripts/run_posthoc3_dev.py --stage rerank    # uses the committed Qwen3-VL reranker scores (Colab, not repeated)
+run scripts/run_posthoc3_dev.py --stage ocr       # uses the committed A_vlm scores (transcription not committed)
+run scripts/run_posthoc3_dev.py --stage embed     # uses the committed Qwen3-VL embedding scores
+run scripts/run_test_evaluation.py --config configs/posthoc3_test_evaluation.yaml # post-hoc set 3 test
+run scripts/posthoc3_rerank_flow.py                                              # post-hoc set 3, descriptive
 run scripts/make_figures.py
 run scripts/make_report_tables.py
 run -m pytest -q tests

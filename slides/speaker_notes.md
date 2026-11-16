@@ -75,18 +75,30 @@ These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Plan
 - OCR quality: a dictionary-share proxy does not explain who wins. Say that the proxy is crude.
 - If asked about BGE-M3: the 4 empty-OCR pages share one embedding that ranks high for most queries. BGE-M3 alone is understated, but D and the hybrid barely change (checked on dev only).
 
-**16 · Cost.**
+**16 · What are ColPali's remaining misses?**
+- Before trying more methods, we asked which errors any second signal could fix. The flags were fixed in a commit before counting.
+- The clearest pattern: in 58 of the 78 test misses, no query word appears on the gold page's OCR. For hits this is 19 of 147. Dev shows the same contrast (52 of 80 vs 26 of 146).
+- Read two examples aloud: "What is the name of the company on the letter head?" and "What is the date of the letter?". Many letters fit these questions. They were written by annotators looking at one page, so as search queries they are under-specified.
+- Key point: even a much cleaner transcription (Qwen3.5) leaves 53 of the 78. So this is about the queries, not the OCR.
+
+**17 · Post-hoc set 3: four attempts to beat ColPali.**
+- Pre-registered on 16 November before running; newest Qwen models; settings chosen on dev; test used once (its fourth use, so exploratory).
+- Cleaner OCR: BM25 improves by about 4.6 points, but fusing it with ColPali still hurts (−3.5 points, significant after Holm). Selective fusion and a Qwen3-VL embedding ensemble change nothing significant.
+- Visual reranker: the only thing that reads the page image against the question. Dev +4.9 points, but on test only +1.1 and not significant. It fixed 10 misses but pushed 8 correct pages out of the top 5. It also costs about 7 seconds per query.
+- Say it plainly: the dev gain did not replicate. That is why we choose settings on dev and look at test only once.
+
+**18 · Cost.**
 - Fusion is almost free: a fraction of a millisecond and a sub-MB index. So the obstacle is quality, not cost.
 - Caveat: the components were measured on different devices.
 
-**17 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
+**19 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
 
-**18 · Conclusions.**
+**20 · Conclusions.**
 - The reproduction holds. Fusion hurts, and the control shows it is not specific to BM25.
 - The literature is consistent with this: fusion fails with unequal inputs and helped where the text was clean and equally strong.
 - Open question: would better text extraction change this?
 
-**19 · Reproducibility and AI use.**
+**21 · Reproducibility and AI use.**
 - Everything is re-runnable on a laptop from the committed score matrices, and a fresh clone reproduces all outputs exactly.
 - State plainly what the AI did and what you did and verified.
 
@@ -109,6 +121,10 @@ These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Plan
 - **Is ColPali advantaged on DocVQA?**
   Yes, possibly. DocVQA is in its training data (the split is not stated by the authors), while BM25 and BGE-M3 are zero-shot. This is listed as a limitation. It is a reason the result may not transfer to other corpora.
 - **Would better OCR change the result?**
-  Possibly. That is our main open hypothesis. A better *tokenizer* alone did not help (slide 14), which points to the OCR text itself. IRPAPERS saw gains with clean LLM transcriptions where text and image retrieval were about equally strong.
+  We tested it (slide 17). A Qwen3.5-4B transcription makes BM25 about 4.6 points better, but fusing it with ColPali still hurts. The gold page still shares no word with the query for 53 of ColPali's 78 test misses. So on this task the obstacle is the queries, not the OCR. IRPAPERS saw gains where text and image retrieval were about equally strong, which is not the case here.
+- **The visual reranker gained 4.9 points on dev. Why not report that?**
+  Because dev chose its settings. The test run, done once, gives +1.1 (not significant). We report both and explain the gap: it fixed 10 misses but also broke 8 hits on test, and N was the top of a rising grid.
+- **Did you use the test set too often?**
+  Four times, each with settings frozen beforehand and labelled exploratory after the first. That is a limitation: one of the four results could be noise. The main conclusion rests on the first, pre-registered run.
 - **What did the AI do?**
-  See slide 18 and `docs/ai_usage.md`: code, Colab driving, literature extraction and drafting. You made the design decisions, approved every run and verified *(fill in what you checked)*.
+  See slide 21 and `docs/ai_usage.md`: code, Colab driving, literature extraction and drafting. You made the design decisions, approved every run and verified *(fill in what you checked)*.

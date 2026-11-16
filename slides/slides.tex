@@ -314,6 +314,30 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
+\begin{frame}{What are ColPali's remaining misses?}
+\small Descriptive; flags fixed before counting (\texttt{fe3533b}). Miss = gold page not in ColPali's top 5.\\[6pt]
+\begin{itemize}
+  \item \Mea{} no query word in the gold page's OCR: \textbf{\noOverlapMissTest{} of \missTest{}} test misses vs \noOverlapHitTest{} of the hits (dev \noOverlapMissDev{}/\missDev{} vs \noOverlapHitDev{})
+  \item \Mea{} \farMissTest{} misses have the gold page below rank 50; a text system finds only \textFindsTest{}
+  \item \Mea{} with a much cleaner Qwen3.5 transcription: still \noOverlapMissVlmTest{} of \missTest{}
+\end{itemize}
+\vspace{4pt}
+\Int{} typical miss: ``What is the name of the company on the letter head?'', ``What is the date of the letter?''. These are layout questions without a content word, and many pages fit them. They are \textbf{under-specified as retrieval queries}, not OCR failures.
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Post-hoc set 3: four attempts to beat ColPali}
+\small Pre-registered 16 Nov (\texttt{e70f2a7}); newest Qwen models on Colab L4; dev selection, test once (4th use) --- \textbf{exploratory}.\\[4pt]
+{\scriptsize\input{../report/generated/tab_posthoc3.tex}}
+\vspace{2pt}
+\begin{itemize}
+  \item \Mea{} visual reranker: dev \deltaBvrDevPts{} pt, test \deltaBvr{} ($p_\text{Holm}$ \pHolmBvr{}). It fixes \vrFixedTest{} misses but breaks \vrBrokenTest{} hits; about \vrLatTwenty{}\,s/query
+  \item \Mea{} cleaner OCR helps BM25 (\deltaAvlmA{}), but fusion still hurts (\deltaCvlm{})
+  \item \Int{} only reading the \emph{image} against the question points upward, and not reliably
+\end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
 \begin{frame}{Cost: fusion is cheap --- quality is the obstacle}
 \centering
 {\scriptsize\input{../report/generated/tab_resources.tex}}
@@ -333,7 +357,7 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
   \item One task (DocVQA), one OCR (Tesseract), one checkpoint (v1.3)
   \item \Pub{} DocVQA is in ColPali's training data (split not stated) --- favours ColPali vs zero-shot text baselines
   \item Test set: \nTest{} queries, only \nvisual{} visual --- wide CIs, per-type results exploratory
-  \item Score-level fusion, tokenizer, text RAG stack, reranker and OCR proxy tested only post-hoc, one design each
+  \item Score-level fusion, tokenizer, text RAG stack, rerankers, VLM OCR and OCR proxy tested only post-hoc, one design each; test split used four times
   \item BGE-M3 alone understated: empty-OCR pages rank high (\emptyTopFive{}/\nQueries{} queries); D, T$_\text{hyb}$ unaffected on dev
   \item Main run keeps the official BM25 preprocessing (drops ``no'', ``2-26'') for comparability
   \item Resource numbers from three devices (L4, M5 MPS, M5 CPU)
@@ -345,14 +369,15 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \begin{frame}{Conclusions and open questions}
 \begin{itemize}
   \item \Mea{} ColPali's DocVQA result reproduces with the authors' code and checkpoint.
-  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties; post-hoc, score-level fusion picks ColPali alone, a better tokenizer adds no headroom, and a text RAG stack with a cross-encoder stays \deltaTrr{} below ColPali.
+  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties; post-hoc, score-level fusion picks ColPali alone, a better tokenizer adds no headroom, a text RAG stack with a cross-encoder stays \deltaTrr{} below ColPali; cleaner VLM OCR, selective fusion and a Qwen3-VL reranker/ensemble do not improve reliably.
   \item \Int{} On DocVQA, ColPali already reads the lexical anchors BM25 needs --- better than Tesseract OCR does. Fusion with a much weaker ranking imports its errors.
   \item \Int{} Consistent with when fusion fails in text IR (unequal inputs) and when text + visual fusion helped (clean text, equal strength).
 \end{itemize}
 \vspace{0.4em}
 \textbf{Open} \Hyp{}
 \begin{itemize}
-  \item Fusion should help once the OCR text itself improves (layout-aware / LLM OCR) or on text-dense corpora --- the tokenizer alone was not enough.
+  \item Cleaner VLM OCR did not make fusion help here: the residual misses are under-specified queries. Fusion may still help on text-dense corpora where text retrieval is close to visual retrieval.
+  \item A visual reranker may help on a larger, fresh query set, but it costs seconds per query.
   \item On ViDoRe V2 (less lexical overlap by design), even less.
 \end{itemize}
 \end{frame}
