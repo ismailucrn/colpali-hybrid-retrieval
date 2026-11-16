@@ -60,6 +60,7 @@ A second post-hoc set tests a full text RAG retrieval stack. BM25 + BGE-M3 hybri
 Most of ColPali's remaining misses are layout questions with no query word on the gold page.
 A third post-hoc set targets the misses directly. It tests a Qwen3-VL visual reranker on ColPali's top 20, selective fusion, BM25 over a Qwen3.5 transcription, and a Qwen3-VL embedding ensemble. None improves reliably on test. The visual reranker gains \deltaBvr{} ($p_\text{Holm}$ \pHolmBvr{}) after \deltaBvrDevPts{} points on dev, and fusing the cleaner transcription still hurts (\deltaCvlm{}).
 A fourth set tests newer visual models. A newer ColPali-style retriever (Tomoro ColQwen3-4B) beats ColPali on DocVQA test (\deltaTM{}, $p_\text{Holm}$ \pHolmTM{}), and so does fusing it with ColPali (\deltaFtm{}). Its gain holds when it is evaluated once, frozen, on a task not used for any choice (InfoVQA, \infoDelta{}, $p$ = \infoP{}). Fusion helps when the second ranking is visual and strong, and it hurts when the second ranking is text-based.
+A fifth set applies the frozen DocVQA fusion settings to the nine other ViDoRe~v1 tasks. BM25 fusion is significantly worse than ColPali on \pfSigLoss{} of them and significantly better on \pfSigGain{}. A leave-one-task-out router that chooses per query between ColPali and fusion does not help either.
 \end{abstract}
 
 \paragraph{How to read this report.} The assignment asks to keep four kinds of statements apart. We label them where it matters: \Pub{} = reported by the cited authors; \Mea{} = obtained by us (every such number is generated from a committed file in \file{results/} by \file{scripts/make\_report\_tables.py}); \Int{} = our reading of a paper or result; \Hyp{} = expected but not tested.
@@ -672,7 +673,57 @@ Because repeated use of one test split weakens any single result, we added a \te
 \end{itemize}
 We did not check whether DocVQA or InfoVQA test pages appear in these models' training data. Their InfoVQA and DocVQA scores may therefore be optimistic, as ColPali's may be.
 
-\paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali. Post-hoc, neither score-level fusion nor a better BM25 tokenizer changes this, and neither does a text RAG stack with a cross-encoder reranker. Post-hoc set 3 found no reliable improvement either. Selective fusion, fusion over a cleaner VLM transcription and a second visual retriever do not help, and a visual reranker's dev gain did not replicate on test. Post-hoc set 4 does find an improvement. It comes from newer and stronger visual retrievers, and from fusing them with ColPali; it holds on a fresh task (InfoVQA, \infoDelta{}).
+\subsection{Post-hoc set 5: does the result generalise across ViDoRe, and can a router learn when to fuse? (exploratory)}
+\label{sec:posthoc5}
+All earlier fusion results come from one task. We therefore asked two further questions, with design and expectations committed before any run on these tasks (16 November, \texttt{265d3f9}).
+\begin{itemize}
+  \item \textbf{Generalisation.} We ran ColPali v1.3 and BM25 (over the authors' Tesseract text, official tokenizer) on the other nine ViDoRe~v1 tasks. C (RRF, $k{=}1$) and C$_\text{w}$ (weighted RRF) were applied with their settings \emph{frozen} from DocVQA dev, so nothing was tuned on these tasks, and each task acts as a fresh test set. The official evaluator merges rows that share a page image with a maximum over their scores, and we do the same (TabFQuAD, TAT-DQA and the synthetic tasks have such rows).
+  \item \textbf{Router.} A logistic regression decides per query whether to use C or ColPali alone. Its inputs are score-based and query-text features only: score margins, the rank agreement of the two retrievers, query length and digit share. Its settings were fixed in advance. It is trained on nine tasks and evaluated on the held-out tenth (leave-one-task-out, DocVQA included).
+\end{itemize}
+Pre-registered expectations: ColPali within $\pm$2 points of its card on each task (P5.0); a higher $\Delta$C on the six text-dense tasks than on the visual ones (P5.1); $\Delta$C rising with the headroom (P5.2); C$_\text{w}$ within $\pm$1 point of ColPali (P5.3); a router that does not hurt on average and gains where the headroom is large (P5.4).
+
+\begin{table}[!htbp]\centering\small
+\input{generated/tab_posthoc5.tex}
+\caption{\Mea{} Frozen DocVQA fusion settings on the nine other ViDoRe v1 tasks (\file{results/posthoc5/fusion.json}).}\label{tab:posthoc5}
+\end{table}
+
+\paragraph{Results.} \Mea{} (Table~\ref{tab:posthoc5})
+\begin{itemize}
+  \item ColPali matches its card within $\pm$2 points on \pfWithin{} of nine tasks. The exceptions are TabFQuAD (\pfTabCard{}) and synthetic energy (\pfEnergyCard{}, 100 queries). We did not investigate these two gaps.
+  \item C is significantly \emph{worse} than ColPali on \pfSigLoss{} tasks: InfoVQA \pfInfoDC{}, ArxivQA \pfArxivDC{}, TabFQuAD \pfTabDC{}. It is better on \pfSigGain{}. On TAT-DQA it is \pfTatDC{} ($p_\text{Holm}$ \pfTatP{}). On ShiftProject and the synthetic tasks it is within about $\pm$2 points and not significant.
+  \item Mean $\Delta$C is \pfTextMean{} over the text-dense tasks and \pfVisMean{} over the visual ones. The headroom never exceeds \pfMaxHead{} of the queries, and it does not predict $\Delta$C ($\rho$ = \pfRho{}, exact $p$ = \pfRhoP{}, nine tasks).
+  \item C$_\text{w}$ stays within one point of ColPali everywhere.
+\end{itemize}
+
+\begin{table}[!htbp]\centering\small
+\input{generated/tab_router.tex}
+\caption{\Mea{} Leave-one-task-out router (\file{results/posthoc5/router.json}).}\label{tab:router}
+\end{table}
+
+\paragraph{Router.} \Mea{} (Table~\ref{tab:router})
+\begin{itemize}
+  \item The router sends few queries to C. Its macro nDCG@5 is \pfRR{}, against \pfRB{} for ColPali alone and \pfRC{} for C ($\Delta$ \pfRDelta{}).
+  \item No held-out task gains significantly, and ArxivQA loses (\pfRArxiv{}, $p_\text{Holm}$ \pfRArxivP{}).
+  \item The per-query oracle reaches \pfROracle{}. Queries where C helps do exist, but these features cannot find them.
+\end{itemize}
+
+\paragraph{Verdicts and reading.}
+\begin{itemize}
+  \item \Mea{} Verdicts on the pre-registered expectations:
+  \begin{itemize}
+    \item P5.0 held on seven tasks.
+    \item P5.1 held only in direction: the text-dense mean is about zero, not a gain.
+    \item P5.2 not supported.
+    \item P5.3 held.
+    \item P5.4 not held (slightly negative on average, no gain anywhere).
+  \end{itemize}
+  \item \Mea{} \emph{Post-hoc and descriptive, not pre-registered:} the strength gap between ColPali and BM25 (B$-$A) tracks $\Delta$C better than the headroom does ($\rho$ = \pfGapRho{}, exact $p$ = \pfGapRhoP{}, $n$ = 9).
+  \item \Int{} The DocVQA result generalises across ViDoRe~v1: rank fusion with BM25 never significantly helps ColPali. It costs a lot where BM25 is much weaker (visual tasks) and is roughly neutral where BM25 comes close (text-dense and synthetic tasks). This is the unequal-inputs pattern again, now across tasks rather than across queries.
+  \item \Int{} Even on text-dense pages, ColPali already finds almost every page that BM25 finds, so there is little for fusion to add.
+  \item \textbf{Caveats.} Four tasks have only 100 queries, so their intervals are wide. ColPali scores 0.93--0.99 on the synthetic tasks, which leaves little room above it. \Hyp{} The synthetic and ShiftProject queries may have been generated from the pages by an LLM, which would favour lexical overlap. This is unverified and is to be checked in the ViDoRe construction section of~\cite{colpali}.
+\end{itemize}
+
+\paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali. Post-hoc, neither score-level fusion nor a better BM25 tokenizer changes this, and neither does a text RAG stack with a cross-encoder reranker. Post-hoc set 3 found no reliable improvement either. Selective fusion, fusion over a cleaner VLM transcription and a second visual retriever do not help, and a visual reranker's dev gain did not replicate on test. Post-hoc set 4 does find an improvement. It comes from newer and stronger visual retrievers, and from fusing them with ColPali; it holds on a fresh task (InfoVQA, \infoDelta{}). Post-hoc set 5 shows that the negative fusion result is not specific to DocVQA: on none of nine further ViDoRe tasks does BM25 fusion significantly help, and a leave-one-task-out router does not find the queries where it would.
 
 % =====================================================================================================
 \section{Limitations, conclusions and open questions}
@@ -680,7 +731,7 @@ We did not check whether DocVQA or InfoVQA test pages appear in these models' tr
 
 \paragraph{Limitations.}
 \begin{itemize}
-  \item \textbf{One task, one OCR, one checkpoint.} All conclusions are about ViDoRe~v1 DocVQA with the benchmark's Tesseract text and ColPali~v1.3. \Pub{} DocVQA is one of the academic datasets in ColPali's training data~\cite[\S4.2, App.~A.3]{colpali} \todo{verify in App.~A.3 / Table~3 (39,463 DocVQA pairs, read only from an extracted summary)}. The paper does not say which DocVQA split was used, and its contamination check covers multi-page PDFs only~\cite[\S4.2]{colpali}. \Int{} Training on DocVQA data favours ColPali against the zero-shot text baselines on this task. We did not check whether any test page also appears in the training set.
+  \item \textbf{One main task, one OCR, one checkpoint.} The main conclusions are about ViDoRe~v1 DocVQA with the benchmark's Tesseract text and ColPali~v1.3. Post-hoc set 5 extends the fusion comparison, with frozen settings, to the nine other ViDoRe~v1 tasks, but not to ViDoRe~V2 or to other OCR. \Pub{} DocVQA is one of the academic datasets in ColPali's training data~\cite[\S4.2, App.~A.3]{colpali} \todo{verify in App.~A.3 / Table~3 (39,463 DocVQA pairs, read only from an extracted summary)}. The paper does not say which DocVQA split was used, and its contamination check covers multi-page PDFs only~\cite[\S4.2]{colpali}. \Int{} Training on DocVQA data favours ColPali against the zero-shot text baselines on this task. We did not check whether any test page also appears in the training set.
   \item \textbf{Small test set.} 225 queries; 17 visual queries. Per-type results are exploratory, and the confidence intervals are wide (about $\pm$0.06 nDCG@5 per system).
   \item \textbf{Fusion functions.} Our main analysis used rank fusion. Score-level convex combination and a code-preserving tokenizer were tested only post-hoc (Section~\ref{sec:posthoc}), with one normalisation (min-max) and one tokenizer design. Other score normalisations, learned fusion and query-dependent weights remain untested.
   \item \textbf{Post-hoc set 2 is post-hoc and partly cross-device.} The text RAG stack, the cross-encoder and the OCR analysis were added on 15 November, after the main test run, at our own initiative to answer an obvious objection. They were pre-registered before running, but the test split had already been used twice. We tested one reranker, one pool size and one OCR proxy, and the proxy is crude. The cross-encoder ran on Apple MPS, so its latency is not comparable with ColPali's L4 numbers.
@@ -699,15 +750,20 @@ We did not check whether DocVQA or InfoVQA test pages appear in these models' tr
   \item \Mea{} ColPali's DocVQA result is reproducible with the authors' code and checkpoint (\fullB{} vs \pubCard{}).
   \item \Mea{} Adding BM25 through RRF significantly \emph{hurts} it (\deltaC{} nDCG@5 on test). A dense-text control hurts equally. The best dev-tuned weighting only ties. Post-hoc, score-level fusion selects ColPali alone on dev, and a better BM25 tokenizer improves BM25 but adds no query that ColPali misses. A text RAG stack (hybrid + cross-encoder reranker) stays \deltaTrr{} below ColPali, and reranking ColPali's candidates with the cross-encoder is rejected on dev. With a much cleaner Qwen3.5 transcription, BM25 improves by \deltaAvlmA{}, yet fusing it with ColPali still hurts (\deltaCvlm{}). A Qwen3-VL visual reranker gains \deltaBvr{} on test (not significant).
   \item \Mea{} What does improve retrieval here is a stronger visual model. Tomoro ColQwen3-4B gains \deltaTM{} on DocVQA test and \infoDelta{} on InfoVQA, where it was evaluated once and frozen. Fusing such a model with ColPali also helps (\deltaFtm{}), but less than the stronger model alone.
+  \item \Mea{} The negative fusion result is not specific to DocVQA. With settings frozen from DocVQA dev, BM25 fusion is significantly worse than ColPali on \pfSigLoss{} of nine further ViDoRe~v1 tasks and better on \pfSigGain{}. A leave-one-task-out router does not recover the per-query gains that an oracle shows exist (Section~\ref{sec:posthoc5}).
   \item \Int{} On this task ColPali already reads the lexical anchors that BM25 depends on, and reads them better than Tesseract OCR does. Equal-weight rank fusion with a much weaker second ranking therefore mostly imports that ranking's errors. This is consistent with the conditions under which fusion is reported to fail in text IR~\cite{bruch}, and with the cases where text + visual fusion did help having clean text and comparably strong inputs~\cite{irpapers}.
 \end{itemize}
 
 \paragraph{Open questions.}
 \begin{itemize}
-  \item \Hyp{} A lexical signal should start to help when the page \emph{text} improves (layout-aware or LLM-based OCR), or on text-dense corpora. Improving the tokenizer alone did not create headroom (Section~\ref{sec:posthoc}), and neither did a cross-encoder reading the same OCR text (Section~\ref{sec:posthoc2}). A cleaner VLM transcription of the same pages (Section~\ref{sec:posthoc3}) improved BM25 but still did not make fusion help. On this task, then, the bottleneck is the queries rather than the OCR. The hypothesis remains open for corpora where text retrieval comes close to visual retrieval and the headroom (``A only'' in Table~\ref{tab:headroom}) is large.
+  \item \Hyp{} A lexical signal should start to help when the page \emph{text} improves (layout-aware or LLM-based OCR), or on text-dense corpora. Improving the tokenizer alone did not create headroom (Section~\ref{sec:posthoc}), and neither did a cross-encoder reading the same OCR text (Section~\ref{sec:posthoc2}). A cleaner VLM transcription of the same pages (Section~\ref{sec:posthoc3}) improved BM25 but still did not make fusion help. On this task, then, the bottleneck is the queries rather than the OCR. Across ViDoRe~v1 (Section~\ref{sec:posthoc5}) even the text-dense tasks leave at most \pfMaxHead{} headroom. The hypothesis therefore remains open only for corpora where text retrieval comes close to visual retrieval \emph{and} the headroom is large; we found no such ViDoRe~v1 task.
   \item \Hyp{} A visual reranker that reads the question against the page image may help on a larger test set or at greater depth, but it costs seconds per query. Whether its dev gain was noise or split-specific needs a fresh query set.
   \item \Hyp{} On ViDoRe~V2, which reduces query--page lexical overlap by design~\cite{vidorev2}, fusion should help even less.
   \item Open: why does ColPali v1.3 use about \peakGPU{}\,GiB of GPU memory to encode pages?
+  \item \Hyp{} A per-query router needs features that see the page, not just the scores. The oracle in Table~\ref{tab:router} shows that per-query choice has room, but margins and rank agreement do not find it.
+  \item Open: do the test pages of DocVQA and InfoVQA occur in the training data of ColPali or Tomoro? A near-duplicate image search against their training sets would settle how far the absolute scores, and the size of set 4's gain, can be trusted.
+  \item Open: how many of the remaining misses are label artefacts? Many are under-specified layout questions with several valid pages (Section~\ref{sec:misses}). Relabelling them with all valid pages, or using a larger fresh query set from the original DocVQA questions, would also remove our repeated use of one 225-query test split.
+  \item Open: does the reproduction gap close with the paper's checkpoint (v1.0) and an older \texttt{colpali-engine}, and does a retrieval gain such as set 4's carry over to answer accuracy in a full RAG pipeline?
 \end{itemize}
 
 % =====================================================================================================
@@ -753,6 +809,14 @@ python scripts/run_test_evaluation.py --config configs/posthoc2_test_evaluation.
 python scripts/ocr_quality.py
 python scripts/checks/bge_empty_pages.py                               # diagnostic, dev only
 bash scripts/checks/reproduce_cpu_pipeline.sh                          # fresh-clone check of all of the above
+\end{Verbatim}
+
+\noindent\textbf{Post-hoc set 5.} ColPali on eight more tasks needs a GPU (about 30 minutes on an L4, \file{notebooks/posthoc5\_colpali\_colab.ipynb}); its score matrices are committed. BM25 and the analysis run on CPU and read only the query, filename and OCR columns from the Hub:
+\begin{Verbatim}[fontsize=\footnotesize,breaklines=true]
+python scripts/run_posthoc5_gpu.py --tasks tabfquad arxivqa tatdqa shiftproject synth_energy synth_ai synth_gov synth_health  # GPU
+python scripts/run_posthoc5.py --stage bm25
+python scripts/run_posthoc5.py --stage fusion
+python scripts/run_posthoc5.py --stage router
 \end{Verbatim}
 
 \section{AI-use disclosure}

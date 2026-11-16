@@ -1,0 +1,101 @@
+query,A_ndcg_at_5,A_gold_rank,B_ndcg_at_5,B_gold_rank,C_ndcg_at_5,C_gold_rank,C_w_ndcg_at_5,C_w_gold_rank
+Quelle partie de la production pétrolière du Kazakhstan provient de champs en mer ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle est la tendance générale de la taille moyenne des champs découverts au Kazakhstan au fil du temps ?,0.5,3,0.5,3,0.5,3,0.5,3
+Où se situent les découvertes de pétrole en Angola ?,1.0,1,0.63093,2,0.63093,2,0.63093,2
+Quelle est la production cumulée de pétrole brut en Algérie depuis la découverte en 1950 jusqu'à présent?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle est la tendance générale des champs découverts aux États-Unis depuis 1900 ?,0.0,14,0.63093,2,0.430677,4,0.63093,2
+Quelle est la tendance générale des découvertes cumulées de pétrole brut en Russie ?,0.5,3,1.0,1,0.63093,2,1.0,1
+Quelles sont les incertitudes politiques pesant sur le secteur du LTO aux États-Unis ?,1.0,1,0.63093,2,1.0,1,0.63093,2
+Quelle a été la tendance de la production de pétrole brut en Russie depuis le pic de 1986 ?,1.0,1,0.0,6,1.0,1,0.0,6
+Quelle est l'évolution de la durée moyenne entre la découverte et la mise en production d'un champ pétrolier en Algérie ?,0.430677,4,1.0,1,1.0,1,1.0,1
+Quelle était la production maximale de pétrole brut algérien enregistrée par le passé ?,0.0,97,0.386853,5,0.0,10,0.386853,5
+Quelle a été la durée moyenne entre la découverte et la mise en production d'un champ pétrolier en Arabie Saoudite après l'année 2000 ?,1.0,1,0.63093,2,0.63093,2,0.63093,2
+Quelle est l'année où les découvertes de pétrole brut au large des côtes du Nigeria ont atteint leur pic ?,0.0,107,0.0,6,0.0,11,0.0,6
+Quelle est l'évolution de la production d'hydrocarbures liquides au Mexique entre 2003 et 2019 ?,1.0,1,1.0,1,1.0,1,1.0,1
+Comment a évolué la production de pétrole brut conventionnel aux États-Unis depuis 1970 ?,0.5,3,0.0,6,0.430677,4,0.0,6
+Quels sont les volumes de production de pétrole brut prévus pour l'Égypte d'ici 2030 ?,0.0,23,1.0,1,1.0,1,1.0,1
+Quelle est la position de la Russie en termes de réserves pétrolières ?,1.0,1,0.63093,2,0.63093,2,0.63093,2
+Quels facteurs influenceront la production d'hydrocarbures liquides au Koweït après 2020 ?,0.0,32,1.0,1,0.63093,2,1.0,1
+À quelle date les réserves de pétrole brut en Angola ont-elles dépassé les découvertes cumulées ?,0.386853,5,1.0,1,0.63093,2,1.0,1
+"Quels sont les pays ayant la plus grande part des découvertes cumulées de pétrole brut en 2020 (en milliers de barils, hors découvertes cumulées) ?",0.0,7,0.0,41,0.0,15,0.0,39
+Quel événement a conduit au pic de production de pétrole brut au Mexique autour de 2003-2004 ?,0.430677,4,0.63093,2,0.5,3,0.63093,2
+Quel est l'objectif principal du think tank The Shift Project ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelles sont les principales institutions publiques impliquées dans l'administration de la santé ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les exemples d'actions favorables à l'intégration de la démarche d'achat responsable ?,1.0,1,1.0,1,1.0,1,1.0,1
+quelle réduction annuelle des émissions de GES est requise d'ici 2025 pour respecter le budget carbone ?,1.0,1,0.0,26,1.0,1,0.0,25
+Que doivent faire les professionnels de santé face à l'urgence climatique ?,0.63093,2,0.5,3,0.5,3,0.5,3
+Quelle est la répartition des émissions de gaz à effet de serre par acteur du secteur de la santé ?,0.63093,2,0.5,3,0.5,3,0.5,3
+Quels sont les principaux acteurs impliqués dans la chaîne d'approvisionnement du secteur de la santé ?,0.0,26,1.0,1,1.0,1,1.0,1
+Quelle est la part des émissions du secteur de la santé due aux médicaments ?,0.0,18,1.0,1,0.5,3,1.0,1
+Qu'est-ce que le décret tertiaire impose en termes de réduction de la consommation énergétique du parc tertiaire français ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle entité contribue le plus aux émissions de gaz à effet de serre dans le système de santé français ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les freins à la réduction des émissions des médicaments ?,0.0,32,1.0,1,0.63093,2,1.0,1
+Quelle est la part d'émissions de gaz à effet de serre associée à la médecine de ville dans le secteur de la santé ?,0.0,13,0.5,3,0.386853,5,0.5,3
+Que couvre le plan de mobilité à mettre en place par les établissements de santé ?,0.0,89,1.0,1,0.63093,2,1.0,1
+Qu'est-ce que la France doit faire pour s'engager dans un système de santé plus sobre ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quel est le pourcentage approximatif des émissions de gaz à effet de serre du secteur de la santé par rapport aux émissions nationales françaises ?,0.0,6,1.0,1,1.0,1,1.0,1
+Quel est le rôle du Health Data Hub français dans l'exploitation des données de santé ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle est l'évolution du nombre de morts prématurées liées aux canicules ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les bénéfices pour la santé de repenser l'urbanisme et de développer les îlots de fraîcheur urbains ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle est la part des émissions de gaz à effet de serre du numérique liée aux terminaux utilisateurs ?,1.0,1,0.63093,2,0.63093,2,0.63093,2
+Quels sont les principaux pays émetteurs de gaz à effet de serre dans le secteur de la santé ?,1.0,1,0.430677,4,0.63093,2,0.430677,4
+Quelles sont les principales innovations technologiques prévues pour l'aviation d'ici 2035?,0.5,3,1.0,1,1.0,1,1.0,1
+Quelle est la réduction des émissions de CO2 pour la compagnie Hop! après le remplacement de ses avions ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les axes principaux du plan de relance pour l'aéronautique présenté par le gouvernement français en juin 2020 ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les projets visant à harmoniser la gestion du trafic aérien entre les pays ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelles sont les possibilités de mise en œuvre pour réduire les émissions de l'aviation d'affaires ?,0.0,24,0.0,10,0.0,13,0.0,10
+Quels sont les effets escomptés de la restriction de l'usage de loisirs dans l'aviation ?,1.0,1,1.0,1,1.0,1,1.0,1
+Qu'est-ce que la Direction Générale de l'Aviation Civile (DGAC) ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle est la proportion de Français ayant pris l'avion au moins une fois dans leur vie ?,1.0,1,0.0,11,1.0,1,0.0,9
+Quels sont les différents types de risques mentionnés dans le rapport qui caractérisent la transition énergétique de l'industrie aéronautique ?,1.0,1,1.0,1,1.0,1,1.0,1
+Comment fonctionne le processus de compensation dans CORSIA ?,1.0,1,1.0,1,1.0,1,1.0,1
+"Selon le graphique, quelle est la capacité d'import et la consommation réelle de carburants SAF (biocarburants durables pour l'aviation) prévues en 2050 ?",0.5,3,0.0,6,0.430677,4,0.0,6
+Quels sont les principaux enjeux liés à la fixation d'un prix plancher sur les billets ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les acteurs concernés par l'optimisation des opérations en vol dans l'aviation ?,0.5,3,1.0,1,1.0,1,1.0,1
+Quels sont les objectifs de réduction des émissions de CO2 liés à l'utilisation du système de traction électrique des avions ?,1.0,1,1.0,1,1.0,1,1.0,1
+"Quelles sont les mesures proposées par le rapport Crise(s), climat pour décarboner l'aviation ?",0.430677,4,1.0,1,1.0,1,1.0,1
+Quelles sont les mesures proposées pour la restriction progressive du nombre de passagers sur les lignes aériennes ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle est la consommation de carburant prévue en 2050 pour les différents types d'avions selon le scénario ICEMAN ?,0.430677,4,0.63093,2,0.5,3,0.63093,2
+Quels sont les avantages et inconvénients de l'hydrogène comme carburant d'avion ?,0.0,78,1.0,1,1.0,1,1.0,1
+Quelles sont les mesures prévues pour réduire les émissions de gaz à effet de serre dans l'aviation?,0.0,37,1.0,1,1.0,1,1.0,1
+Quelle est la contribution de l'aviation civile aux émissions mondiales de CO2 en 2018 ?,1.0,1,0.386853,5,0.63093,2,0.386853,5
+Qu'est-ce que les fonds d'investissements thématiques orientés vers la transition ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelles sont les principales situations ou enjeux énergétiques et économiques de la France ?,0.0,325,1.0,1,0.63093,2,1.0,1
+Quels sont les impacts économiques estimés à l'horizon de 10 ans en termes de facture énergétique et de balance commerciale?,0.63093,2,1.0,1,1.0,1,1.0,1
+Quelles sont les zones en France qui devraient connaître les plus fortes hausses de température en été selon le scénario A2 ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les principaux impacts positifs attendus de l'augmentation du parc de véhicules électriques en France ?,0.0,314,0.0,144,0.0,218,0.0,150
+Quelles techniques culturales permettent de réduire la consommation d'énergie des exploitations agricoles ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les principaux défis et difficultés rencontrés par le secteur automobile français dans la transition vers des véhicules plus écologiques ?,0.63093,2,1.0,1,1.0,1,1.0,1
+Quel est le coût de production du kWh pour l'éolien en mer par rapport à d'autres sources d'énergie renouvelables ?,0.0,54,1.0,1,0.63093,2,1.0,1
+Quels sont les principaux objets pour lesquels les microcrédits professionnels sont octroyés ?,0.63093,2,0.63093,2,0.63093,2,0.63093,2
+Quels étaient les principaux placements utilisés par les ménages français les plus aisés pour leur épargne en 2011 ?,1.0,1,0.63093,2,1.0,1,0.63093,2
+Comment est-il proposé de réduire les flux dans le domaine du fret ?,0.430677,4,0.5,3,0.430677,4,0.5,3
+Quel est le coût estimé de la conception et de la réalisation de la campagne d'annonces presse pour promouvoir les habitations en bois ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les secteurs économiques les plus fragiles et sensibles aux dépenses de consommation non contraintes ?,1.0,1,0.63093,2,1.0,1,0.63093,2
+Quels sont les facteurs favorables pour investir dans la transition carbone pour les particuliers/ménages ?,1.0,1,0.63093,2,1.0,1,1.0,1
+Quels sont les avantages de développer l'industrie forestière et les usages du bois en France ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels est le pourcentage de personnes qui changent leurs habitudes pour être plus écologiques ? ,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les différents modèles agricoles alternatifs  ?,0.386853,5,1.0,1,1.0,1,1.0,1
+Quels sont les risques associés à la hausse des dépenses contraintes des ménages ?,1.0,1,0.386853,5,0.63093,2,0.430677,4
+Quelle part de la facture énergétique française est due aux produits pétroliers ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelles sont les deux méthodes principales permettant d'augmenter l'enveloppe globale des fonds publics destinés au financement de la transition ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelles sont les principales caractéristiques de l'emploi dans la filière ciment en 2018 ?,0.0,14,0.63093,2,0.430677,4,0.63093,2
+Quels sont les modes de transport concernés par la transformation du fret après transformation ?,0.5,3,1.0,1,0.63093,2,1.0,1
+Quels sont les principaux postes d'émission de gaz à effet de serre liés au secteur de la santé ?,0.0,12,0.430677,4,0.0,7,0.430677,4
+Quelle part des émissions de gaz à effet de serre agricoles est liée à l'élevage de ruminants ?,0.63093,2,0.63093,2,1.0,1,0.63093,2
+Quelles sont les principales difficultés rencontrées dans la réalisation du bilan du secteur de l'ESRI ?,0.0,18,1.0,1,0.63093,2,1.0,1
+Combien d'employés compte la Gendarmerie nationale française ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle est la principale conséquence de la transformation du secteur agricole en termes d'emploi?,0.5,3,0.0,7,0.5,3,0.0,7
+Quelle sera la composition du parc automobile en 2050 selon les prévisions ?,0.5,3,0.5,3,0.430677,4,0.5,3
+Quelles sont les principales sources de flux physiques pour le secteur de la santé ?,0.5,3,0.63093,2,0.63093,2,0.63093,2
+Quelle est l'empreinte carbone actuelle totale (en MteqCO2 / an) des produits alimentaires en france ? ,0.0,870,0.0,13,0.0,25,0.0,13
+Pour quel objectif la méthode Ademe a-t-elle été adoptée ?,0.430677,4,1.0,1,1.0,1,1.0,1
+Quelle est la stratégie prévue par le PTEF pour augmenter la ressource de bois hors forêt ?,0.63093,2,1.0,1,1.0,1,1.0,1
+Quelles sont les deux questions soulevées par la dépendance aux énergies fossiles en France ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelle est la consommation de charbon projetée pour le secteur de l'industrie après la transformation selon le tableau ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels sont les différents types de chauffage mentionnés pour le logement collectif ?,0.63093,2,1.0,1,1.0,1,1.0,1
+Comment allonger la durée de vie des ordinateurs professionnels selon The Shift Project ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quelles sont les pistes envisagées pour décarboner les moyens de transport routiers existants ?,1.0,1,1.0,1,1.0,1,1.0,1
+Quels matériaux verront leur consommation augmenter significativement d'ici 2050 dans le secteur du logement? ,0.63093,2,0.0,10,0.5,3,0.0,9
+Quels sont les principaux pays fournisseurs d'uranium naturel pour alimenter le parc nucléaire français ?,0.63093,2,0.63093,2,0.63093,2,0.63093,2
+Quels sont les principaux défis auxquels est confrontée l'agriculture moderne en France ?,0.0,96,1.0,1,1.0,1,1.0,1

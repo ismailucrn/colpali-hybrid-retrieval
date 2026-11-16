@@ -1,0 +1,41 @@
+# Colab L4, notebooks/posthoc5_colpali_colab.ipynb, run 2026-11-16 19:24-19:55 UTC. Copied from the notebook page;
+# download/progress-bar lines and the metrics.json heads (identical to the committed files) are omitted.
+Mon Nov 16 19:24:30 2026  NVIDIA L4, driver 580.82.07, CUDA 13.0, 23034 MiB
+265d3f938a98c66e9c8b1e7eeaf8202d10675655 Pre-register post-hoc set 5: fusion on nine more ViDoRe v1 tasks and a leave-one-task-out router; ColPali GPU script, row-merge loader
+
+!python scripts/run_posthoc5_gpu.py --tasks tabfquad --limit 4      # smoke test, never reported
+=== tabfquad: 280 rows -> 4 pages, 4 queries
+pages 4 (vectors/page [1031, 1031], dim 128); index 1 s; latency median 48 ms
+wrote results/colpali_v1.3_tabfquad_smoke
+
+!python scripts/run_posthoc5_gpu.py --tasks tabfquad arxivqa tatdqa shiftproject
+=== tabfquad: 280 rows -> 70 pages, 280 queries
+pages 70 (vectors/page [1031, 1031], dim 128); index 14 s; latency median 65 ms
+wrote results/colpali_v1.3_tabfquad
+=== arxivqa: 500 rows -> 500 pages, 500 queries
+pages 500 (vectors/page [1031, 1031], dim 128); index 104 s; latency median 149 ms
+wrote results/colpali_v1.3_arxivqa
+=== tatdqa: 1663 rows -> 277 pages, 1646 queries
+pages 277 (vectors/page [1031, 1031], dim 128); index 60 s; latency median 103 ms
+wrote results/colpali_v1.3_tatdqa
+=== shiftproject: 1000 rows -> 1000 pages, 100 queries
+pages 1000 (vectors/page [1031, 1031], dim 128); index 218 s; latency median 254 ms
+wrote results/colpali_v1.3_shiftproject
+
+!python scripts/run_posthoc5_gpu.py --tasks synth_energy synth_ai synth_gov synth_health
+=== synth_energy: 1000 rows -> 977 pages, 100 queries
+pages 977 (vectors/page [1031, 1031], dim 128); index 221 s; latency median 239 ms
+wrote results/colpali_v1.3_synth_energy
+=== synth_ai: 1000 rows -> 968 pages, 100 queries
+pages 968 (vectors/page [1031, 1031], dim 128); index 210 s; latency median 239 ms
+wrote results/colpali_v1.3_synth_ai
+=== synth_gov: 1000 rows -> 972 pages, 100 queries
+pages 972 (vectors/page [1031, 1031], dim 128); index 210 s; latency median 233 ms
+wrote results/colpali_v1.3_synth_gov
+=== synth_health: 1000 rows -> 965 pages, 100 queries
+pages 965 (vectors/page [1031, 1031], dim 128); index 207 s; latency median 245 ms
+wrote results/colpali_v1.3_synth_health
+
+!sha256sum /content/posthoc5_colpali.zip
+71c18e29893699b6eb9a8d65e91b8c0dd32efcbe73e925367cd141f983a25888  /content/posthoc5_colpali.zip
+# Auto-download did not arrive; the user re-clicked the cell. Local sha256 identical.

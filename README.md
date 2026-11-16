@@ -39,6 +39,10 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
   - On DocVQA test (fifth use), newer ColPali-style retrievers beat ColPali: Tomoro ColQwen3-4B 0.636 (+0.066, p_Holm 0.002) and ColQwen2.5 0.618 (+0.048, p_Holm 0.03).
   - RRF of ColPali with either one gives +0.043 (p_Holm < 0.001). Qwen3-VL-Reranker-8B on ColPali's top 10 gives +0.032 (p_Holm 0.048).
   - **Confirmation on a fresh task:** the candidate picked by a rule fixed in advance (Tomoro) was evaluated once and frozen on ViDoRe InfoVQA: 0.942 vs ColPali 0.857 (+0.085, p 0.0001). On the same task ColPali reproduces its model card (0.857).
+- **Post-hoc set 5** (exploratory, pre-registered 16 Nov, `results/posthoc5/`):
+  - The frozen DocVQA fusion settings were applied to the nine other ViDoRe v1 tasks, with ColPali and BM25 run on each. BM25 fusion is significantly worse than ColPali on InfoVQA (−0.042), ArxivQA (−0.125) and TabFQuAD (−0.054), and significantly better on none. On the text-dense and synthetic tasks it is roughly neutral.
+  - A leave-one-task-out router choosing per query between ColPali and fusion: macro nDCG@5 0.840 vs ColPali 0.842 (oracle 0.866).
+  - ColPali matches its model card within ±2 points on 7 of 9 tasks.
 
 ## Systems
 
@@ -166,6 +170,10 @@ python scripts/run_posthoc4_dev.py --stage rerank8b                             
 python scripts/run_posthoc4_dev.py --stage candidate                                   # post-hoc 4: InfoVQA candidate
 python scripts/run_test_evaluation.py --config configs/posthoc4_test_evaluation.yaml   # post-hoc 4: test, once
 python scripts/evaluate_fresh_task.py                                                  # post-hoc 4: InfoVQA, once
+# GPU (Colab L4): notebooks/posthoc5_colpali_colab.ipynb (ColPali on eight more ViDoRe v1 tasks)
+python scripts/run_posthoc5.py --stage bm25                                           # post-hoc 5: BM25, nine tasks (reads Hub columns)
+python scripts/run_posthoc5.py --stage fusion                                         # post-hoc 5: frozen fusion per task
+python scripts/run_posthoc5.py --stage router                                         # post-hoc 5: leave-one-task-out router
 python scripts/make_figures.py                                                         # results/figures/
 python scripts/make_report_tables.py                                                   # report/generated/
 (cd report && tectonic main.tex)                                                       # report/main.pdf
@@ -186,6 +194,7 @@ python scripts/make_report_tables.py                                            
 | Tables: post-hoc set 2, cascade, OCR quality (report §7.7) | `run_posthoc2_dev.py`, `run_reranker.py`, `run_test_evaluation.py` (posthoc2 config), `ocr_quality.py`, `checks/bge_empty_pages.py` | `results/posthoc2/`, `results/reranker_docvqa/`, `results/ocr_quality/`, `results/checks/bge_empty_pages.json` |
 | Tables: ColPali's misses; post-hoc set 3 (report §7.8–7.9) | `miss_taxonomy.py`, `vlm_text_overlap.py`, `run_posthoc3_gpu.py` (Colab), `run_bm25.py` (VLM config), `run_posthoc3_dev.py`, `run_test_evaluation.py` (posthoc3 config), `posthoc3_rerank_flow.py` | `results/miss_taxonomy/`, `results/posthoc3/`, `results/visual_reranker_docvqa/`, `results/qwen3vl_embedding_docvqa/`, `results/vlm_ocr_docvqa/`, `results/bm25_vlm_docvqa/` |
 | Table: post-hoc set 4 + InfoVQA confirmation (report §7.10) | `run_posthoc4_gpu.py` (Colab), `run_posthoc4_dev.py`, `run_test_evaluation.py` (posthoc4 config), `evaluate_fresh_task.py` | `results/posthoc4/`, `results/{colqwen25,tomoro,qwen3vl_embedding8b}_{docvqa,infovqa}/`, `results/visual_reranker8b_docvqa/`, `results/colpali_v1.3_infovqa/` |
+| Tables: post-hoc set 5, nine ViDoRe tasks + router (report §7.11) | `run_posthoc5_gpu.py` (Colab), `run_posthoc5.py` | `results/posthoc5/`, `results/colpali_v1.3_<task>/`, `results/bm25_<task>/` |
 
 Figure files (`results/figures/`, made by `make_figures.py`):
 

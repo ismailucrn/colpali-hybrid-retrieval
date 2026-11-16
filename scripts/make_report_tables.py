@@ -17,6 +17,9 @@ Usage:
 from __future__ import annotations
 
 import json
+import math
+
+import numpy as np
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -320,6 +323,70 @@ def posthoc4(N: dict) -> None:
           "Bottom rows: the candidate chosen by a pre-registered rule on DocVQA dev, evaluated once and unchanged on InfoVQA.")
 
 
+P5_NAMES = {"infovqa": "InfoVQA", "arxivqa": "ArxivQA", "tabfquad": "TabFQuAD", "tatdqa": "TAT-DQA",
+            "shiftproject": "ShiftProject", "synth_energy": "Synth.\\ energy", "synth_ai": "Synth.\\ AI",
+            "synth_gov": "Synth.\\ gov.", "synth_health": "Synth.\\ health", "docvqa": "DocVQA (reused)"}
+
+
+def posthoc5(N: dict) -> None:
+    """POST-HOC set 5 (pre-registered 2026-11-16, 265d3f9): frozen fusion on nine ViDoRe v1 tasks, and a router."""
+    import itertools
+
+    fu = load("results/posthoc5/fusion.json")
+    ro = load("results/posthoc5/router.json")
+    T, S = fu["tasks"], fu["summary"]
+    rows = []
+    for n, r in T.items():
+        m = r["metrics"]
+        rows.append(f"{P5_NAMES[n]} ({r['group']}) & {r['n_queries']} & {f3(m['A']['ndcg_at_5'])} & {f3(m['B']['ndcg_at_5'])} & "
+                    f"{f3(r['card_B_ndcg_at_5'])} & {sgn(r['C_vs_B']['delta'])} {sci(r['C_vs_B']['delta_ci95'])} & "
+                    f"{pval(r['C_vs_B']['p_holm'])} & {sgn(r['C_w_vs_B']['delta'])} & {pval(r['C_w_vs_B']['p_holm'])} & "
+                    f"{100 * r['headroom_A_only_top5']:.1f}\\%")
+    table("tab_posthoc5", "lrllllllll",
+          r"Task (group) & $n$ & A & B & card & $\Delta$C [95\% CI] & $p_\mathrm{Holm}$ & $\Delta$C$_\text{w}$ & $p_\mathrm{Holm}$ & headroom",
+          rows, "nDCG@5 on the full query set of each task; fusion settings frozen from DocVQA dev (C: RRF $k{=}1$; "
+          "C$_\\text{w}$: weights 0.95/0.05, $k{=}20$). Holm over the nine tasks within each family. Card: ColPali v1.3 model "
+          "card (self-reported). Headroom: share of queries with the gold page in BM25's top 5 but not in ColPali's.")
+    rows = []
+    for n, r in ro["folds"].items():
+        x = r["ndcg_at_5"]
+        rows.append(f"{P5_NAMES[n]} & {r['n_queries']} & {r['routed_to_C']} & {f3(x['B'])} & {f3(x['C'])} & {f3(x['R'])} & "
+                    f"{f3(x['oracle'])} & {sgn(r['R_vs_B']['delta'], 4)} & {pval(r['R_vs_B']['p_holm'])}")
+    mc = ro["macro_ndcg_at_5"]
+    rows.append(r"\midrule Macro average & & & " + " & ".join(f3(mc[k]) for k in ("B", "C", "R", "oracle"))
+                + f" & {sgn(ro['macro_delta_R_minus_B'])} & ")
+    table("tab_router", "lrrllllll",
+          r"Held-out task & $n$ & to C & B & C & R & oracle & $\Delta$R & $p_\mathrm{Holm}$", rows,
+          "Leave-one-task-out logistic-regression router between B and C, settings fixed before the run; Holm over the ten "
+          "folds. Oracle: per-query best of B and C (an upper bound, not a system).")
+    # post-hoc descriptive: strength gap B - A vs Delta C
+    names = list(T)
+    gap = [T[n]["metrics"]["B"]["ndcg_at_5"] - T[n]["metrics"]["A"]["ndcg_at_5"] for n in names]
+    dc = [T[n]["C_vs_B"]["delta"] for n in names]
+    from scipy.stats import rankdata
+    rx, ry = rankdata(gap), rankdata(dc)
+    rho = float(np.corrcoef(rx, ry)[0, 1])
+    ge = sum(abs(np.corrcoef(rx, p)[0, 1]) >= abs(rho) - 1e-12 for p in itertools.permutations(ry))
+    within = sum(abs(T[n]["B_minus_card_pts"]) <= 2 for n in names)
+    sig_loss = sum(T[n]["C_vs_B"]["p_holm"] < 0.05 and T[n]["C_vs_B"]["delta"] < 0 for n in names)
+    sig_gain = sum(T[n]["C_vs_B"]["p_holm"] < 0.05 and T[n]["C_vs_B"]["delta"] > 0 for n in names)
+    words = {0: "none", 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine"}
+    N.update({
+        "pfRho": f"{S['spearman_headroom_vs_delta_C']['rho']:.2f}", "pfRhoP": f"{S['spearman_headroom_vs_delta_C']['p_exact_two_sided']:.2f}",
+        "pfGapRho": sgn(rho, 2), "pfGapRhoP": f"{ge / math.factorial(len(names)):.3f}",
+        "pfTextMean": sgn(S["mean_delta_C_by_group"]["text"], 4), "pfVisMean": sgn(S["mean_delta_C_by_group"]["visual"]),
+        "pfWithin": words[within], "pfSigLoss": words[sig_loss], "pfSigGain": words[sig_gain],
+        "pfMaxHead": f"{100 * max(T[n]['headroom_A_only_top5'] for n in names):.0f}\\%",
+        "pfInfoDC": sgn(T["infovqa"]["C_vs_B"]["delta"]), "pfArxivDC": sgn(T["arxivqa"]["C_vs_B"]["delta"]),
+        "pfTabDC": sgn(T["tabfquad"]["C_vs_B"]["delta"]), "pfTatDC": sgn(T["tatdqa"]["C_vs_B"]["delta"]),
+        "pfTatP": pval(T["tatdqa"]["C_vs_B"]["p_holm"]), "pfShiftDC": sgn(T["shiftproject"]["C_vs_B"]["delta"]),
+        "pfTabCard": sgn(T["tabfquad"]["B_minus_card_pts"], 1), "pfEnergyCard": sgn(T["synth_energy"]["B_minus_card_pts"], 1),
+        "pfRB": f3(mc["B"]), "pfRC": f3(mc["C"]), "pfRR": f3(mc["R"]), "pfROracle": f3(mc["oracle"]),
+        "pfRDelta": sgn(ro["macro_delta_R_minus_B"], 4), "pfRArxiv": sgn(ro["folds"]["arxivqa"]["R_vs_B"]["delta"]),
+        "pfRArxivP": pval(ro["folds"]["arxivqa"]["R_vs_B"]["p_holm"]),
+    })
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     full = {s: load(f"results/{d}/metrics.json") for s, d in
@@ -552,6 +619,7 @@ def main() -> None:
     missanalysis(N)
     posthoc3(N)
     posthoc4(N)
+    posthoc5(N)
 
     lines = ["% generated by scripts/make_report_tables.py -- do not edit"]
     lines += [f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in N.items()]

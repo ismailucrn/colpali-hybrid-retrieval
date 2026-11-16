@@ -1,0 +1,9 @@
+infovqa       rows   500 pages   500 queries   494  empty   3  BM25 nDCG@5 0.6320
+arxivqa       rows   500 pages   500 queries   500  empty  78  BM25 nDCG@5 0.3482
+tabfquad      rows   280 pages    70 queries   280  empty   0  BM25 nDCG@5 0.5766
+tatdqa        rows  1663 pages   277 queries  1646  empty   0  BM25 nDCG@5 0.5863
+shiftproject  rows  1000 pages  1000 queries   100  empty   2  BM25 nDCG@5 0.6367
+synth_energy  rows  1000 pages   977 queries   100  empty   7  BM25 nDCG@5 0.9058
+synth_ai      rows  1000 pages   968 queries   100  empty   6  BM25 nDCG@5 0.9411
+synth_gov     rows  1000 pages   972 queries   100  empty   4  BM25 nDCG@5 0.8574
+synth_health  rows  1000 pages   965 queries   100  empty   2  BM25 nDCG@5 0.8886

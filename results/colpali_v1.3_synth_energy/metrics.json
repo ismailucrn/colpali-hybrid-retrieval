@@ -1,0 +1,217 @@
+{
+  "timestamp_utc": "2026-11-16T19:38:08+00:00",
+  "config_path": "configs/posthoc5_vidore.yaml",
+  "config": {
+    "seed": 0,
+    "tasks": {
+      "infovqa": {
+        "base": "vidore/infovqa_test_subsampled",
+        "base_rev": "f793e830aaeae1ceb8a2df626fc555b3fd04d3db",
+        "text": "vidore/infovqa_test_subsampled_tesseract",
+        "text_rev": "7bd56b41a40e767bba7b1467c5520c337246291c",
+        "card": 0.85716,
+        "group": "visual"
+      },
+      "arxivqa": {
+        "base": "vidore/arxivqa_test_subsampled",
+        "base_rev": "b8a106812c8682bab08935cf5d1b4566c82562de",
+        "text": "vidore/arxivqa_test_subsampled_tesseract",
+        "text_rev": "a2bc4c4616bd9247221c8cfe27851c805159d525",
+        "card": 0.83037,
+        "group": "visual"
+      },
+      "tabfquad": {
+        "base": "vidore/tabfquad_test_subsampled",
+        "base_rev": "16c8e633612fbda7400bfcbbc31d61a7534f580f",
+        "text": "vidore/tabfquad_test_subsampled_tesseract",
+        "text_rev": "ac87e3a89b9829f55dbdf79163d05f856f2ae755",
+        "card": 0.87441,
+        "group": "none"
+      },
+      "tatdqa": {
+        "base": "vidore/tatdqa_test",
+        "base_rev": "b46fea43695e14697510104a3331d9e88683a416",
+        "text": "vidore/tatdqa_test_tesseract",
+        "text_rev": "74e16e7580883ff1640254fdd11b1db54789b257",
+        "card": 0.70361,
+        "group": "text"
+      },
+      "shiftproject": {
+        "base": "vidore/shiftproject_test",
+        "base_rev": "6e6223b3839a3f4e62d676e70a1b715ee520cc66",
+        "text": "vidore/shiftproject_test_tesseract",
+        "text_rev": "494949aaaf202d450ece1ae70a7e87b703f550a5",
+        "card": 0.77385,
+        "group": "text"
+      },
+      "synth_energy": {
+        "base": "vidore/syntheticDocQA_energy_test",
+        "base_rev": "a2f2f358463b03b84506849460ab5094a358526c",
+        "text": "vidore/syntheticDocQA_energy_test_tesseract",
+        "text_rev": "2ae81641b592eb99387af754f4db203f01815b42",
+        "card": 0.95405,
+        "group": "text"
+      },
+      "synth_ai": {
+        "base": "vidore/syntheticDocQA_artificial_intelligence_test",
+        "base_rev": "5694fec64c57f7380f918435f9234b96d817b82a",
+        "text": "vidore/syntheticDocQA_artificial_intelligence_test_tesseract",
+        "text_rev": "9d6880f4f97a5e4726b18b6ab600bb136bda3cd0",
+        "card": 0.97431,
+        "group": "text"
+      },
+      "synth_gov": {
+        "base": "vidore/syntheticDocQA_government_reports_test",
+        "base_rev": "91cf66572d89c9cccac0661de227acaf04b44f64",
+        "text": "vidore/syntheticDocQA_government_reports_test_tesseract",
+        "text_rev": "3ed3f98776924e5bb2a9f8debea393a9dd91d789",
+        "card": 0.96216,
+        "group": "text"
+      },
+      "synth_health": {
+        "base": "vidore/syntheticDocQA_healthcare_industry_test",
+        "base_rev": "d973f3da3e60c8eaf566efa2f7d2a1515cba40ed",
+        "text": "vidore/syntheticDocQA_healthcare_industry_test_tesseract",
+        "text_rev": "3a85d938890112cadddd115150962192e7ef412f",
+        "card": 0.96911,
+        "group": "text"
+      }
+    },
+    "docvqa": {
+      "base": "vidore/docvqa_test_subsampled",
+      "base_rev": "49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6",
+      "A": "results/bm25_docvqa/scores.npz",
+      "B": "results/colpali_v1.3_docvqa/scores.npz"
+    },
+    "colpali": {
+      "family": "colpali_engine",
+      "model": "vidore/colpali-v1.3",
+      "revision": "b5c6dd62125326e6f0b540c1f7b36e901cdc0a11",
+      "base_revision": "30ab955d073de4a91dc5a288e8c97226647e3e5a",
+      "model_class": "ColPali",
+      "processor_class": "ColPaliProcessor",
+      "batch_size": 4,
+      "output_dir": "results/colpali_v1.3_{task}"
+    },
+    "bm25": {
+      "tokenizer": "official",
+      "output_dir": "results/bm25_{task}"
+    },
+    "fusion": {
+      "C": {
+        "kind": "rrf",
+        "inputs": [
+          "A",
+          "B"
+        ],
+        "k": 1
+      },
+      "C_w": {
+        "kind": "wrrf",
+        "inputs": [
+          "B",
+          "A"
+        ],
+        "weights": [
+          0.95,
+          0.05
+        ],
+        "k": 20
+      },
+      "k_grid_descriptive": [
+        1,
+        5,
+        10,
+        20,
+        40,
+        60,
+        80,
+        100,
+        200,
+        500
+      ]
+    },
+    "router": {
+      "between": [
+        "B",
+        "C"
+      ],
+      "model": "logistic_regression",
+      "label": "1 if nDCG@5(C) > nDCG@5(B); 0 if lower; ties dropped from training (they do not change the outcome)",
+      "sample_weight": "equal total weight per training task",
+      "threshold": 0.5,
+      "evaluation": "leave-one-task-out over the 9 tasks + DocVQA (10 folds)",
+      "features": [
+        "b_rel_margin",
+        "a_rel_margin",
+        "b_top_z",
+        "a_top_z",
+        "log_rank_of_a_top1_in_b",
+        "top5_overlap",
+        "log_query_len",
+        "digit_share"
+      ]
+    },
+    "output_dir": "results/posthoc5"
+  },
+  "seed": 0,
+  "git_commit": "265d3f938a98c66e9c8b1e7eeaf8202d10675655",
+  "git_dirty": true,
+  "python": "3.13.16",
+  "packages": {
+    "colpali-engine": "0.3.18",
+    "torch": "2.13.0",
+    "transformers": "5.22.0",
+    "peft": "0.20.0",
+    "datasets": "4.8.5",
+    "huggingface-hub": "1.33.0",
+    "pillow": "11.3.0",
+    "numpy": "2.4.6"
+  },
+  "hardware": {
+    "device": "cuda",
+    "platform": "Linux-6.6.159+-x86_64-with-glibc2.39",
+    "processor": "x86_64",
+    "gpu_name": "NVIDIA L4",
+    "gpu_total_memory_mb": 22563.125,
+    "cuda_version": "13.0"
+  },
+  "command": "scripts/run_posthoc5_gpu.py --tasks synth_energy synth_ai synth_gov synth_health",
+  "label": "POST-HOC set 5 (pre-registered 2026-11-16)",
+  "task": "synth_energy",
+  "dataset": {
+    "name": "vidore/syntheticDocQA_energy_test",
+    "revision": "a2f2f358463b03b84506849460ab5094a358526c",
+    "split": "test"
+  },
+  "n_rows": 1000,
+  "n_queries": 100,
+  "n_pages": 977,
+  "system": "vidore/colpali-v1.3",
+  "family": "colpali_engine",
+  "timings": {
+    "index_pages_s": 221.34099690599987,
+    "index_per_page_s": 0.22655168567656078
+  },
+  "latency": {
+    "n": 50,
+    "median_ms": 238.8730794999674,
+    "mean_ms": 242.4716565000108,
+    "p95_ms": 268.07735119998597,
+    "note": "encode one query + MaxSim against all stored pages (CPU scoring for colpali_engine)"
+  },
+  "index": {
+    "vectors_per_page_min_max": [
+      1031,
+      1031
+    ],
+    "dim": 128,
+    "size_mb": 245.919677734375,
+    "note": "page vectors at bf16 (2 bytes)"
+  },
+  "peak_memory": {
+    "peak_allocated_mb": 16190.38525390625,
+    "peak_reserved_mb": 16886.0,
+    "method": "torch.cuda.max_memory_*"
+  }
+}

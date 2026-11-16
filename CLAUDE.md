@@ -140,6 +140,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
   - InfoVQA (frozen candidate TM, fresh task): +8.5, p 0.0001. ColPali InfoVQA 0.8569 vs card 0.85716.
   - First confirmed improvement, but it comes from a better visual retriever, not from text fusion.
   - `results/posthoc4/`, report §7.10, slide 18.
+- **Post-hoc set 5 (16 Nov, user request "further work 4+5", pre-registered `265d3f9`):** ColPali v1.3 + BM25 on the 9 other ViDoRe v1 tasks, DocVQA fusion settings frozen. C significantly worse on InfoVQA/ArxivQA/TabFQuAD, better nowhere; ~neutral on text-dense/synthetic tasks; headroom ≤ 7%, ρ(headroom, ΔC) 0.26 n.s.; post-hoc ρ(B−A gap, ΔC) −0.70. Leave-one-task-out router: macro 0.840 vs B 0.842 (oracle 0.866). ColPali within ±2 of card on 7/9 (TabFQuAD −2.1, synth energy −2.4, not investigated). Rows sharing a page image: official max-merge (`src/data.py`). `results/posthoc5/`, report §7.11, slide 19 (slides now 26, report 30 pp.).
 - **Open:** report/slide TODOs that need the user (name/ID, presentation date, ±2 tolerance confirmation, literature cell checks, App. A.3 count, AI-use self-verification, tag hash); `v1.0-submission` tag after the final edits.
 
 ## Timeline (compressed, from 3 November)

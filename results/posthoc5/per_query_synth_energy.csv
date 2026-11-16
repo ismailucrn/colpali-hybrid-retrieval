@@ -1,0 +1,101 @@
+query,A_ndcg_at_5,A_gold_rank,B_ndcg_at_5,B_gold_rank,C_ndcg_at_5,C_gold_rank,C_w_ndcg_at_5,C_w_gold_rank
+"What types of road improvements are planned for Greenmount Road in Belleville, Illinois?",1.0,1,1.0,1,1.0,1,1.0,1
+How did the average miles per shipment for single modes change from 1997 to 2007?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the total greenhouse gas reduction in metric tons projected for 2050 across all measures listed?,0.0,16,1.0,1,0.5,3,1.0,1
+What is the importance of accurate estimation of available PV power according to the text?,1.0,1,1.0,1,1.0,1,1.0,1
+What are some potential vulnerabilities of underground nuclear power plants?,1.0,1,1.0,1,1.0,1,1.0,1
+What are the two different closed-system mechanically reversible processes described in the example?,1.0,1,1.0,1,1.0,1,1.0,1
+What information is being requested for the controlled correspondence office?,1.0,1,1.0,1,1.0,1,1.0,1
+Which county is the reconstruction project on Pierce Lane located in?,1.0,1,1.0,1,1.0,1,1.0,1
+How is the Authority addressing concerns related to the San Francisco to San Jose environmental document?,1.0,1,1.0,1,1.0,1,1.0,1
+What is different about PG&E's pipeline constraints and operating conditions compared to Southern California Gas Company?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the expected revenue for the power production company in the given quarter?,1.0,1,1.0,1,1.0,1,1.0,1
+At what temperature and pressure conditions is the reaction vessel maintained?,1.0,1,1.0,1,1.0,1,1.0,1
+What caused the price of wholesale electricity to significantly increase in 2017 and 2018 at SoCal Citygate?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the purpose of a configuration footprint in the Staged Project Delivery Process?,1.0,1,1.0,1,1.0,1,1.0,1
+Who is the Governmental Affairs Agent listed on Schedule F - Travel/Lodging?,1.0,1,1.0,1,1.0,1,1.0,1
+What types of highway improvements are listed for US 150 in Champaign County?,1.0,1,1.0,1,1.0,1,1.0,1
+Which car model from Aston Martin is categorized as a Subcompact Car?,1.0,1,1.0,1,1.0,1,1.0,1
+What are the nodes and links in a power grid graph representation?,1.0,1,1.0,1,1.0,1,1.0,1
+"How is the heat transferred in a mechanically reversible, constant-pressure process related to the constant-pressure heat capacity?",1.0,1,1.0,1,1.0,1,1.0,1
+What are some factors affecting public opinion on nuclear energy in the United States?,1.0,1,1.0,1,1.0,1,1.0,1
+Why are the strategies found within this plan meant to address transportation equity?,1.0,1,1.0,1,1.0,1,1.0,1
+What could cause the 'Transformer Temp unreadable' fault?,1.0,1,1.0,1,1.0,1,1.0,1
+What types of highway improvements are listed for District 9 in Illinois?,0.0,6,0.0,11,0.0,8,0.0,10
+How can energy storage play a role in enabling cost-effective integration of PV generation?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the procedure to populate the master data to the operational store?,1.0,1,1.0,1,1.0,1,1.0,1
+What percentage of EIB Group's 2022 gross mobility emissions came from business travel flights?,1.0,1,1.0,1,1.0,1,1.0,1
+What is one of the reasons mentioned for the United States to be concerned about the security of its energy supply according to the passage?,1.0,1,0.0,6,1.0,1,0.0,6
+What criteria does NERC's standard BAL-003-1 establish?,1.0,1,1.0,1,1.0,1,1.0,1
+What criteria should a heat exchanger satisfy for thermal energy storage in solar and low energy buildings?,1.0,1,1.0,1,1.0,1,1.0,1
+What are the major greenhouse gases mentioned in the table?,0.0,704,0.0,43,0.0,87,0.0,45
+What are the different ways AC Support behaves depending on the equipment installed with the Conext SW?,1.0,1,1.0,1,1.0,1,1.0,1
+What percentage of workers had a commute time of 15-29 minutes in 1990?,1.0,1,1.0,1,1.0,1,1.0,1
+What are some examples of microgrid controller research and development?,1.0,1,1.0,1,1.0,1,1.0,1
+Which country is Leszek Twardy's organization located in?,0.430677,4,1.0,1,1.0,1,1.0,1
+What are some characteristics of investors suitable for the Aggressive Growth asset mix?,1.0,1,1.0,1,1.0,1,1.0,1
+What was the average annual percent change in ton-miles for all modes of transportation between 1997 and 2007?,1.0,1,1.0,1,1.0,1,1.0,1
+What factors contribute to the projected annual change in U.S. natural gas plant liquids production?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the cooling system used in the roof of the building?,0.5,3,1.0,1,1.0,1,1.0,1
+What are the key features of the PV-BESS plant described in the text?,0.0,45,0.63093,2,0.5,3,0.63093,2
+What is the significance of the μ = 0 region in the inversion curves?,1.0,1,1.0,1,1.0,1,1.0,1
+What was the average commute time for workers in 2011?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the address of Ramba Consulting Group?,0.386853,5,0.0,6,0.0,6,0.0,6
+What is the estimated total savings for a PV system in Durham under the net metering (flat rate) billing option over the system's useful life of 25 years?,1.0,1,1.0,1,1.0,1,1.0,1
+"What is the fee range for Everglades Foundation, The?",1.0,1,1.0,1,1.0,1,1.0,1
+"What is the estimated cost for the intersection reconstruction project at Main St in Spaulding, Sangamon County?",1.0,1,1.0,1,1.0,1,1.0,1
+What measures have been taken to improve security at nuclear power plants since 9/11?,0.63093,2,1.0,1,1.0,1,1.0,1
+What type of nuclear reactor was involved in the Chernobyl accident?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the formula given for the Green's function describing the evolution of an instantaneous point injection of tracer?,1.0,1,1.0,1,1.0,1,1.0,1
+In which county are the Greenmount Road projects located?,1.0,1,1.0,1,1.0,1,1.0,1
+What types of communication expenses are listed on Schedule E?,0.63093,2,1.0,1,0.63093,2,1.0,1
+What is the average OPEC spare production capacity for the years 2014-2023?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the estimated cost for the bridge joint replacement and culvert repair project on Route 55 BUS at Ditch 1.2 Mi S & Fancy Creek in Sherman?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the recommended approach for implementing shared streets with cars?,1.0,1,1.0,1,1.0,1,1.0,1
+What initiatives are being undertaken to address urban freight movement challenges in Orlando?,1.0,1,1.0,1,1.0,1,1.0,1
+How does the United Kingdom's electricity grid differ from the United States according to the passage?,1.0,1,1.0,1,1.0,1,1.0,1
+Why does the ground appear warmer than the panels in the thermal image?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the altitude operating limit for these models?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the address of Florida State University Foundation?,0.5,3,1.0,1,1.0,1,1.0,1
+What is mentioned about the need for a carbon pricing framework?,1.0,1,0.5,3,1.0,1,0.5,3
+What steps can be taken if a biomass project appears viable after evaluation?,1.0,1,1.0,1,1.0,1,1.0,1
+What happens to the voltage of a battery undergoing constant current discharge over time?,1.0,1,1.0,1,1.0,1,1.0,1
+What parking strategies are suggested for new residential development?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the projected peak electricity demand in California for the year 2030?,1.0,1,1.0,1,1.0,1,1.0,1
+Why is the $5/Dth noncompliance charge for operational flow orders not considered productive or beneficial?,1.0,1,1.0,1,1.0,1,1.0,1
+What types of accounts or products allow investors to defer paying taxes?,1.0,1,1.0,1,1.0,1,1.0,1
+What are some companies and their locations listed on the page?,0.0,269,0.0,32,0.0,64,0.0,32
+What is the projected regional energy mix for electricity demand scenarios in 2010?,1.0,1,1.0,1,1.0,1,1.0,1
+What were some of the unique design features of the Chernobyl reactor that contributed to the accident?,1.0,1,1.0,1,1.0,1,1.0,1
+What method was used to estimate the accuracy of the baseline method?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the mission of the Bioenergy Technologies Office (BETO)?,1.0,1,1.0,1,1.0,1,1.0,1
+What are the specific topics mentioned related to the national energy policy options?,0.5,3,1.0,1,1.0,1,1.0,1
+What is the purpose of decreasing the ash content in sludge from 26% to 15% for the future renovations?,1.0,1,1.0,1,1.0,1,1.0,1
+What are the strategies and recommendations for early notification and coordination in Texas?,1.0,1,1.0,1,1.0,1,1.0,1
+What are the potential impacts of high geothermal fluid production rates compared to recharge rates?,1.0,1,1.0,1,1.0,1,1.0,1
+What are some challenges faced in the integration of solar photovoltaic (PV) power plants into the electric power grid?,1.0,1,1.0,1,1.0,1,1.0,1
+Which hour of the day had the highest overall electricity generation in 2019?,0.0,9,1.0,1,1.0,1,1.0,1
+How is China's energy intensity expected to change between 2012 and 2040 for the chemical industry?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the forecasted annual change for U.S. hydrocarbon gas liquids product supplied (consumption) in 2025?,1.0,1,1.0,1,1.0,1,1.0,1
+What fuel type had the highest average hourly generation in 2019 according to the chart?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the governing equation for the motion of tracers?,1.0,1,1.0,1,1.0,1,1.0,1
+How can the 'Dead Battery Detected' error be resolved?,1.0,1,1.0,1,1.0,1,1.0,1
+What was the cause of the Chernobyl nuclear accident?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the trend in natural gas usage for electricity generation according to the scenarios?,1.0,1,0.63093,2,1.0,1,0.63093,2
+What are some challenges mentioned regarding the large-scale implementation of electric vehicles?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the purpose of the integrated risk management framework mentioned in the passage?,1.0,1,1.0,1,1.0,1,1.0,1
+Which region has the highest load growth rate from 2020 to 2026?,1.0,1,1.0,1,1.0,1,1.0,1
+"What is the lobbyist income reported for Amelia B McKie during the period from January 1 to May 31, 2018?",1.0,1,1.0,1,1.0,1,1.0,1
+What are some key goals and requirements related to renewable energy integration in California?,1.0,1,0.63093,2,1.0,1,0.63093,2
+What are the different regional and subregional plans mentioned for the San Diego region?,1.0,1,1.0,1,1.0,1,1.0,1
+How did the air travel emissions from the EIB Group change in 2022 compared to 2021?,1.0,1,0.63093,2,0.63093,2,0.63093,2
+How did the percentage of workers with a commute time of less than 15 minutes change from 1990 to 2011?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the average annual growth rate of regional load across the Western Interconnection from 2020 to 2026?,1.0,1,1.0,1,1.0,1,1.0,1
+What does the activity coefficient represent for a species in solution?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the projected annual growth rate of electricity demand in the country according to the latest Philippine Energy Plan Update?,1.0,1,1.0,1,1.0,1,1.0,1
+What industry does Servico cater to?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the spark spread used for in power generation?,1.0,1,1.0,1,1.0,1,1.0,1
+What are some recent advances in HVDC system controllers?,1.0,1,1.0,1,1.0,1,1.0,1
+What is the name of the institute where Andrei Vladescu works?,1.0,1,1.0,1,1.0,1,1.0,1
+How is the drilling cost index calculated?,1.0,1,1.0,1,1.0,1,1.0,1
+What does the Authority do after the design work progresses in keeping with the Staged Project Delivery process?,1.0,1,1.0,1,1.0,1,1.0,1

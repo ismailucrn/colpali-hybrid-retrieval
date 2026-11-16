@@ -1,0 +1,20 @@
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{lrrllllll}
+\toprule
+Held-out task & $n$ & to C & B & C & R & oracle & $\Delta$R & $p_\mathrm{Holm}$ \\
+\midrule
+InfoVQA & 494 & 6 & 0.857 & 0.815 & 0.858 & 0.892 & +0.0015 & 1.000 \\
+ArxivQA & 500 & 71 & 0.824 & 0.699 & 0.808 & 0.829 & $-$0.0159 & 0.002 \\
+TabFQuAD & 280 & 88 & 0.853 & 0.799 & 0.844 & 0.867 & $-$0.0092 & 1.000 \\
+TAT-DQA & 1646 & 18 & 0.709 & 0.697 & 0.709 & 0.754 & +0.0003 & 1.000 \\
+ShiftProject & 100 & 3 & 0.761 & 0.780 & 0.760 & 0.835 & $-$0.0013 & 1.000 \\
+Synth.\ energy & 100 & 1 & 0.930 & 0.943 & 0.930 & 0.953 & +0.0000 & 1.000 \\
+Synth.\ AI & 100 & 0 & 0.985 & 0.984 & 0.985 & 0.991 & +0.0000 & 1.000 \\
+Synth.\ gov. & 100 & 1 & 0.954 & 0.946 & 0.954 & 0.968 & +0.0000 & 1.000 \\
+Synth.\ health & 100 & 0 & 0.976 & 0.963 & 0.976 & 0.983 & +0.0000 & 1.000 \\
+DocVQA (reused) & 451 & 3 & 0.575 & 0.525 & 0.575 & 0.592 & $-$0.0004 & 1.000 \\
+\midrule Macro average & & & 0.842 & 0.815 & 0.840 & 0.866 & $-$0.003 &  \\
+\bottomrule
+\end{tabular}
+\end{adjustbox}
+\par\smallskip{\footnotesize Leave-one-task-out logistic-regression router between B and C, settings fixed before the run; Holm over the ten folds. Oracle: per-query best of B and C (an upper bound, not a system).}

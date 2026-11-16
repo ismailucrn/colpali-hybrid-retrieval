@@ -94,23 +94,32 @@ These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Plan
 - How to read it: fusion helps when the second ranking is visual and strong, and hurts when it is text. That is the same unequal-inputs story from the other side.
 - Caveat to say aloud: these models were trained on more data, and we did not check training-data overlap.
 
-**19 · Cost.**
+**19 · Post-hoc set 5: is DocVQA special?**
+- The obvious objection to everything so far: "that is one task". We took the fusion settings exactly as frozen on DocVQA dev and ran them on all nine other ViDoRe v1 tasks, pre-registered, with nothing tuned there. Each task is a fresh test.
+- Result: BM25 fusion is significantly worse than ColPali on three tasks (InfoVQA, ArxivQA, TabFQuAD) and significantly better on none. On the text-dense tasks (TAT-DQA, ShiftProject, the synthetic reports) it is roughly neutral.
+- Our pre-registered guess was that the headroom (queries BM25 finds and ColPali misses) would predict where fusion helps. It does not: the headroom is at most 7% anywhere. What tracks the loss, looked at afterwards and labelled post-hoc, is how much weaker BM25 is than ColPali. That is the unequal-inputs story again, now across tasks.
+- The learned router, trained on nine tasks and tested on the tenth, almost always keeps ColPali. It does not help. An oracle shows that some queries do benefit, but score-margin features cannot find them.
+- Caveats: four tasks have only 100 queries. ColPali is near the ceiling on the synthetic tasks. ColPali misses its card by just over 2 points on two tasks, which we did not investigate.
+
+**20 · Cost.**
 - Fusion is almost free: a fraction of a millisecond and a sub-MB index. So the obstacle is quality, not cost.
 - Caveat: the components were measured on different devices.
 
-**20 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
+**21 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
 
-**21 · Conclusions.**
+**22 · Conclusions.**
 - The reproduction holds. Fusion hurts, and the control shows it is not specific to BM25.
 - The literature is consistent with this: fusion fails with unequal inputs and helped where the text was clean and equally strong.
 - Open question: would better text extraction change this?
 
-**22 · Reproducibility and AI use.**
+**23 · Reproducibility and AI use.**
 - Everything is re-runnable on a laptop from the committed score matrices, and a fresh clone reproduces all outputs exactly.
 - State plainly what the AI did and what you did and verified.
 
 ## Likely questions
 
+- **Maybe DocVQA is just a bad task for BM25?**
+  We checked (slide 19). With the DocVQA settings frozen, fusion never helps significantly on any of the nine other ViDoRe v1 tasks, including the text-dense ones. The negative result is not DocVQA-specific.
 - **Why v1.3 and not the paper's v1.0?**
   v1.0 is marked unsupported in the current colpali-engine. Making it run would mean old library versions and an unknown time cost. We reproduce the authors' own reported v1.3 number with the same protocol. The paper's 54.4 is shown as context only.
 - **Is −0.94 points a failed reproduction?**
