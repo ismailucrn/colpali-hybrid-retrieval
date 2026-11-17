@@ -255,7 +255,6 @@ All logs are in `results/checks/`, and every run, including failed ones, is list
 | `docs/deviations.md` | differences from the original paper and which comparisons still hold |
 | `docs/query_tagging.md` | frozen query-type rules and split |
 | `docs/literature_matrix.md` | 8-paper comparison matrix, search approach, research gap |
-| `docs/ai_usage.md` | AI-use disclosure |
 
 ## License
 

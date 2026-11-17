@@ -30,7 +30,7 @@
 - Reproduction: choose a testable claim, state what we expect and what would make us question the claim. Record source revision, dependencies, checkpoint, data version, preprocessing, seeds, config, commands. Smaller scale is allowed but every deviation must be described, together with which comparisons still hold. Keep published and measured scores separate; investigate discrepancies before blaming the method.
 - Improvement: one targeted change, rationale stated **before** seeing results, evaluated against the reproduced baseline under matched conditions, with a **control or ablation**, task-quality metrics and a **resource metric** (latency, peak memory, ...). Negative results are acceptable if analyzed honestly. Report unfavorable examples as well as favorable ones. **Never tune on the test set.**
 - Grading criteria: literature depth and synthesis; technical understanding; reproduction; targeted improvement; experimental rigor (fair controls, valid splits, honest uncertainty, failure analysis); reproducibility and communication. Reasoning and honesty count, not only whether the score improved.
-- AI use is allowed but must be disclosed in the report (tools + specific contributions). Keep `docs/ai_usage.md` updated as we go.
+- AI use is allowed but must be disclosed in the report (tools + specific contributions), in its AI-use appendix. `docs/ai_usage.md` was removed from the current version on 2026-11-17 at the user's request; it remains in git history.
 - Integrity: no sharing of project-specific code, outputs, analysis, reports or slides with classmates.
 
 ## Decisions made so far
@@ -171,7 +171,7 @@ ColPali encodes each document page *image* with a PaliGemma-based vision-languag
 - Remote: https://github.com/ismailucrn/colpali-hybrid-retrieval, branch `main`.
 - **Commit and push at every important milestone**, without waiting to be asked: e.g. repo skeleton, working smoke test, reproduction result, each new system (A–E), split/tag files frozen, final test run, figures/tables, report drafts, submission tag. Small, focused commits; imperative English messages.
 - **All commits are authored by the user's GitHub account only** (`ismailucrn`, email `89876113+ismailucrn@users.noreply.github.com`, set in the repo-local git config). Check `git config user.name` / `user.email` before committing.
-  - **No `Co-Authored-By: Claude` trailer or any other AI attribution line in commit messages.** AI assistance is disclosed in `docs/ai_usage.md` and the report instead.
+  - **No `Co-Authored-By: Claude` trailer or any other AI attribution line in commit messages.** AI assistance is disclosed in the report instead.
 - Before each commit: review `git status` / the diff; never commit credentials, `.env`, data, embeddings or checkpoints.
 - Never force-push or rewrite pushed history; that would break the traceability of reported results.
 
@@ -184,7 +184,7 @@ src/          reusable code
 notebooks/    Colab notebooks (thin wrappers around scripts/)
 results/      small saved outputs: run files, metrics JSON/CSV, tables, figures
 data/         local data cache — gitignored
-docs/         experiment_log.md, run_registry.md, deviations.md, literature_matrix.md, ai_usage.md, query_tagging.md
+docs/         experiment_log.md, run_registry.md, deviations.md, literature_matrix.md, query_tagging.md
 ```
 
 - Every reported number must be reproducible by a committed script + config.

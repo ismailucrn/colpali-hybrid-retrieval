@@ -8,7 +8,7 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
 - **[M] Measured:** our own result, with the file it comes from.
 - **(unverified):** not yet checked against the paper text. Do not cite it before checking.
 
-**How the details were checked.** Paper details were extracted on 2026-11-06 from the arXiv HTML or PDF versions listed with each paper. The extraction was AI-assisted (see `docs/ai_usage.md`). The author read all papers and checked the cells against them. On 2026-11-17 the open items were also re-checked against the papers with AI assistance: the ColPali, DSE and Bruch et al. PDFs were read as text, and the ColPali, DSE, IRPAPERS, slide-study and Bruch et al. HTML pages were read. The checked items are marked *Checked 2026-11-17*. Anything still seen only in a summary stays marked (unverified). Section and table numbers are given so each cell can be checked quickly.
+**How the details were checked.** Paper details were extracted on 2026-11-06 from the arXiv HTML or PDF versions listed with each paper. The extraction was AI-assisted (see the report's AI-use appendix). The author read all papers and checked the cells against them. On 2026-11-17 the open items were also re-checked against the papers with AI assistance: the ColPali, DSE and Bruch et al. PDFs were read as text, and the ColPali, DSE, IRPAPERS, slide-study and Bruch et al. HTML pages were read. The checked items are marked *Checked 2026-11-17*. Anything still seen only in a summary stays marked (unverified). Section and table numbers are given so each cell can be checked quickly.
 
 ---
 

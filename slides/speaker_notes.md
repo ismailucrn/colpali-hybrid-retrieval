@@ -147,6 +147,6 @@ These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Plan
 - **Did you use the test set too often?**
   Four times, each with settings frozen beforehand and labelled exploratory after the first. That is a limitation: one of the four results could be noise. The main conclusion rests on the first, pre-registered run.
 - **What did the AI do?**
-  See slide 22 and `docs/ai_usage.md`: code, Colab driving, literature extraction and drafting. You made the design decisions, approved every run and verified *(fill in what you checked)*.
+  See slide 25 and the report's AI-use appendix (App. B): code, Colab driving, literature extraction and drafting. You made the design decisions, approved every pre-registration and run, reviewed each result and read all papers in the literature matrix.
 - **So did you find an improvement or not?**
   For the project's question (does a *text* signal help ColPali?): no, across four sets. For "can retrieval here be improved at all?": yes. A newer visual retriever is better, and it holds on a fresh task where its settings were frozen in advance. Fusion with ColPali helps only when the second model is visual and strong.
