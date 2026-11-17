@@ -579,3 +579,8 @@ Chronological record of every run and decision. One entry per run or decision; n
   - The IRPAPERS hybrid (R@1 49) equals ColQwen2 alone (49). Its gain is +3 over the text hybrid and +6 over the image model it fuses.
   - DSE's own hybrid is below DSE alone on SlideVQA (71.5 vs 75.3, App. A.2 / Table 4).
   - The report, slide 5 and the matrix were updated.
+
+### 2026-11-17 — Note: presentation format and report expansion (no new experiment)
+- The instructor asked for a 5-minute talk that introduces the topic to classmates, and for a report "as detailed as possible", since the report carries the grade.
+- `slides/short_talk.pdf` was added; the detailed deck `slides/slides.pdf` stays.
+- The report gained an overview of all attempts, a system diagram, a measured worked RRF example, an nDCG@5 explanation, a set-5 figure and three appendices. No number changed; every new number is generated from committed results.

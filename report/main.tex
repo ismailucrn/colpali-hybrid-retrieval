@@ -21,6 +21,8 @@
 \setlist{itemsep=2pt,topsep=3pt}
 \emergencystretch=3em
 \usepackage{fvextra}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc}
 \graphicspath{{../results/figures/}}
 \input{generated/numbers.tex}
 
@@ -80,10 +82,10 @@ We also ask whether any gain comes from the \emph{lexical} signal specifically, 
 \paragraph{Scope.}
 Deliberately narrow:
 \begin{itemize}
-  \item one ViDoRe~v1 task (DocVQA: \nPages{} pages, \nQueries{} queries);
+  \item one ViDoRe~v1 task in the main analysis (DocVQA: \nPages{} pages, \nQueries{} queries); the nine other ViDoRe~v1 tasks only in a post-hoc generalisation check (Section~\ref{sec:posthoc5});
   \item the authors' published checkpoint, inference only, with no training or fine-tuning;
   \item page retrieval only, with no answer generation;
-  \item rank-level fusion only (RRF and a weighted variant) in the main analysis; score-level fusion, a text RAG stack with a cross-encoder reranker, and an OCR-quality analysis only post-hoc (Section~\ref{sec:posthoc}).
+  \item rank-level fusion only (RRF and a weighted variant) in the main analysis; score-level fusion, a text RAG stack with a cross-encoder reranker, an OCR-quality analysis, newer Qwen-based rerankers, embedders and OCR, and stronger visual retrievers only post-hoc (Sections~\ref{sec:posthoc}--\ref{sec:posthoc5}).
 \end{itemize}
 
 \paragraph{Contributions.}
@@ -91,8 +93,23 @@ Deliberately narrow:
   \item A traceable reproduction of ColPali v1.3 on DocVQA with the official evaluation protocol. The metric code is checked against MTEB, every run (including failed ones) is logged, and outputs are saved (Section~\ref{sec:repro}).
   \item A pre-registered, controlled test of BM25 + ColPali fusion. It has a dense-text control, a frozen dev/test split, frozen query-type tags, paired significance tests with multiple-comparison correction, and resource measurements (Sections~\ref{sec:improve}--\ref{sec:results}).
   \item A negative result with a mechanism. The failure analysis shows the lexical signal has almost no headroom on this task, and why: lexical overlap after OCR (Section~\ref{sec:failure}). Two pre-registered post-hoc checks (score-level fusion, a code-preserving tokenizer) rule out the two most obvious alternative explanations (Section~\ref{sec:posthoc}). A second post-hoc set shows that a stronger text pipeline (hybrid retrieval + cross-encoder reranking) does not close the gap either (Section~\ref{sec:posthoc2}).
+  \item Four further improvement attempts with current models (Qwen3-VL reranker and embedder, a Qwen3.5 page transcription, selective fusion), none of which improves reliably on test (Section~\ref{sec:posthoc3}). Stronger ColPali-style retrievers do improve. The best of them was chosen by a rule fixed in advance and confirmed once on a task never used for any choice (InfoVQA, Section~\ref{sec:posthoc4}).
+  \item A generalisation test. With settings frozen from DocVQA dev, BM25 fusion is checked on the nine other ViDoRe~v1 tasks, together with a leave-one-task-out router that decides per query whether to fuse (Section~\ref{sec:posthoc5}).
   \item A literature matrix of eight papers. It shows that text + visual fusion has been tried only recently, with mixed and uncontrolled results (Section~\ref{sec:lit}).
 \end{enumerate}
+
+\paragraph{The project at a glance.}
+Table~\ref{tab:overview} lists every attempt to improve on ColPali in the order it was made, and Figure~\ref{fig:attempts} shows the same comparisons on one axis. Each set of experiments was written down and committed before it was run. Settings were chosen on the dev split, and each set used the test split once. \Mea{} Of the \ovAttempts{} DocVQA test comparisons, \ovLosses{} are significant losses and \ovGains{} are significant gains. Every gain comes from a second \emph{visual} model or from replacing ColPali, never from a text signal. Sections~\ref{sec:results}--\ref{sec:posthoc5} give each experiment in detail.
+
+\begin{table}[!htbp]\centering\footnotesize\setlength{\tabcolsep}{3.5pt}
+\input{generated/tab_overview.tex}
+\caption{\Mea{} Every attempt to improve on ColPali v1.3, in chronological order.}\label{tab:overview}
+\end{table}
+
+\begin{figure}[!htbp]\centering
+\includegraphics[width=0.9\linewidth]{fig7_all_attempts.pdf}
+\caption{\Mea{} Paired difference in nDCG@5 to ColPali, with 95\% bootstrap intervals, for every attempt (DocVQA test; bottom row: the frozen candidate on InfoVQA). Filled markers are significant after Holm correction within each set. Colour shows what the attempt adds: a text signal (orange), a second visual signal (green), or a replacement for ColPali (grey).}\label{fig:attempts}
+\end{figure}
 
 % =====================================================================================================
 \section{Literature search and critical synthesis}
@@ -219,6 +236,37 @@ Single RTX 3090; ColPali 12.9\,GB vs BM25 0.04\,GB. &
 \section{Technical explanation of the method}
 \label{sec:method}
 
+Figure~\ref{fig:systems} shows the systems compared. The text systems read OCR text extracted from the page. ColPali reads the page image itself. The fused systems combine the two rankings and need no training.
+
+\begin{figure}[!htbp]\centering
+\begin{tikzpicture}[node distance=4mm and 5mm, every node/.style={font=\footnotesize},
+  box/.style={draw=black!45, rounded corners=2pt, fill=white, inner sep=3.5pt, align=center},
+  hot/.style={box, draw=blue!60!black, fill=blue!6},
+  txt/.style={box, draw=orange!80!black, fill=orange!7},
+  arr/.style={-{Stealth[length=2mm]}, black!55, thick}]
+  % ColPali
+  \node[box] (img) {page image\\448$\times$448};
+  \node[hot, right=of img] (vlm) {PaliGemma-3B\\+ LoRA (v1.3)};
+  \node[hot, right=of vlm] (pv) {1031 vectors\\$\times$ 128 per page};
+  \node[box, below=of img] (q1) {query text};
+  \node[hot, right=of q1] (lm) {same language\\model};
+  \node[hot, right=of lm] (qv) {one vector\\per query token};
+  \node[hot, anchor=west] (ms) at ($(pv.east)!0.5!(qv.east)+(5mm,0)$) {MaxSim\\$\Rightarrow$ ranking B};
+  \draw[arr] (img) -- (vlm); \draw[arr] (vlm) -- (pv); \draw[arr] (q1) -- (lm); \draw[arr] (lm) -- (qv);
+  \draw[arr] (pv.east) -- (ms); \draw[arr] (qv.east) -- (ms);
+  % text side
+  \node[box, below=9mm of q1] (img2) {page image};
+  \node[txt, right=of img2] (ocr) {Tesseract OCR\\(released with ViDoRe)};
+  \node[txt, right=of ocr] (bm) {BM25 $\Rightarrow$ ranking A\\BGE-M3 $\Rightarrow$ ranking BGE};
+  \draw[arr] (img2) -- (ocr); \draw[arr] (ocr) -- (bm);
+  % fusion
+  \node[box, draw=green!40!black, fill=green!6, right=12mm of bm] (fu) {RRF / weighted RRF\\C = (A, B), D = (BGE, B)};
+  \draw[arr] (ms.south) |- (fu.north) node[pos=0.25, right, font=\scriptsize, black!60] {rank};
+  \draw[arr] (bm) -- (fu) node[midway, above, font=\scriptsize, black!60] {rank};
+\end{tikzpicture}
+\caption{The systems compared. Top: ColPali (B) encodes the page image and the query with the same vision--language model and scores them by late interaction (MaxSim). Bottom: the text systems read the benchmark's OCR text. Right: C and D fuse ColPali's ranking with a text ranking. Only ranks are combined, so no score calibration is needed.}\label{fig:systems}
+\end{figure}
+
 \paragraph{ColPali encoding.} \Pub{}~\cite[\S2.2, \S4.1]{colpali}
 \begin{itemize}
   \item A page image is resized to 448$\times$448 and split into patches by the SigLIP vision encoder. The patch embeddings are fed, together with a short text prompt, through the Gemma-2B language model of PaliGemma-3B.
@@ -253,6 +301,19 @@ Single RTX 3090; ColPali 12.9\,GB vs BM25 0.04\,GB. &
   \mathrm{wRRF}(d) = \frac{w}{k + \mathrm{rank}_\text{ColPali}(d)} + \frac{1-w}{k + \mathrm{rank}_\text{text}(d)} ,
 \end{equation}
 where $w=0.5$ recovers plain RRF and $w=1$ recovers ColPali alone. This is close to the per-retriever parameterisation studied in~\cite{bruch}.
+
+\paragraph{A worked example: how equal-weight RRF demotes a correct page.} \Mea{} Table~\ref{tab:rrfexample} uses one of our test queries with $k=1$, the value selected on dev.
+\begin{itemize}
+  \item ColPali ranks the gold page first. BM25 ranks it \exGoldA{}th, because ``No'' is a stopword and ``2-26'' is not alphanumeric, so no part of the anchor reaches BM25.
+  \item RRF gives the gold page $\frac12 + \frac{1}{343}$. A page that ColPali puts at rank 298 but BM25 puts first gets $\frac{1}{299}+\frac12$, which is slightly more.
+  \item With equal weights, one first place in the weak ranking is worth as much as a first place in the strong ranking. The gold page drops to rank \exGoldC{}, and the query's nDCG@5 falls from 1.0 to 0.5.
+\end{itemize}
+This is the mechanism behind most of C's losses (Section~\ref{sec:failure}). A weight $w$ close to 1 removes it: C$_w$ keeps the gold page first.
+
+\begin{table}[!htbp]\centering\small
+\input{generated/tab_rrf_example.tex}
+\caption{\Mea{} The four top-ranked pages after fusion for one test query (\file{results/*\_docvqa/scores.npz}).}\label{tab:rrfexample}
+\end{table}
 
 \paragraph{Ties and ranks.} All systems are ranked with the evaluator's own order: score descending, then document id descending, as in \texttt{trec\_eval}. Fusion and evaluation therefore see identical rankings. \Mea{} This matters for ColPali: bf16 scores contain exact ties.
 
@@ -359,6 +420,13 @@ A = BM25; B = ColPali v1.3; BGE-M3 alone (reported for context); C = RRF(A, B); 
 
 \paragraph{Metrics.}
 Primary: nDCG@5, the paper's main metric. Also Recall@5, Recall@10, nDCG@10 and MRR@10.
+Because every query has exactly one relevant page, nDCG@5 reduces to a simple function of the gold page's rank $r$:
+\[
+\mathrm{nDCG@5} = \begin{cases} 1/\log_2(r+1) & r \le 5 \\ 0 & r > 5 \end{cases}
+\qquad
+\begin{array}{c|ccccc|c} r & 1 & 2 & 3 & 4 & 5 & {>}5 \\ \hline \text{score} & 1.000 & 0.631 & 0.500 & 0.431 & 0.387 & 0 \end{array}
+\]
+A system's nDCG@5 is the mean over queries, and ``one point'' in this report is 0.01. A gold page moving from rank 1 to rank 3 therefore costs that query half of its score. A miss beyond rank 5 costs all of it.
 Resource metrics: indexing time, index size, single-query latency (median; sequential and parallel execution of the components, plus fusion overhead) and peak memory.
 
 \paragraph{Uncertainty and tests.} Fixed before the test run (\texttt{deec1d8}).
@@ -700,6 +768,11 @@ Pre-registered expectations: ColPali within $\pm$2 points of its card on each ta
 \caption{\Mea{} Leave-one-task-out router (\file{results/posthoc5/router.json}).}\label{tab:router}
 \end{table}
 
+\begin{figure}[!htbp]\centering
+\includegraphics[width=\linewidth]{fig8_vidore_tasks.pdf}
+\caption{\Mea{} Left: frozen C minus ColPali per task, with 95\% intervals; filled markers are significant after Holm correction over the nine tasks. Right (post-hoc, descriptive): the further BM25 is below ColPali on a task, the more fusion costs ($\rho$ = \pfGapRho{}, exact $p$ = \pfGapRhoP{}).}\label{fig:vidore}
+\end{figure}
+
 \paragraph{Router.} \Mea{} (Table~\ref{tab:router})
 \begin{itemize}
   \item The router sends few queries to C. Its macro nDCG@5 is \pfRR{}, against \pfRB{} for ColPali alone and \pfRC{} for C ($\Delta$ \pfRDelta{}).
@@ -834,6 +907,78 @@ AI assistance was used and is permitted by the assignment. The detailed, dated r
   \end{itemize}
 \end{itemize}
 The author chose the topic, task, checkpoint, control model and the models of post-hoc set 4; approved every pre-registration before its run; signed in to Colab and handled the downloads; and reviewed each result as it was reported. The author read all papers in the literature matrix and checked the extracted details against them. An additional AI-assisted check of the open items (17 November) is recorded in \file{docs/literature\_matrix.md}. The author remains responsible for every claim and for defending the conclusions.
+
+% =====================================================================================================
+\section{Chronology of the project}
+\label{app:chrono}
+Every step below is a commit in the repository. Every run, including failed ones, is listed in \file{docs/run\_registry.md}, and the reasoning behind each decision is in \file{docs/experiment\_log.md}.
+
+\begin{center}\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l p{9.6cm} l}
+\toprule
+Date & Step & Commit \\
+\midrule
+23 Oct & Project start: topic (multimodal document retrieval for RAG) and main paper (ColPali). & -- \\
+3 Nov & Project plan with the research question, systems A--E, predictions P1--P3 and the $\pm$2-point tolerance. & \texttt{162441e} \\
+3 Nov & Smoke test on Colab L4; task (DocVQA) and checkpoint (v1.3) chosen; full ColPali run: nDCG@5 \fullB{}. & \texttt{0a716fa} \\
+3 Nov & Query-type tags and the stratified dev/test split frozen, before any fusion run. & \texttt{55fa350} \\
+4 Nov & BM25 (A) run; BGE-M3 fixed as control D before any of its results. & \texttt{2dfcf31} \\
+4 Nov & Dev selection; weighted RRF (ablation E) pre-registered after equal-weight RRF hurt on dev. & \texttt{b558ceb} \\
+4 Nov & Test script and statistics committed; the single test run follows (negative result). & \texttt{deec1d8}, \texttt{658dbd1} \\
+6 Nov & Failure analysis, six figures, literature matrix (eight papers); research gap narrowed. & -- \\
+7 Nov & First report draft (19 pages). & -- \\
+11 Nov & Fresh-clone audit (all outputs identical); slides; post-hoc set 1 pre-registered and run. & \texttt{cb332b7} \\
+15 Nov & Post-hoc set 2 (text RAG stack, cross-encoder, cascade, OCR quality). & \texttt{92c2163} \\
+16 Nov & Taxonomy of ColPali's misses (plan fixed before counting). & \texttt{fe3533b} \\
+16 Nov & Post-hoc set 3 (Qwen3-VL reranker and embedder, Qwen3.5 transcription, selective fusion). & \texttt{e70f2a7} \\
+16 Nov & Post-hoc set 4 (stronger visual models) and the frozen InfoVQA confirmation. & \texttt{6091e78}, \texttt{751d0b9} \\
+16 Nov & Post-hoc set 5 (nine more ViDoRe v1 tasks, router); fresh-clone check of all 92 outputs. & \texttt{265d3f9}, \texttt{63c23f9} \\
+17 Nov & Literature items re-checked against the papers; final report; tag \texttt{v1.0-submission}. & -- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =====================================================================================================
+\section{Plan versus execution}
+\label{app:plan}
+\begin{center}\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{2.6cm} p{3.6cm} p{3.9cm} p{5.0cm}}
+\toprule
+Topic & Planned & Done & Why \\
+\midrule
+GPU & free Colab T4 & Colab Pro L4, bf16 & On a T4 the script would fall back to fp16 (a deviation), and the 16\,GB peak memory risked running out. \\
+Checkpoint & paper's v1.0 & v1.3, target its model card & v1.0 is marked not supported by \texttt{colpali-engine} 0.3.18. The paper's 54.4 is reported as context. \\
+Query types & manual tags & rule-based tags from query text only & Reproducible, and impossible to bias with system outputs. \\
+Ablation E & $k$ sensitivity only & plus weighted RRF & Equal-weight RRF hurt on dev. Pre-registered before running and labelled dev-informed. \\
+BGE-M3 input length & library default & 8192 tokens, explicit & FlagEmbedding's default changed to 512, which would truncate pages that BM25 sees in full. \\
+Research gap & ``visual retrievers are evaluated alone'' & narrowed (6 Nov) & The targeted search found earlier text + visual fusion work. \\
+Report claims & DocVQA \emph{train} split in ColPali's training data; headroom bounds every fusion & both corrected (11 Nov) & The split is not stated in the paper. The bound holds only for per-query selection. \\
+Scope & one task, fusion only & plus five post-hoc sets & Each answered a specific objection or follow-up question, and each was pre-registered before running. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% =====================================================================================================
+\section{Glossary}
+\label{app:gloss}
+\begin{description}[style=nextline, leftmargin=1.5cm, font=\normalfont\bfseries]
+  \item[nDCG@5] Ranking quality of the top five results. With one relevant page per query: $1/\log_2(r+1)$ if the gold page is at rank $r \le 5$, else 0 (Section~\ref{sec:design}).
+  \item[Recall@$k$] Share of queries whose gold page is in the top $k$.
+  \item[MRR@10] Mean of $1/r$ for the gold page's rank $r$, or 0 beyond rank 10.
+  \item[Late interaction / MaxSim] Query and page are encoded separately into many vectors. At scoring time each query vector takes its best match among the page vectors, and the maxima are summed.
+  \item[RRF] Reciprocal rank fusion: each system contributes $1/(k+\text{rank})$ for each document.
+  \item[Weighted RRF] RRF with weights $w$ and $1-w$ on the two systems.
+  \item[Convex combination] $\alpha$-weighted sum of min--max-normalised scores.
+  \item[Cross-encoder / reranker] A model that reads query and candidate together and rescores a short list.
+  \item[Headroom] Queries the second system finds in its top five while ColPali does not; an upper bound on what per-query selection can gain.
+  \item[Selection oracle] Per query, the better of two systems. It is an upper bound, not a system.
+  \item[Dev / test split] Settings are chosen on dev. Test is evaluated once, with the chosen settings.
+  \item[Pre-registration] Hypotheses, grids and selection rules are committed before the run they govern, and are never edited afterwards. Changes are added as dated notes.
+  \item[Bootstrap CI] Resample queries with replacement 10,000 times and take the 2.5th and 97.5th percentiles of the mean.
+  \item[Permutation test] Randomly flip the sign of paired per-query differences to see how extreme the observed mean difference is.
+  \item[Holm correction] Step-down adjustment of $p$-values for several comparisons in one family.
+  \item[Fresh task] A dataset never used for any choice in the project, used once to confirm a frozen candidate.
+\end{description}
 
 % =====================================================================================================
 \begin{thebibliography}{99}\small

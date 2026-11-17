@@ -2,7 +2,7 @@
 
 Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 helps (YZM5110 Multimodal Learning, research project).
 
-> **Status (17 November 2026):** submitted version, pinned with the tag `v1.0-submission`. Report: `report/Ucuran_YZM5110_Research.pdf` (a copy of `report/main.pdf`). Slides: `slides/slides.pdf`. All experiments are done and their outputs are committed.
+> **Status (17 November 2026):** submitted version, pinned with the tag `v1.0-submission`. Report: `report/Ucuran_YZM5110_Research.pdf` (a copy of `report/main.pdf`). Slides: `slides/short_talk.pdf` (5-minute introductory talk for the class, notes in `slides/short_talk_notes.md`) and `slides/slides.pdf` (detailed deck). All experiments are done and their outputs are committed.
 
 ## Summary
 
@@ -199,6 +199,7 @@ python scripts/make_figures.py                                                  
 python scripts/make_report_tables.py                                                   # report/generated/
 (cd report && tectonic main.tex)                                                       # report/main.pdf
 (cd slides && tectonic slides.tex)                                                     # slides/slides.pdf
+(cd slides && tectonic short_talk.tex)                                                 # slides/short_talk.pdf (5-min talk)
 ```
 
 - `results/vlm_ocr_docvqa/page_texts.json` (the Qwen3.5 transcription of the DocVQA pages) is not committed, because it is a copy of the dataset's page content; its sha256 is in `docs/run_registry.md` (row 54). The BM25 scores built from it (`results/bm25_vlm_docvqa/scores.npz`) are committed, so every post-hoc set 3 table re-runs on CPU without it. To rebuild A_vlm, run the OCR notebook first.
@@ -227,6 +228,9 @@ Figure files (`results/figures/`, made by `make_figures.py`):
 | `fig4_test_by_type` | test nDCG@5 by query type; Δ of fusions vs ColPali |
 | `fig5_headroom` | who finds the gold page (top 5), per query type |
 | `fig6_overlap` | hit rate vs query–OCR lexical overlap |
+| `fig7_all_attempts` | every attempt to improve on ColPali: Δ nDCG@5 with 95% CI (report Figure 1) |
+| `fig8_vidore_tasks` | post-hoc set 5: frozen fusion per ViDoRe task; strength gap vs Δ |
+| `fig9_talk_summary` | short-talk summary bar chart (DocVQA test) |
 
 ## Tests and checks
 

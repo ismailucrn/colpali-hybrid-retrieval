@@ -387,6 +387,78 @@ def posthoc5(N: dict) -> None:
     })
 
 
+def rrf_example(N: dict) -> None:
+    """Worked example (measured): how equal-weight RRF (k = 1, as selected on dev) demotes ColPali's correct page."""
+    import sys
+    sys.path.insert(0, str(REPO))
+    from src.fusion import ranks_from_scores, rrf
+
+    q, gold, k = "What is No. 2-26 of subheading H ?", "kkwg0227", 1
+    A = np.load(REPO / "results/bm25_docvqa/scores.npz")
+    B = np.load(REPO / "results/colpali_v1.3_docvqa/scores.npz")
+    pids = list(A["page_ids"])
+    i = list(A["queries"]).index(q)
+    SA, SB = A["scores"][i:i + 1].astype(float), B["scores"][i:i + 1].astype(float)
+    rA, rB = ranks_from_scores(SA, pids)[0], ranks_from_scores(SB, pids)[0]
+    F = rrf([SA, SB], pids, k=k)
+    rF = ranks_from_scores(F, pids)[0]
+    rows = []
+    for j in np.argsort(rF)[:4]:
+        mark = r" (\textbf{gold})" if pids[j] == gold else ""
+        rows.append(f"\\texttt{{{pids[j]}}}{mark} & {rB[j]} & {rA[j]} & $\\frac{{1}}{{{k}+{rB[j]}}}+\\frac{{1}}{{{k}+{rA[j]}}}$ = {F[0, j]:.4f} & {rF[j]}")
+    table("tab_rrf_example", "lrrlr", r"Page & ColPali rank & BM25 rank & RRF score ($k{=}1$) & fused rank", rows,
+          "Test query ``" + q.replace(" ?", "?") + "'' (tag \\emph{exact}); ranks and scores from the committed score matrices.")
+    g = pids.index(gold)
+    N.update({"exGoldA": str(rA[g]), "exGoldC": str(rF[g])})
+
+
+VERDICT = lambda d, p: ("gain" if d > 0 else "loss") if p < 0.05 else "n.s."  # noqa: E731
+
+
+def overview(N: dict) -> None:
+    """One row per attempt to improve on ColPali (DocVQA test unless stated), in chronological order."""
+    rows_spec = [
+        ("4 Nov", "Main", "C: RRF(BM25, ColPali), proposed", "test_evaluation", "C"),
+        ("4 Nov", "Main", "D: RRF(BGE-M3, ColPali), control", "test_evaluation", "D"),
+        ("4 Nov", "Main", "C$_w$: weighted RRF, BM25", "test_evaluation", "C_w"),
+        ("4 Nov", "Main", "D$_w$: weighted RRF, BGE-M3", "test_evaluation", "D_w"),
+        ("11 Nov", "Set 1", "C$_\\text{code}$: code-preserving BM25 in RRF", "posthoc_extensions", "C_code"),
+        ("11 Nov", "Set 1", "Score-level fusion, BM25 (dev picks $\\alpha{=}1$)", "posthoc_extensions", "C_cc"),
+        ("15 Nov", "Set 2", "Text RAG stack: hybrid + cross-encoder", "posthoc2", "T_rr"),
+        ("15 Nov", "Set 2", "Cross-encoder on ColPali's top $N$ (dev picks $N{=}1$)", "posthoc2", "B_ce"),
+        ("16 Nov", "Set 3", "Qwen3-VL-Reranker-2B on ColPali's top 20", "posthoc3", "B_vr"),
+        ("16 Nov", "Set 3", "Selective fusion (BM25 margin gate)", "posthoc3", "C_sel"),
+        ("16 Nov", "Set 3", "RRF(BM25 over Qwen3.5 transcription, ColPali)", "posthoc3", "C_vlm"),
+        ("16 Nov", "Set 3", "RRF(Qwen3-VL-Embedding-2B, ColPali)", "posthoc3", "E_ens"),
+        ("16 Nov", "Set 4", "Tomoro ColQwen3-4B alone (replaces ColPali)", "posthoc4", "TM"),
+        ("16 Nov", "Set 4", "ColQwen2.5 alone (replaces ColPali)", "posthoc4", "CQ"),
+        ("16 Nov", "Set 4", "RRF(ColPali, Tomoro)", "posthoc4", "F_tm"),
+        ("16 Nov", "Set 4", "RRF(ColPali, ColQwen2.5)", "posthoc4", "F_cq"),
+        ("16 Nov", "Set 4", "Qwen3-VL-Reranker-8B on ColPali's top 10", "posthoc4", "B_vr8"),
+        ("16 Nov", "Set 4", "RRF(ColPali, Qwen3-VL-Embedding-8B)", "posthoc4", "F_q8"),
+    ]
+    files = {f: load(f"results/{f}/metrics.json") for f in {r[3] for r in rows_spec}}
+    rows, n_gain, n_loss = [], 0, 0
+    for date, st, label, f, sid in rows_spec:
+        v = files[f]["vs_baseline"][sid]
+        verdict = VERDICT(v["delta"], v["p_holm"])
+        n_gain += verdict == "gain"; n_loss += verdict == "loss"
+        rows.append(f"{date} & {st} & {label} & {sgn(v['delta'])} {sci(v['delta_ci95'])} & {pval(v['p_holm'])} & {verdict}")
+    fr = load("results/posthoc4/fresh_task_infovqa.json")
+    rows.append(r"\midrule 16 Nov & Set 4 & InfoVQA (fresh task): Tomoro alone, frozen & " + f"{sgn(fr['delta'])} {sci(fr['delta_ci95'])} & {pval(fr['p_permutation'])} & {VERDICT(fr['delta'], fr['p_permutation'])}")
+    fu = load("results/posthoc5/fusion.json")["tasks"]
+    worse = sum(t["C_vs_B"]["p_holm"] < 0.05 and t["C_vs_B"]["delta"] < 0 for t in fu.values())
+    better = sum(t["C_vs_B"]["p_holm"] < 0.05 and t["C_vs_B"]["delta"] > 0 for t in fu.values())
+    rows.append(f"16 Nov & Set 5 & Frozen C on nine more ViDoRe v1 tasks & {sgn(min(t['C_vs_B']['delta'] for t in fu.values()))} to {sgn(max(t['C_vs_B']['delta'] for t in fu.values()))} & -- & {worse} loss, {better} gain")
+    ro = load("results/posthoc5/router.json")
+    rows.append(f"16 Nov & Set 5 & Leave-one-task-out router (macro over 10 tasks) & {sgn(ro['macro_delta_R_minus_B'], 4)} & -- & no gain")
+    table("tab_overview", "llp{6.2cm}lll", r"Date & Set & Attempt & $\Delta$nDCG@5 vs ColPali [95\% CI] & $p_\mathrm{Holm}$ & verdict", rows,
+          "DocVQA test split (225 queries) unless stated; each set was pre-registered and its settings chosen on dev before "
+          "its single test run. Verdict: ``gain''/``loss'' if $p_\\mathrm{Holm} < 0.05$ within the set's own family, else n.s. "
+          "The InfoVQA row is one pre-registered comparison (permutation $p$); the set-5 rows summarise Tables~\\ref{tab:posthoc5} and~\\ref{tab:router}.")
+    N.update({"ovGains": str(n_gain), "ovLosses": str(n_loss), "ovAttempts": str(len(rows_spec))})
+
+
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     full = {s: load(f"results/{d}/metrics.json") for s, d in
@@ -620,6 +692,8 @@ def main() -> None:
     posthoc3(N)
     posthoc4(N)
     posthoc5(N)
+    rrf_example(N)
+    overview(N)
 
     lines = ["% generated by scripts/make_report_tables.py -- do not edit"]
     lines += [f"\\newcommand{{\\{k}}}{{{v}}}" for k, v in N.items()]
