@@ -1,0 +1,140 @@
+% YZM5110 Research Project -- 5-minute introductory talk (19 Nov 2026 session).
+% The instructor asked for a short talk that introduces the topic to classmates; the detailed account of what was
+% tried and what worked is in the report (report/Ucuran_YZM5110_Research.pdf) and in the detailed deck (slides.pdf).
+% Build:  python scripts/make_report_tables.py && python scripts/make_figures.py && cd slides && tectonic short_talk.tex
+% Measured numbers are macros from ../report/generated/numbers.tex; published numbers are typed by hand and cited.
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,calc}
+\input{../report/generated/numbers.tex}
+\graphicspath{{../results/figures/}}
+
+\definecolor{cpBlue}{HTML}{2a78d6}\definecolor{bmOrange}{HTML}{eb6834}\definecolor{bgAqua}{HTML}{1b7a55}
+\definecolor{ink}{HTML}{1f1f1d}\definecolor{muted}{HTML}{6b6a66}\definecolor{tagI}{HTML}{8a6d00}
+\definecolor{soft}{HTML}{eef4fc}
+\usetheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamercolor{frametitle}{fg=cpBlue}
+\setbeamercolor{title}{fg=cpBlue}
+\setbeamercolor{structure}{fg=cpBlue}
+\setbeamercolor{normal text}{fg=ink}
+\setbeamerfont{frametitle}{series=\bfseries,size=\Large}
+\setbeamertemplate{itemize items}{\textbullet}
+\setbeamertemplate{footline}{\hfill\textcolor{muted}{\scriptsize\insertframenumber\,/\,\inserttotalframenumber}\hspace{1em}\vspace{0.6em}}
+\newcommand{\lbl}[2]{\textsf{\scriptsize\textcolor{#1}{[#2]}}}
+\newcommand{\Pub}{\lbl{cpBlue}{Published}}
+\newcommand{\Mea}{\lbl{bgAqua}{Measured}}
+\newcommand{\Int}{\lbl{tagI}{Interpretation}}
+\tikzset{box/.style={draw=muted, rounded corners=2pt, fill=white, inner sep=4pt, font=\small, align=center},
+         hot/.style={box, draw=cpBlue, fill=soft},
+         arr/.style={-{Stealth[length=2.2mm]}, muted, thick}}
+
+\title{Searching Document Pages as Images}
+\subtitle{ColPali, and whether keyword search still helps it}
+\author{\.{I}smail U\c{C}URAN \quad (26587009)}
+\institute{YZM5110 Multimodal Learning --- Research Project}
+\date{19 November 2026}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\centering\footnotesize\texttt{github.com/ismailucrn/colpali-hybrid-retrieval}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{The problem: finding the right page for RAG}
+Before an LLM can answer a question about a PDF, a \textbf{retriever} must find the page that holds the answer.\\[10pt]
+\textbf{The usual pipeline turns pages into text first:}\\[6pt]
+\begin{tikzpicture}[node distance=5mm]
+  \node[box] (p) {PDF page};
+  \node[box, right=of p] (o) {layout detection\\+ OCR};
+  \node[box, right=of o] (c) {chunks of text};
+  \node[box, right=of c] (e) {text embedding\\or BM25};
+  \node[box, right=of e] (s) {search};
+  \draw[arr] (p) -- (o); \draw[arr] (o) -- (c); \draw[arr] (c) -- (e); \draw[arr] (e) -- (s);
+\end{tikzpicture}\\[10pt]
+\begin{itemize}
+  \item slow to build (OCR, captioning), and it breaks easily;
+  \item tables, charts, logos and layout are lost or garbled;
+  \item OCR errors become search errors.
+\end{itemize}
+\vspace{4pt}
+\textcolor{muted}{Two modalities meet here: the document is an \emph{image}, the question is \emph{text}.}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{ColPali: search the page \emph{image} directly}
+\begin{columns}[T]
+\column{0.58\linewidth}
+\begin{tikzpicture}[node distance=4mm, every node/.append style={font=\scriptsize}]
+  \node[box] (img) {page\\image};
+  \node[hot, right=of img] (vlm) {PaliGemma-3B\\(vision--language)};
+  \node[box, right=of vlm] (pv) {$\approx$1000\\patch vectors};
+  \node[box, below=6mm of img] (q) {question\\(text)};
+  \node[hot, below=6mm of vlm] (lm) {same model};
+  \node[box, below=6mm of pv] (qv) {one vector\\per word};
+  \node[hot, anchor=west] (ms) at ($(pv.east)!0.5!(qv.east)+(4mm,0)$) {MaxSim\\score};
+  \draw[arr] (img) -- (vlm); \draw[arr] (vlm) -- (pv);
+  \draw[arr] (q) -- (lm); \draw[arr] (lm) -- (qv);
+  \draw[arr] (pv.east) -- (ms); \draw[arr] (qv.east) -- (ms);
+\end{tikzpicture}\\[10pt]
+\small $\text{score}(q,d)=\sum_{\text{words } i}\ \max_{\text{patches } j}\ \langle q_i, d_j\rangle$\\[3pt]
+\textcolor{muted}{\footnotesize each question word finds the patch where it ``appears'' on the page --- no OCR}
+\column{0.39\linewidth}
+\begin{itemize}
+  \item Faysse et al., \emph{ColPali}, ICLR 2025.
+  \item Same scoring idea as ColBERT (text search), applied to image patches.
+  \item \Pub{} On the ViDoRe benchmark it beats every OCR-based pipeline: average nDCG@5 \textbf{81.3} vs \textbf{67.0}.
+  \item New model family since then: ColQwen, Tomoro, \dots
+\end{itemize}
+\end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{My question: does keyword search still add anything?}
+\begin{itemize}
+  \item In \emph{text} search, combining \textbf{keyword search (BM25)} with \textbf{semantic search} is a cheap, standard improvement (``hybrid search'').
+  \item Visual retrievers might miss exact strings: invoice numbers, codes, names.
+  \item \textbf{Question:} if we add BM25 over the page's OCR text to ColPali, does page retrieval improve? For which questions?
+\end{itemize}
+\vspace{6pt}
+\textbf{What I did}
+\begin{enumerate}
+  \item Reproduced ColPali on ViDoRe DocVQA with the authors' code and checkpoint.
+  \item Fused it with BM25 using reciprocal rank fusion, plus a \emph{control} (a dense text model instead of BM25).
+  \item Fixed predictions and settings in advance; tuned on a dev split; touched the test split once; significance tests.
+  \item Follow-ups: stronger text pipelines, newer Qwen models, and the same test on nine more ViDoRe tasks.
+\end{enumerate}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{What came out}
+\centering\includegraphics[width=0.8\linewidth]{fig9_talk_summary.pdf}\\[2pt]
+\raggedright\small
+\begin{itemize}
+  \item \Mea{} The reproduction holds: nDCG@5 \fullB{} vs \pubCard{} reported by the authors.
+  \item \Mea{} Adding text never helped: BM25 fusion \deltaC{} on DocVQA, and no significant gain on any of nine more ViDoRe tasks.
+  \item \Mea{} A newer \emph{visual} model did: Tomoro ColQwen3-4B \deltaTM{} here, \infoDelta{} on a task never used for tuning.
+\end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Take-aways for your own projects}
+\begin{itemize}
+  \item \Int{} \textbf{Visual document retrievers already ``read'' the text.} OCR-based keyword search mostly finds pages ColPali finds anyway.
+  \item \Int{} \textbf{Fusion is not free.} Combining two rankers helps when both are comparably strong; a much weaker one imports its errors. This matches findings in text retrieval (Bruch et al., TOIS 2024).
+  \item \textbf{Method matters as much as the score:} a control system, a held-out test set used once, and a fresh task for confirmation turned a ``negative'' result into a clear answer.
+\end{itemize}
+\vspace{10pt}
+\begin{block}{More detail}
+\small Report, code, all results and the detailed slides:\\
+\texttt{github.com/ismailucrn/colpali-hybrid-retrieval} \quad(tag \texttt{v1.0-submission})
+\end{block}
+\end{frame}
+
+\end{document}

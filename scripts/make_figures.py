@@ -1,7 +1,8 @@
 """Regenerate every report figure from committed result files (no model, no dataset download).
 
 Inputs:  results/test_evaluation/metrics.json, results/fusion_docvqa/dev_selection*.json,
-         results/failure_analysis/analysis.json
+         results/failure_analysis/analysis.json, results/posthoc*/metrics.json, results/posthoc4/fresh_task_infovqa.json,
+         results/posthoc5/fusion.json
 Outputs: results/figures/fig*.png (300 dpi) and .pdf
 
 Colour follows the entity in every figure: ColPali = blue, BM25 family (A, C, C_w) = orange,
@@ -220,6 +221,129 @@ def fig6_overlap(fa: dict) -> None:
     save(fig, "fig6_overlap")
 
 
+# ---- overview figures added 2026-11-17 (post-hoc sets 1-5; short talk) -----------------------------------
+
+ATTEMPTS = [  # (metrics file, system id, label, second signal); order = chronology
+    ("test_evaluation", "C", "C: RRF(BM25, ColPali)", "text"),
+    ("test_evaluation", "D", "D: RRF(BGE-M3, ColPali)  [control]", "text"),
+    ("test_evaluation", "C_w", "C_w: weighted RRF (BM25)", "text"),
+    ("test_evaluation", "D_w", "D_w: weighted RRF (BGE-M3)", "text"),
+    ("posthoc_extensions", "C_code", "Set 1: C with code-preserving BM25", "text"),
+    ("posthoc_extensions", "C_cc", "Set 1: score-level fusion (BM25)", "text"),
+    ("posthoc_extensions", "D_cc", "Set 1: score-level fusion (BGE-M3)", "text"),
+    ("posthoc2", "T_rr", "Set 2: text RAG stack (hybrid + reranker)", "text"),
+    ("posthoc2", "B_ce", "Set 2: ColPali + cross-encoder rerank", "text"),
+    ("posthoc3", "C_sel", "Set 3: selective fusion", "text"),
+    ("posthoc3", "C_vlm", "Set 3: RRF(BM25 on Qwen3.5 OCR, ColPali)", "text"),
+    ("posthoc3", "E_ens", "Set 3: RRF(Qwen3-VL-Emb-2B, ColPali)", "visual"),
+    ("posthoc3", "B_vr", "Set 3: ColPali + Qwen3-VL-Reranker-2B", "visual"),
+    ("posthoc4", "F_q8", "Set 4: RRF(Qwen3-VL-Emb-8B, ColPali)", "visual"),
+    ("posthoc4", "B_vr8", "Set 4: ColPali + Qwen3-VL-Reranker-8B", "visual"),
+    ("posthoc4", "F_cq", "Set 4: RRF(ColPali, ColQwen2.5)", "visual"),
+    ("posthoc4", "F_tm", "Set 4: RRF(ColPali, Tomoro)", "visual"),
+    ("posthoc4", "CQ", "Set 4: ColQwen2.5 alone (replaces ColPali)", "replace"),
+    ("posthoc4", "TM", "Set 4: Tomoro ColQwen3-4B alone (replaces ColPali)", "replace"),
+]
+KIND_COLOR = {"text": ORANGE, "visual": AQUA, "replace": GRAY_DARK}
+
+
+def fig7_all_attempts() -> None:
+    """Every attempt to beat ColPali on the DocVQA test split: paired delta nDCG@5 with 95% CI (one row each)."""
+    from matplotlib.lines import Line2D
+
+    files = {f: load(f"results/{f}/metrics.json") for f in {a[0] for a in ATTEMPTS}}
+    fresh = load("results/posthoc4/fresh_task_infovqa.json")
+    rows = [(lbl, files[f]["vs_baseline"][sid]["delta"], files[f]["vs_baseline"][sid]["delta_ci95"],
+             files[f]["vs_baseline"][sid]["p_holm"], kind) for f, sid, lbl, kind in ATTEMPTS]
+    rows.append(("InfoVQA (fresh task): Tomoro alone, frozen", fresh["delta"], fresh["delta_ci95"],
+                 fresh["p_permutation"], "replace"))
+    fig, ax = plt.subplots(figsize=(7.2, 6.2))
+    ax.axvline(0, color=BLUE, lw=1.2, ls="--", zorder=1)
+    n = len(rows)
+    for i, (lbl, d, (lo, hi), p, kind) in enumerate(rows):
+        y = n - 1 - i
+        c = KIND_COLOR[kind]
+        ax.plot([lo, hi], [y, y], color=c, lw=2, solid_capstyle="round", zorder=2)
+        ax.plot(d, y, "o", color=c if p < 0.05 else SURFACE, mec=c, mew=1.6, ms=6.5, zorder=3)
+        ax.text(0.205, y, f"{100 * d:+.1f}", va="center", ha="right", fontsize=7.5, color=INK2)
+    ax.axhline(0.5, color=MUTED, lw=0.8)
+    ax.set_yticks(range(n), [r[0] for r in reversed(rows)], fontsize=7.8)
+    ax.set_xlim(-0.2, 0.21)
+    ax.set_xlabel("Δ nDCG@5 vs ColPali v1.3 (paired, 95% bootstrap CI)")
+    ax.set_title("Every attempt to improve on ColPali (DocVQA test, n = 225; bottom row: InfoVQA)", loc="left")
+    handles = [Line2D([], [], color=KIND_COLOR[k], marker="o", lw=2, label=t) for k, t in
+               (("text", "adds a text signal"), ("visual", "adds a second visual signal"), ("replace", "replaces ColPali"))]
+    handles.append(Line2D([], [], color=MUTED, marker="o", mfc=SURFACE, lw=0, label="hollow = not significant (p ≥ 0.05)"))
+    ax.legend(handles=handles, loc="upper right", bbox_to_anchor=(1.0, 0.42), fontsize=7.5)
+    ax.text(0.205, n - 0.35, "Δ pts", ha="right", fontsize=7.5, color=MUTED)
+    save(fig, "fig7_all_attempts")
+
+
+TASK_NAMES = {"infovqa": "InfoVQA", "arxivqa": "ArxivQA", "tabfquad": "TabFQuAD", "tatdqa": "TAT-DQA",
+              "shiftproject": "ShiftProject", "synth_energy": "Synth. energy", "synth_ai": "Synth. AI",
+              "synth_gov": "Synth. gov.", "synth_health": "Synth. health"}
+
+
+def fig8_vidore_tasks() -> None:
+    """Post-hoc set 5: frozen C vs ColPali on nine ViDoRe v1 tasks; strength gap vs fusion delta (post-hoc)."""
+    from matplotlib.lines import Line2D
+
+    fu = load("results/posthoc5/fusion.json")["tasks"]
+    gcol = {"visual": AQUA, "text": ORANGE, "none": GRAY_DARK}
+    order = sorted(fu, key=lambda t: fu[t]["C_vs_B"]["delta"])
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.2, 3.6), gridspec_kw={"width_ratios": [1.15, 1]})
+    a1.axvline(0, color=BLUE, lw=1.2, ls="--")
+    for y, t in enumerate(order):
+        r = fu[t]["C_vs_B"]
+        c = gcol[fu[t]["group"]]
+        a1.plot(r["delta_ci95"], [y, y], color=c, lw=2, solid_capstyle="round")
+        a1.plot(r["delta"], y, "o", color=c if r["p_holm"] < 0.05 else SURFACE, mec=c, mew=1.6, ms=6.5)
+    a1.set_yticks(range(len(order)), [f"{TASK_NAMES[t]} (n={fu[t]['n_queries']})" for t in order], fontsize=7.8)
+    a1.set_xlabel("Δ nDCG@5, C − ColPali (95% CI)")
+    a1.set_title("Frozen DocVQA fusion on nine ViDoRe v1 tasks", loc="left")
+    a1.legend(handles=[Line2D([], [], color=gcol[g], marker="o", lw=2, label=l) for g, l in
+                       (("visual", "visual task"), ("text", "text-dense task"), ("none", "French tables"))]
+              + [Line2D([], [], color=MUTED, marker="o", mfc=SURFACE, lw=0, label="hollow = n.s. after Holm")],
+              loc="lower right", fontsize=7)
+    offsets = {"synth_gov": (4, 5), "tatdqa": (6, -3), "synth_health": (-12, -13)}
+    for t in fu:
+        gap = fu[t]["metrics"]["B"]["ndcg_at_5"] - fu[t]["metrics"]["A"]["ndcg_at_5"]
+        d = fu[t]["C_vs_B"]["delta"]
+        a2.plot(gap, d, "o", color=gcol[fu[t]["group"]], ms=7, mec=SURFACE, mew=1.2)
+        a2.annotate(TASK_NAMES[t], (gap, d), xytext=offsets.get(t, (4, 3)), textcoords="offset points",
+                    fontsize=7, color=INK2)
+    a2.axhline(0, color=BLUE, lw=1.2, ls="--")
+    a2.set_xlabel("ColPali − BM25 (nDCG@5): how much weaker BM25 is")
+    a2.set_ylabel("Δ nDCG@5, C − ColPali")
+    a2.set_title("Post-hoc, descriptive: the gap predicts the loss", loc="left")
+    fig.tight_layout()
+    save(fig, "fig8_vidore_tasks")
+
+
+def fig9_talk_summary() -> None:
+    """Short-talk summary: DocVQA test nDCG@5 of the main systems, grouped by what the system adds."""
+    t = load("results/test_evaluation/metrics.json")["results"]
+    p2 = load("results/posthoc2/metrics.json")["results"]
+    p4 = load("results/posthoc4/metrics.json")["results"]
+    rows = [("BM25 (OCR text)", t["A"], ORANGE), ("Text RAG stack\n(hybrid + reranker)", p2["T_rr"], ORANGE),
+            ("ColPali + BM25\n(RRF)", t["C"], ORANGE), ("ColPali v1.3", t["B"], BLUE),
+            ("ColPali + Tomoro\n(RRF)", p4["F_tm"], AQUA), ("Tomoro ColQwen3-4B\n(newer model)", p4["TM"], GRAY_DARK)]
+    fig, ax = plt.subplots(figsize=(8.4, 3.0))
+    b = t["B"]["metrics"]["ndcg_at_5"]
+    for x, (lbl, r, c) in enumerate(rows):
+        v = r["metrics"]["ndcg_at_5"]
+        lo, hi = r["ndcg_at_5_ci95"]
+        ax.bar(x, v, color=c, width=0.62, edgecolor=SURFACE, linewidth=2)
+        ax.plot([x, x], [lo, hi], color=INK2, lw=1.2)
+        ax.text(x, hi + 0.015, f"{v:.3f}", ha="center", fontsize=8, color=INK)
+    ax.axhline(b, color=BLUE, lw=1, ls="--")
+    ax.set_xticks(range(len(rows)), [r[0] for r in rows], fontsize=7.6)
+    ax.set_ylim(0, 0.75)
+    ax.set_ylabel("nDCG@5 (95% CI)")
+    ax.set_title("DocVQA test (225 queries): text signals do not help ColPali; a newer visual model does", loc="left")
+    save(fig, "fig9_talk_summary")
+
+
 def main() -> None:
     style()
     test = load("results/test_evaluation/metrics.json")
@@ -230,6 +354,9 @@ def main() -> None:
     fa = load("results/failure_analysis/analysis.json")
     fig5_headroom(fa)
     fig6_overlap(fa)
+    fig7_all_attempts()
+    fig8_vidore_tasks()
+    fig9_talk_summary()
 
 
 if __name__ == "__main__":
