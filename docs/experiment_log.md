@@ -571,3 +571,11 @@ Chronological record of every run and decision. One entry per run or decision; n
   - It hurts a lot where BM25 is much weaker (visual tasks) and is roughly neutral where BM25 is close to ColPali (text-dense and synthetic tasks).
   - This is the unequal-inputs pattern seen across tasks. Even the text-dense tasks offer little headroom: ColPali already finds almost every page that BM25 finds.
   - A router fed only score and query features cannot find the few queries where fusion helps. The oracle shows such queries exist (+2.4 pt macro), but our features do not identify them.
+
+### 2026-11-17 — Note: literature items checked; one set-5 caveat resolved
+- Type: note (no run). The open literature items were checked against the paper text with AI assistance. Details are in `docs/literature_matrix.md` ("Items to verify").
+- Resolves the *unverified* caveat in the set-5 entries (pre-registration and results). ColPali §3.1 and Table 1: the practical tasks (Shift and the four synthetic sets) have queries generated from the pages by Claude-3 Sonnet and filtered by human annotators. Those entries are left unchanged; this note supersedes the caveat.
+- Corrections:
+  - The IRPAPERS hybrid (R@1 49) equals ColQwen2 alone (49). Its gain is +3 over the text hybrid and +6 over the image model it fuses.
+  - DSE's own hybrid is below DSE alone on SlideVQA (71.5 vs 75.3, App. A.2 / Table 4).
+  - The report, slide 5 and the matrix were updated.

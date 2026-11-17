@@ -8,7 +8,7 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
 - **[M] Measured:** our own result, with the file it comes from.
 - **(unverified):** not yet checked against the paper text. Do not cite it before checking.
 
-**How the details were checked.** Paper details were extracted on 2026-11-06 from the arXiv HTML or PDF versions listed with each paper. The extraction was AI-assisted (see `docs/ai_usage.md`). **The author must read every paper and confirm every cell before it goes into the report.** Section and table numbers are given so each cell can be checked quickly.
+**How the details were checked.** Paper details were extracted on 2026-11-06 from the arXiv HTML or PDF versions listed with each paper. The extraction was AI-assisted (see `docs/ai_usage.md`). On 2026-11-17 the open items were re-checked against the papers, again with AI assistance: the ColPali, DSE and Bruch et al. PDFs were read as text, and the ColPali, DSE, IRPAPERS, slide-study and Bruch et al. HTML pages were read. The checked items are marked *Checked 2026-11-17*. Anything still seen only in a summary stays marked (unverified). Section and table numbers are given so each cell can be checked quickly.
 
 ---
 
@@ -71,7 +71,7 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
 
 ### 3.1 ColPali — Faysse, Sibille, Wu, Omrani, Viaud, Hudelot, Colombo
 
-*Citation:* "ColPali: Efficient Document Retrieval with Vision Language Models", arXiv 2407.01449v6 (28 Feb 2025). Venue: not stated on the pages read. ICLR 2025 is (unverified); check the published version before citing a venue.
+*Citation:* "ColPali: Efficient Document Retrieval with Vision Language Models", arXiv 2407.01449v6 (28 Feb 2025). Venue: ICLR 2025 (*checked 2026-11-17*: the arXiv comments field and the PDF header both say "Published as a conference paper at ICLR 2025").
 *Read:* https://arxiv.org/html/2407.01449v6, §1–7 verbatim. Appendices A.3, B.2–B.4 and C–F were not read verbatim.
 
 - **Question and contribution.** [P, §1–2] Practical document retrieval is bottlenecked by the ingestion pipeline (PDF parsing, OCR, layout detection, captioning), not by the embedding model. The paper makes two contributions:
@@ -90,7 +90,7 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
 - **Data and protocol.**
   - [P, §4.2] Training: 118,695 query–page pairs, 63 % from academic datasets and 37 % synthetic (Claude-3 Sonnet questions on web-crawled PDFs). The authors checked that no multi-page PDF appears in both ViDoRe and the training set.
   - [P, §3.1, Table 1] ViDoRe V1 has five academic tasks (DocVQA 500/500, InfoVQA, TAT-DQA, arXivQA, TabFQuAD) and five practical tasks (100 queries / 1000 pages each). Main metric: nDCG@5.
-  - [I] The overlap check covers *multi-page PDFs*. It does not obviously cover the single-page academic sets such as DocVQA. DocVQA is one of the academic training datasets (App. A.3, Table 3: 39,463 pairs (unverified: read only from an extracted summary)); **which DocVQA split was used is not stated** (paper and the `vidore/colpali_train_set` card, checked 2026-11-11). Training on DocVQA data favours ColPali on DocVQA relative to zero-shot text baselines; test-page overlap was not checked.
+  - [I] The overlap check covers *multi-page PDFs*. It does not obviously cover the single-page academic sets such as DocVQA. DocVQA is one of the academic training datasets (App. A.3, Table 3: 39,463 pairs, *checked 2026-11-17 in the PDF*; Table 3 lists DocVQA, InfoVQA 10,074, TATDQA 13,251, arXivQA 10,000 and scraped PDFs 45,940, total 118,695); **which DocVQA split was used is not stated** (paper and the `vidore/colpali_train_set` card, checked 2026-11-11). Training on DocVQA data favours ColPali on DocVQA relative to zero-shot text baselines; test-page overlap was not checked.
   - *Correction 2026-11-11:* an earlier version of this cell said DocVQA's *train* split is used; that was not verified and has been replaced.
 - **Baselines and evidence.**
   - [P, §3.2] Text pipelines are built with "Unstructured" (text-only, + OCR, + captioning) and embedded with BM25 or BGE-M3. A page's score is the max over its chunks.
@@ -108,9 +108,9 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
   - [P, §3.2] "Little difference" between BM25 and BGE-M3 on the same text: the authors read this as a "visual information bottleneck".
   - [M, `results/colpali_v1.3_docvqa/metrics.json`] We measured nDCG@5 0.5752 for checkpoint v1.3. Its model card reports 0.5845.
 - **Resources and reproducibility.**
-  - [P, §5.2, Fig. 2] Indexing on an L4: about 0.39 s/page for ColPali vs 7.22 s/page for the Unstructured pipeline (unverified: the per-page totals come from App. B.4 / Table 5, which was not read verbatim).
+  - [P, §5.2, Fig. 2] Indexing on an L4: about 0.39 s/page for ColPali vs 7.22 s/page for the Unstructured pipeline (*checked 2026-11-17*: App. B.4, Table 5, average per-page latency on 1000 ViDoRe test pages, g2-standard-8 VM with an L4).
   - [P, §5.2] 257.5 KB per page in fp16. Token pooling with factor 3 keeps 97.8 % of performance with 66.7 % fewer vectors.
-  - Query encoding: about 30 ms for ColPali vs about 22 ms for BGE (unverified: the extracted HTML text is garbled; check the PDF).
+  - Query encoding: about 30 ms for ColPali vs about 22 ms for BGE [P, §5.2] (*checked 2026-11-17*: "about 22 ms for 15 tokens" for BGE and "about 30 ms" for ColPali's language model).
   - [P, §4.2] Training on 8 GPUs (GPU type not stated).
   - [P, Reproducibility statement] Code, adapters, training set and benchmark are released.
   - [I] Licence wording is inconsistent ("MIT" vs "open licenses") and should be checked on the repositories.
@@ -180,7 +180,7 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
   - [P, Table 1] SlideVQA nDCG@10: DSE 75.3 vs BM25 55.8 and E5 59.3.
   - [P, §5.4.2] Of 50 text-retriever failures on slides, 22 were text-extraction errors and 28 needed visual context.
   - [P, App. A.2, Table 4] **Hybrid** (fused rankings): DSE + Phi-3 text reaches 71.5 nDCG@10 on SlideVQA. On Wiki-SS the authors report "minimal improvement".
-  - *Unverified:* the exact fusion method used in A.2, and how 71.5 compares with DSE alone in the same setting. The fused number is below supervised DSE alone (75.3, Table 1); check whether A.2 uses a different setting.
+  - *Checked 2026-11-17 in the PDF:* the hybrid interpolates the similarity scores of the two retrievers (A.2, citing Ma et al. 2022). Table 4 repeats DSE alone at 75.3 nDCG@10 on SlideVQA, so DSE + Phi-3 (71.5) is **below** DSE alone in the same setting. The authors write that "DSE alone still outperforms the hybrid CLIP + Phi-3 model", and that on Wiki-SS "hybrid models show minimal improvement".
 - **Resources and reproducibility.**
   - [P, §4.3] Trained on 2× A100 80 GB.
   - [P, §5.3, Fig. 4] On an H100, going from 1×1 to 4×4 crops raises NQ Top-10 from 62.0 to 73.7 but lowers encoding speed from 12.2 to 4.3 documents/s.
@@ -292,7 +292,7 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
   - Text: BM25 + Arctic 2.0 dense, fused by relative score fusion (RSF; min-max normalisation, then a weighted sum).
   - Image: ColModernVBERT (MaxSim); ColPali and ColQwen2 are also evaluated.
   - Multimodal hybrid: an α sweep between text-only and image-only. At α = 0.5 the weights are 0.25 / 0.25 / 0.5.
-  - RRF is also defined (1 / (k + rank)); the k value is not stated in the part read.
+  - RRF is also defined (1 / (k + rank)); the k value is not stated in the part read. The reported multimodal hybrid uses RSF, not RRF (*checked 2026-11-17*, §4.1).
 - **Data and protocol.** [P, §2] Questions are generated by Claude Sonnet 4.5, one per non-reference page of 19 papers. Metrics: Recall@1/5/20 for retrieval; LLM-judged answer alignment for QA.
 - **Baselines and evidence.** [P, Abstract] Recall@1 / 5 / 20:
 
@@ -300,10 +300,13 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
   |---|---|---|---|
   | Text hybrid | 46 | 78 | 91 |
   | Image (ColModernVBERT) | 43 | 78 | 93 |
+  | Image (ColQwen2, Table 2) | 49 | 81 | 94 |
   | **Multimodal hybrid** | **49** | **81** | **95** |
 
+  - *Checked 2026-11-17:* the hybrid is +3 R@1 over the text hybrid and +6 over ColModernVBERT, the image model it fuses (§4.1). It equals ColQwen2 alone at R@1. No significance test or confidence interval is reported in the main text.
+
   - [P, §1] Complementarity at Recall@1: 22 queries succeed with text only, 18 with images only.
-  - [I] No significance test or confidence interval appears in the part read. 180 queries is small; a gain of 6 R@1 points is about 11 queries.
+  - [I] No significance test or confidence interval appears in the part read. 180 queries is small; a gain of 3–6 R@1 points is about 5–11 queries.
 - **Resources and reproducibility.** [P, §3.3, §1] Also tests MUVERA compression: 41 % R@1, 2 points below the uncompressed model. Data and code are on GitHub (Weaviate), (unverified: not opened).
 - **Limitations and connections.**
   - Representation-level fusion is left to future work [P, §3.4]. Other stated limitations were only seen in a summary, so they are not cited.
@@ -314,7 +317,7 @@ Eight papers are analysed in full (§2–§3). Three more appear as related work
 
 ### 3.8 Slide retrieval study — Giouroukis, Dimitriadis, Papadopoulos, Shao, Tsoumakas
 
-*Citation:* "What's the Best Way to Retrieve Slides? A Comparative Study of Multimodal, Caption-Based, and Hybrid Retrieval Techniques", arXiv 2509.15211v1 (18 Sep 2025). The HTML template names CIKM 2025, but the DOI is a placeholder, so the venue is (unverified).
+*Citation:* "What's the Best Way to Retrieve Slides? A Comparative Study of Multimodal, Caption-Based, and Hybrid Retrieval Techniques", arXiv 2509.15211v1 (18 Sep 2025). The HTML front matter names the 34th ACM CIKM (Seoul, November 2025), but the DOI is a placeholder and the arXiv page gives no venue, so the venue is (unverified) and the paper is cited as arXiv (*checked 2026-11-17*).
 *Read:* https://arxiv.org/html/2509.15211, in full.
 
 - **Question and contribution.** [P, §1] Which text-to-slide retrieval architecture gives the best accuracy / latency / storage trade-off? Visual (ColPali, DSE), caption-based (VLM captions + BM25 / dense / "textual ColPali"), OCR + BM25, hybrids and rerankers are compared.
@@ -422,6 +425,13 @@ Our experiment fills this gap for one task (ViDoRe V1 DocVQA). It uses:
 - On ViDoRe V2, which reduces query–page lexical overlap by design, fusion should help even less.
 
 ### Items to verify before citing
-ColPali venue (dblp/OpenReview blocked on 2026-11-11; cited as arXiv v6) and App. A.3 Table 3 (DocVQA pair count, split) and App. B.4 latency numbers; DSE App. A.2 fusion method and setting; slide-study venue (no Crossref record found on 2026-11-11; cited as arXiv); IRPAPERS §4–5 (fusion table, k, significance); VisRAG Table 2.
+*Checked 2026-11-17 (AI-assisted, against the paper text):*
+- ColPali: venue ICLR 2025; App. A.3 Table 3 (39,463 DocVQA pairs; the original DocVQA split is not stated); App. B.4 Table 5 (0.39 vs 7.22 s/page); query-encoding latency (§5.2); Table 2 DocVQA column; §3.1, where the practical tasks (Shift and the four synthetic sets, Table 1) have queries generated by Claude-3 Sonnet and filtered by human annotators.
+- DSE App. A.2 (score interpolation; "minimal improvement" on Wiki-SS; hybrid below DSE alone on SlideVQA).
+- IRPAPERS §4.1 and Table 2 (RSF hybrid; ColQwen2 alone also reaches 49 R@1).
+- Bruch et al. Table 2 (RRF below the better input on MS MARCO, Quora, HotpotQA and FiQA) and App. A Table 5 (SPLADE + BM25).
+- Slide study Table 1 (82.7 vs 81.0; LPM 66.7 vs 66.8; single RTX 3090).
+
+*Still open:* the slide-study venue (placeholder DOI; cited as arXiv); the IRPAPERS appendices (not read verbatim); VisRAG Table 2 (not used for any number).
 
 *Resolved 2026-11-11:* Bruch et al. — ACM TOIS 42(1):1–35, 2024 (Crossref, doi:10.1145/3596512). DocVQA licensing — see `README.md` (Data access).

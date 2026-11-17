@@ -105,7 +105,7 @@ We use the authors' checkpoint (v1.3), \textbf{inference only}.
 RRF (Cormack 2009) & \Pub{} beats single runs when fusing \emph{many} runs of similar quality; $k{=}60$\\
 Bruch et al.\ (TOIS 2024) & \Pub{} default RRF falls \emph{below} the better input on 4/9 datasets\\
 DSE (EMNLP 2024) & \Pub{} screenshot + text hybrid: ``minimal improvement''\\
-IRPAPERS (2026) & \Pub{} fusion helps (R@1 49 vs 43) --- clean LLM transcriptions, text $\approx$ image\\
+IRPAPERS (2026) & \Pub{} fusion helps (R@1 49 vs 43; ColQwen2 alone 49) --- clean LLM transcriptions, text $\approx$ image\\
 Slide study (2025) & \Pub{} RRF[ColPali, text] 81.0 vs ColPali 82.7 nDCG@10\\
 ViDoRe V1/V2 & \Pub{} visual retrievers evaluated \emph{against} or \emph{without} text, never combined\\
 \bottomrule
@@ -418,7 +418,7 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
   \item Pre-registration is checkable in git history (split, control, ablation committed before the test run)
 \end{itemize}
 \vspace{0.4em}
-\textbf{AI use (disclosed, \texttt{docs/ai\_usage.md})}: Claude Code wrote most code, drove Colab, extracted literature details and drafted documents; the author chose task, checkpoint, control and every pre-registration, approved each run, and verified \todo{what you checked}.\\[6pt]
+\textbf{AI use (disclosed, \texttt{docs/ai\_usage.md})}: Claude Code wrote most code, drove Colab, extracted literature details and drafted documents; the author chose task, checkpoint, control and the set-4 models, approved every pre-registration and run, and reviewed each result; the final literature check (17 Nov) was AI-assisted.\\[6pt]
 \centering\texttt{github.com/ismailucrn/colpali-hybrid-retrieval} \quad tag \texttt{v1.0-submission}
 \end{frame}
 

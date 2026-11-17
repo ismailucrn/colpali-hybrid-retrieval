@@ -39,7 +39,7 @@
 \large Reproducing ColPali on ViDoRe DocVQA and Testing BM25 Fusion}
 \author{\.{I}smail U\c{C}URAN \quad (26587009)\\
 YZM5110 Multimodal Learning --- Research Project}
-\date{Draft, \today}
+\date{17 November 2026}
 
 \begin{document}
 \maketitle
@@ -110,7 +110,7 @@ BEIR~\cite{beir}, VisRAG~\cite{visrag} and~\cite{lostocr} are kept as related wo
 
 \noindent\textbf{Known bias.} The search was small: two English queries and no citation tracking. Newer or non-arXiv work may be missing.
 
-\noindent\textbf{How details were checked.} Paper details were extracted from the arXiv HTML/PDF versions with AI assistance (Appendix~\ref{app:ai}). Every cell names its section or table in \file{docs/literature\_matrix.md} so that it can be checked against the paper. \todo{author: confirm every cell against the papers}
+\noindent\textbf{How details were checked.} Paper details were extracted from the arXiv HTML/PDF versions with AI assistance (Appendix~\ref{app:ai}). Every cell names its section or table in \file{docs/literature\_matrix.md} so that it can be checked against the paper. On 17~Nov 2026 the open items were re-checked against the paper text (PDF or HTML), again with AI assistance; details seen only in summaries remain marked as unverified in the matrix.
 
 \subsection{Comparison matrix}
 Table~\ref{tab:matrix} condenses the matrix. The full version, with the location of every claim and the open verification items, is in \file{docs/literature\_matrix.md}. All cells are \Pub{} unless marked \Int{}.
@@ -186,7 +186,7 @@ Are image and text retrieval failures complementary on scientific papers? &
 Page image + GPT-4.1 transcription (not classical OCR). &
 BM25 + Arctic dense (relative score fusion) fused with ColModernVBERT; $\alpha$ sweep. &
 3,230 pages, 180 questions; Recall@1/5/20. &
-R@1: text 46, image 43, \textbf{fusion 49}; 22 text-only vs 18 image-only successes. No significance test (in the part read). &
+R@1: text 46, image 43, \textbf{fusion 49} (ColQwen2 alone also 49); 22 text-only vs 18 image-only successes. No significance test (in the part read). &
 Code on GitHub (not checked). &
 \Int{} Text and image of similar strength with clean text: the conditions under which fusion helps.\\
 \midrule
@@ -265,7 +265,7 @@ where $w=0.5$ recovers plain RRF and $w=1$ recovers ColPali alone. This is close
 We reproduce the \textbf{v1.3} number. v1.0 is marked as not supported by the current reference library (\texttt{colpali-engine} 0.3.18), and making it work had an unknown time cost.
 
 \paragraph{Expectation and falsification criterion (fixed before the run).}
-We expected the measured nDCG@5 to lie within $\pm$2 points of \pubCard{}. This tolerance was written into the project plan before the full run (commit \texttt{162441e}; the run was at \texttt{0a716fa}). A larger gap would first be investigated (checkpoint revision, precision, image resolution, scoring code, dataset revision) before drawing any conclusion about the method. \todo{author: confirm you accept the $\pm$2-point tolerance as stated}
+We expected the measured nDCG@5 to lie within $\pm$2 points of \pubCard{}. This tolerance was written into the project plan before the full run (commit \texttt{162441e}; the run was at \texttt{0a716fa}). A larger gap would first be investigated (checkpoint revision, precision, image resolution, scoring code, dataset revision) before drawing any conclusion about the method.
 
 \paragraph{Implementation.}
 \begin{itemize}
@@ -720,7 +720,7 @@ Pre-registered expectations: ColPali within $\pm$2 points of its card on each ta
   \item \Mea{} \emph{Post-hoc and descriptive, not pre-registered:} the strength gap between ColPali and BM25 (B$-$A) tracks $\Delta$C better than the headroom does ($\rho$ = \pfGapRho{}, exact $p$ = \pfGapRhoP{}, $n$ = 9).
   \item \Int{} The DocVQA result generalises across ViDoRe~v1: rank fusion with BM25 never significantly helps ColPali. It costs a lot where BM25 is much weaker (visual tasks) and is roughly neutral where BM25 comes close (text-dense and synthetic tasks). This is the unequal-inputs pattern again, now across tasks rather than across queries.
   \item \Int{} Even on text-dense pages, ColPali already finds almost every page that BM25 finds, so there is little for fusion to add.
-  \item \textbf{Caveats.} Four tasks have only 100 queries, so their intervals are wide. ColPali scores 0.93--0.99 on the synthetic tasks, which leaves little room above it. \Hyp{} The synthetic and ShiftProject queries may have been generated from the pages by an LLM, which would favour lexical overlap. This is unverified and is to be checked in the ViDoRe construction section of~\cite{colpali}.
+  \item \textbf{Caveats.} Four tasks have only 100 queries, so their intervals are wide. ColPali scores 0.93--0.99 on the synthetic tasks, which leaves little room above it. \Pub{} The practical tasks (ShiftProject and the four synthetic sets) have queries generated from the pages by Claude-3 Sonnet and filtered by human annotators~\cite[\S3.1, Table~1]{colpali}. \Int{} Such queries are likely to share words with their page, which should favour BM25, and BM25 is indeed strong there; fusion still does not help.
 \end{itemize}
 
 \paragraph{Summary of the verdicts.} P1 rejected (significant harm); P2 not supported (no gain anywhere, and the premise is reversed); P3 not supported (C $\approx$ D). The dev-tuned weighting ties with ColPali. Post-hoc, neither score-level fusion nor a better BM25 tokenizer changes this, and neither does a text RAG stack with a cross-encoder reranker. Post-hoc set 3 found no reliable improvement either. Selective fusion, fusion over a cleaner VLM transcription and a second visual retriever do not help, and a visual reranker's dev gain did not replicate on test. Post-hoc set 4 does find an improvement. It comes from newer and stronger visual retrievers, and from fusing them with ColPali; it holds on a fresh task (InfoVQA, \infoDelta{}). Post-hoc set 5 shows that the negative fusion result is not specific to DocVQA: on none of nine further ViDoRe tasks does BM25 fusion significantly help, and a leave-one-task-out router does not find the queries where it would.
@@ -731,7 +731,7 @@ Pre-registered expectations: ColPali within $\pm$2 points of its card on each ta
 
 \paragraph{Limitations.}
 \begin{itemize}
-  \item \textbf{One main task, one OCR, one checkpoint.} The main conclusions are about ViDoRe~v1 DocVQA with the benchmark's Tesseract text and ColPali~v1.3. Post-hoc set 5 extends the fusion comparison, with frozen settings, to the nine other ViDoRe~v1 tasks, but not to ViDoRe~V2 or to other OCR. \Pub{} DocVQA is one of the academic datasets in ColPali's training data~\cite[\S4.2, App.~A.3]{colpali} \todo{verify in App.~A.3 / Table~3 (39,463 DocVQA pairs, read only from an extracted summary)}. The paper does not say which DocVQA split was used, and its contamination check covers multi-page PDFs only~\cite[\S4.2]{colpali}. \Int{} Training on DocVQA data favours ColPali against the zero-shot text baselines on this task. We did not check whether any test page also appears in the training set.
+  \item \textbf{One main task, one OCR, one checkpoint.} The main conclusions are about ViDoRe~v1 DocVQA with the benchmark's Tesseract text and ColPali~v1.3. Post-hoc set 5 extends the fusion comparison, with frozen settings, to the nine other ViDoRe~v1 tasks, but not to ViDoRe~V2 or to other OCR. \Pub{} DocVQA is one of the academic datasets in ColPali's training data, with 39,463 of its 118,695 training pairs~\cite[\S4.2, App.~A.3, Table~3]{colpali}. The paper does not say which DocVQA split was used, and its contamination check covers multi-page PDFs only~\cite[\S4.2]{colpali}. \Int{} Training on DocVQA data favours ColPali against the zero-shot text baselines on this task. We did not check whether any test page also appears in the training set.
   \item \textbf{Small test set.} 225 queries; 17 visual queries. Per-type results are exploratory, and the confidence intervals are wide (about $\pm$0.06 nDCG@5 per system).
   \item \textbf{Fusion functions.} Our main analysis used rank fusion. Score-level convex combination and a code-preserving tokenizer were tested only post-hoc (Section~\ref{sec:posthoc}), with one normalisation (min-max) and one tokenizer design. Other score normalisations, learned fusion and query-dependent weights remain untested.
   \item \textbf{Post-hoc set 2 is post-hoc and partly cross-device.} The text RAG stack, the cross-encoder and the OCR analysis were added on 15 November, after the main test run, at our own initiative to answer an obvious objection. They were pre-registered before running, but the test split had already been used twice. We tested one reranker, one pool size and one OCR proxy, and the proxy is crude. The cross-encoder ran on Apple MPS, so its latency is not comparable with ColPali's L4 numbers.
@@ -833,11 +833,11 @@ AI assistance was used and is permitted by the assignment. The detailed, dated r
     \item drafted the documentation, the figures and this report.
   \end{itemize}
 \end{itemize}
-The author chose the topic, task, checkpoint, control model and every pre-registration step; approved each run; and is responsible for reading the sources, checking citations and every claim, and defending the conclusions. \todo{author: describe what you verified yourself, e.g.\ papers read, code reviewed, examples checked against page images}
+The author chose the topic, task, checkpoint, control model and the models of post-hoc set 4; approved every pre-registration before its run; signed in to Colab and handled the downloads; and reviewed each result as it was reported. The final check of the literature details against the papers (17 November) was delegated to the AI tool and is recorded in \file{docs/literature\_matrix.md}. The author remains responsible for every claim and for defending the conclusions.
 
 % =====================================================================================================
 \begin{thebibliography}{99}\small
-\bibitem{colpali} M.~Faysse, H.~Sibille, T.~Wu, B.~Omrani, G.~Viaud, C.~Hudelot, P.~Colombo. ColPali: Efficient Document Retrieval with Vision Language Models. arXiv:2407.01449v6, 2025.
+\bibitem{colpali} M.~Faysse, H.~Sibille, T.~Wu, B.~Omrani, G.~Viaud, C.~Hudelot, P.~Colombo. ColPali: Efficient Document Retrieval with Vision Language Models. ICLR 2025 (arXiv:2407.01449v6).
 \bibitem{colbert} O.~Khattab, M.~Zaharia. ColBERT: Efficient and Effective Passage Search via Contextualized Late Interaction over BERT. SIGIR 2020. doi:10.1145/3397271.3401075.
 \bibitem{dse} X.~Ma, S.-C.~Lin, M.~Li, W.~Chen, J.~Lin. Unifying Multimodal Retrieval via Document Screenshot Embedding. EMNLP 2024 (arXiv:2406.11251v2).
 \bibitem{vidorev2} Q.~Macé, A.~Loison, M.~Faysse. ViDoRe Benchmark V2: Raising the Bar for Visual Retrieval. arXiv:2505.17166v2, 2025.
