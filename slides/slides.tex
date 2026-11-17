@@ -350,9 +350,15 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 
 % ------------------------------------------------------------------------------------------------------
 \begin{frame}{Post-hoc set 5: is DocVQA special? Nine more ViDoRe tasks}
-\small Pre-registered 16 Nov; ColPali + BM25 on every other ViDoRe v1 task; fusion settings \textbf{frozen from DocVQA dev}.\\[3pt]
+\small Pre-registered 16 Nov; ColPali + BM25 on every other ViDoRe v1 task; fusion settings \textbf{frozen from DocVQA dev}.\\
+\scriptsize\textcolor{muted}{Tasks: InfoVQA (infographics), ArxivQA (figures), TabFQuAD (French tables), TAT-DQA (financial reports); ShiftProject + 4 topic sets (energy, government, healthcare, AI) with Claude-3-generated, human-filtered questions.}\\[2pt]
 {\tiny\input{../report/generated/tab_posthoc5.tex}}
-\vspace{1pt}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Post-hoc set 5: what it shows}
+\centering\includegraphics[width=0.9\linewidth]{fig8_vidore_tasks.pdf}\\[2pt]
+\raggedright
 \begin{itemize}\small
   \item \Mea{} C significantly worse on \pfSigLoss{} tasks, better on \pfSigGain{}; text-dense mean \pfTextMean{}
   \item \Mea{} leave-one-task-out router: macro \pfRR{} vs ColPali \pfRB{} (oracle \pfROracle{}) --- features cannot find the right queries
@@ -389,21 +395,24 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
-\begin{frame}{Conclusions and open questions}
+\begin{frame}{Conclusions}
 \begin{itemize}
   \item \Mea{} ColPali's DocVQA result reproduces with the authors' code and checkpoint.
-  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties; post-hoc, score-level fusion picks ColPali alone, a better tokenizer adds no headroom, a text RAG stack with a cross-encoder stays \deltaTrr{} below ColPali; cleaner VLM OCR, selective fusion and a Qwen3-VL reranker/ensemble do not improve reliably.
-  \item \Mea{} A stronger visual retriever (Tomoro ColQwen3-4B) does: \deltaTM{} on DocVQA, \infoDelta{} on InfoVQA (frozen, unseen task).
-  \item \Mea{} Not DocVQA-specific: on 9 more ViDoRe v1 tasks (frozen settings) BM25 fusion never helps significantly; a learned router does not either.
-  \item \Int{} On DocVQA, ColPali already reads the lexical anchors BM25 needs --- better than Tesseract OCR does. Fusion with a much weaker ranking imports its errors.
-  \item \Int{} Consistent with when fusion fails in text IR (unequal inputs) and when text + visual fusion helped (clean text, equal strength).
+  \item \Mea{} Adding BM25 by RRF \textbf{hurts} (\deltaC{} nDCG@5); a dense-text control hurts equally; the best dev-tuned weighting only ties.
+  \item \Mea{} No text signal helps: score-level fusion, a better tokenizer, a text RAG stack (\deltaTrr{}), cleaner VLM OCR, selective fusion.
+  \item \Mea{} A stronger visual retriever does (Tomoro ColQwen3-4B): \deltaTM{} on DocVQA, \infoDelta{} on InfoVQA (frozen, unseen task).
+  \item \Mea{} Not DocVQA-specific: on 9 more ViDoRe v1 tasks BM25 fusion never helps significantly; a learned router does not either.
+  \item \Int{} ColPali already reads the lexical anchors BM25 needs, better than Tesseract OCR does. Fusion with a much weaker ranking imports its errors, as in text IR (unequal inputs).
 \end{itemize}
-\vspace{0.4em}
-\textbf{Open} \Hyp{}
+\end{frame}
+
+% ------------------------------------------------------------------------------------------------------
+\begin{frame}{Open questions}
+\Hyp{}
 \begin{itemize}
   \item Cleaner VLM OCR did not help fusion; even text-dense ViDoRe tasks leave $\le$\pfMaxHead{} headroom. Open: corpora where text is close to visual \emph{and} headroom is large.
   \item A visual reranker may help on a larger, fresh query set, but it costs seconds per query.
-  \item On ViDoRe V2 (less lexical overlap by design), even less.
+  \item On ViDoRe V2 (less lexical overlap by design), fusion should help even less.
   \item Unchecked: training-data overlap of test pages; multi-gold relabelling of ambiguous queries; a router with page-aware features.
 \end{itemize}
 \end{frame}

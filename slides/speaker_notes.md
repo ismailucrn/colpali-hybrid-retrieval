@@ -101,25 +101,29 @@ These notes go with `slides/slides.pdf` (18 main slides + 3 backup slides). Plan
 - The learned router, trained on nine tasks and tested on the tenth, almost always keeps ColPali. It does not help. An oracle shows that some queries do benefit, but score-margin features cannot find them.
 - Caveats: four tasks have only 100 queries. ColPali is near the ceiling on the synthetic tasks. ColPali misses its card by just over 2 points on two tasks, which we did not investigate.
 
-**20 · Cost.**
+**20 · Set 5: what it shows.** On the left, every task's fusion difference, with only the visual tasks and TabFQuAD significantly negative. On the right, the post-hoc pattern: the further BM25 is below ColPali, the more fusion costs. Say that the right panel is descriptive and was not pre-registered.
+
+**21 · Cost.**
 - Fusion is almost free: a fraction of a millisecond and a sub-MB index. So the obstacle is quality, not cost.
 - Caveat: the components were measured on different devices.
 
-**21 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
+**22 · Limitations.** Read the list. The most important items are: one task, ColPali was trained on DocVQA data, and the small test set.
 
-**22 · Conclusions.**
+**23 · Conclusions.**
 - The reproduction holds. Fusion hurts, and the control shows it is not specific to BM25.
 - The literature is consistent with this: fusion fails with unequal inputs and helped where the text was clean and equally strong.
 - Open question: would better text extraction change this?
 
-**23 · Reproducibility and AI use.**
+**24 · Open questions.** Pick two: corpora where text retrieval is close to visual retrieval, and checking training-data overlap. Mention ViDoRe V2 as a harder benchmark where fusion should help even less.
+
+**25 · Reproducibility and AI use.**
 - Everything is re-runnable on a laptop from the committed score matrices, and a fresh clone reproduces all outputs exactly.
 - State plainly what the AI did and what you did and verified.
 
 ## Likely questions
 
 - **Maybe DocVQA is just a bad task for BM25?**
-  We checked (slide 19). With the DocVQA settings frozen, fusion never helps significantly on any of the nine other ViDoRe v1 tasks, including the text-dense ones. The negative result is not DocVQA-specific.
+  We checked (slides 19–20). With the DocVQA settings frozen, fusion never helps significantly on any of the nine other ViDoRe v1 tasks, including the text-dense ones. The negative result is not DocVQA-specific.
 - **Why v1.3 and not the paper's v1.0?**
   v1.0 is marked unsupported in the current colpali-engine. Making it run would mean old library versions and an unknown time cost. We reproduce the authors' own reported v1.3 number with the same protocol. The paper's 54.4 is shown as context only.
 - **Is −0.94 points a failed reproduction?**
