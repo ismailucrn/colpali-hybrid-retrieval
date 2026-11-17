@@ -2,11 +2,24 @@
 
 Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 helps (YZM5110 Multimodal Learning, research project).
 
-> **Status (17 November 2026):** submitted version, pinned with the tag `v1.0-submission`. Report: `report/Ucuran_YZM5110_Research.pdf` (a copy of `report/main.pdf`). Slides: `slides/short_talk.pdf` (5-minute introductory talk for the class, notes in `slides/short_talk_notes.md`) and `slides/slides.pdf` (detailed deck). All experiments are done and their outputs are committed.
+> **Status (17 November 2026):** final, submitted version, pinned with the tag `v1.0-submission`. All experiments are done and every output is committed. A fresh clone reproduces all 98 compared outputs exactly on a CPU.
+
+## Deliverables
+
+| File | What it is |
+|---|---|
+| `report/Ucuran_YZM5110_Research.pdf` | The report, 36 pages (a copy of `report/main.pdf`, built from `report/main.tex`) |
+| `slides/short_talk.pdf` | 5-minute introductory talk for the class (6 slides); notes in `slides/short_talk_notes.md` |
+| `slides/slides.pdf` | Detailed deck (28 slides); notes and likely questions in `slides/speaker_notes.md` |
+| `results/` | Every measured output: score matrices, metrics, per-query files, figures, console logs |
+
+**Author:** İsmail Uçuran (26587009). **AI use** is disclosed in the report, Appendix B.
 
 ## Summary
 
 **Question.** Does fusing lexical retrieval (BM25 over page text) with ColPali improve page retrieval over ColPali alone, and for which query types? Is any gain due to the *lexical* signal, or to ensembling with any second retriever?
+
+**In one paragraph.** ColPali's published DocVQA result reproduces. Adding a text signal to it never helped: not BM25, a dense text model, a text RAG stack with a cross-encoder, a cleaner VLM transcription, or selective fusion. The same holds on the nine other ViDoRe v1 tasks. Retrieval improved only with a newer visual retriever (Tomoro ColQwen3-4B: +6.6 points on DocVQA test, +8.5 on InfoVQA, where it was evaluated once, frozen). Fusion helps when the second ranking is visual and comparably strong, and it hurts when the second ranking is a much weaker text ranking. The report's Table 1 and Figure 1 list every attempt in one place.
 
 **Answers** (all measured by us; details and uncertainty in `results/test_evaluation/summary.md` and the report):
 
@@ -57,6 +70,7 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
 | post-hoc 2 | T_hyb = RRF(BM25, BGE-M3); T_rr = T_hyb reranked by a cross-encoder; B_ce = ColPali reranked by it; BM25 → ColPali cascade; OCR-quality proxy | A full text RAG retrieval stack and a strong text signal on ColPali, pre-registered 15 Nov |
 | post-hoc 3 | B_vr = ColPali top 20 reranked by Qwen3-VL-Reranker-2B (page images); C_sel = selective fusion; A_vlm / C_vlm = BM25 over a Qwen3.5-4B transcription and its RRF with ColPali; Q3E / E_ens = Qwen3-VL-Embedding-2B and its RRF with ColPali | Four improvement attempts aimed at ColPali's misses, pre-registered 16 Nov |
 | post-hoc 4 | CQ = ColQwen2.5, TM = Tomoro ColQwen3-4B (alone and RRF with ColPali); F_q8 = RRF(ColPali, Qwen3-VL-Embedding-8B); B_vr8 = ColPali top 10 reranked by Qwen3-VL-Reranker-8B; InfoVQA confirmation of the frozen best candidate | Stronger visual models, pre-registered 16 Nov |
+| post-hoc 5 | A, B, C and C_w with settings frozen from DocVQA dev, on InfoVQA, ArxivQA, TabFQuAD, TAT-DQA, ShiftProject and the four synthetic topic tasks; a leave-one-task-out router choosing B or C per query | Generalisation across ViDoRe v1, pre-registered 16 Nov |
 
 - **Primary metric:** nDCG@5. We also report Recall@5/10, nDCG@10, MRR@10 and resource cost (indexing time, index size, query latency, peak memory).
 - **Pre-registered predictions and protocol:** `CLAUDE.md` and `docs/experiment_log.md`.
@@ -71,8 +85,8 @@ src/        reusable code (data loading and official protocol, evaluation, BM25,
 notebooks/  Colab notebooks (thin wrappers around scripts/)
 results/    committed outputs: score matrices (scores.npz), metrics, per-query CSVs, splits, figures, console logs
 report/     LaTeX source of the report; generated/ holds every number and table, written by a script
-slides/     Beamer slides (same generated numbers) and speaker notes
-docs/       experiment log, run registry, deviations, literature matrix, query tagging rules, AI-use disclosure
+slides/     Beamer slides: 5-minute talk and detailed deck (same generated numbers), with speaker notes
+docs/       experiment log, run registry, deviations, literature matrix, query tagging rules
 data/       local cache (gitignored)
 ```
 
@@ -148,7 +162,7 @@ The ColPali repositories are not gated.
 
 ## Reproducing the results
 
-**Step 1 — GPU, once: ColPali scores.** These are already committed as `results/colpali_v1.3_docvqa/scores.npz`. To recompute them on Colab, open `notebooks/colpali_docvqa_colab.ipynb` on an L4 runtime and run all cells. Elsewhere:
+**Step 1, GPU, once: ColPali scores.** These are already committed as `results/colpali_v1.3_docvqa/scores.npz`. To recompute them on Colab, open `notebooks/colpali_docvqa_colab.ipynb` on an L4 runtime and run all cells. Elsewhere:
 
 ```bash
 python scripts/run_colpali.py --config configs/colpali_v1.3_docvqa.yaml
@@ -156,7 +170,7 @@ python scripts/evaluate_scores.py --scores results/colpali_v1.3_docvqa/scores.np
     --dataset vidore/docvqa_test_subsampled --revision 49bf8f13e13c41dd8cdb0cae5314e31c1da1e0d6   # CPU re-evaluation
 ```
 
-**Step 2 — CPU.** Text systems, split, fusion, statistics, analysis, figures, report:
+**Step 2, CPU.** Text systems, split, fusion, statistics, analysis, figures, report:
 
 ```bash
 python scripts/run_bm25.py --config configs/bm25_docvqa.yaml                           # System A
@@ -208,35 +222,39 @@ python scripts/make_report_tables.py                                            
 
 | Report item | Produced by | File |
 |---|---|---|
-| Table: published vs measured | `run_colpali.py`, `run_bm25.py`, `run_bge_m3.py` | `results/*/metrics.json` |
-| Table: dev selection; report Figure 1 (k sweep, weighted grid) | `run_fusion_dev.py`, `run_weighted_fusion_dev.py` | `results/fusion_docvqa/` |
-| Tables: test results, by query type, resources; report Figures 2–3 | `run_test_evaluation.py` | `results/test_evaluation/` |
-| Table: headroom; report Figure 4; examples | `failure_analysis.py` | `results/failure_analysis/` |
-| Table: post-hoc extensions (report §7.6) | `run_bm25.py` (codes), `run_cc_fusion_dev.py`, `run_test_evaluation.py` (post-hoc config) | `results/bm25_codes_docvqa/`, `results/posthoc_extensions/` |
-| Tables: post-hoc set 2, cascade, OCR quality (report §7.7) | `run_posthoc2_dev.py`, `run_reranker.py`, `run_test_evaluation.py` (posthoc2 config), `ocr_quality.py`, `checks/bge_empty_pages.py` | `results/posthoc2/`, `results/reranker_docvqa/`, `results/ocr_quality/`, `results/checks/bge_empty_pages.json` |
-| Tables: ColPali's misses; post-hoc set 3 (report §7.8–7.9) | `miss_taxonomy.py`, `vlm_text_overlap.py`, `run_posthoc3_gpu.py` (Colab), `run_bm25.py` (VLM config), `run_posthoc3_dev.py`, `run_test_evaluation.py` (posthoc3 config), `posthoc3_rerank_flow.py` | `results/miss_taxonomy/`, `results/posthoc3/`, `results/visual_reranker_docvqa/`, `results/qwen3vl_embedding_docvqa/`, `results/vlm_ocr_docvqa/`, `results/bm25_vlm_docvqa/` |
-| Table: post-hoc set 4 + InfoVQA confirmation (report §7.10) | `run_posthoc4_gpu.py` (Colab), `run_posthoc4_dev.py`, `run_test_evaluation.py` (posthoc4 config), `evaluate_fresh_task.py` | `results/posthoc4/`, `results/{colqwen25,tomoro,qwen3vl_embedding8b}_{docvqa,infovqa}/`, `results/visual_reranker8b_docvqa/`, `results/colpali_v1.3_infovqa/` |
-| Tables: post-hoc set 5, nine ViDoRe tasks + router (report §7.11) | `run_posthoc5_gpu.py` (Colab), `run_posthoc5.py` | `results/posthoc5/`, `results/colpali_v1.3_<task>/`, `results/bm25_<task>/` |
+| Table 1 and Figure 1: every attempt at a glance | `make_report_tables.py`, `make_figures.py` (from all `results/posthoc*/` and `results/test_evaluation/`) | `report/generated/tab_overview.tex`, `results/figures/fig7_all_attempts.*` |
+| Table 3: worked RRF example | `make_report_tables.py` | `results/bm25_docvqa/`, `results/colpali_v1.3_docvqa/` |
+| Table 4: published vs measured | `run_colpali.py`, `run_bm25.py`, `run_bge_m3.py` | `results/*/metrics.json` |
+| Table 5 and Figure 3: dev selection (k sweep, weighted grid) | `run_fusion_dev.py`, `run_weighted_fusion_dev.py` | `results/fusion_docvqa/` |
+| Tables 6–8 and Figures 4–5: test results, by query type, resources | `run_test_evaluation.py` | `results/test_evaluation/` |
+| Table 9 and Figure 6: headroom; examples | `failure_analysis.py` | `results/failure_analysis/` |
+| Table 10: post-hoc extensions (§7.6) | `run_bm25.py` (codes), `run_cc_fusion_dev.py`, `run_test_evaluation.py` (post-hoc config) | `results/bm25_codes_docvqa/`, `results/posthoc_extensions/` |
+| Tables 11–13: post-hoc set 2, cascade, OCR quality (§7.7) | `run_posthoc2_dev.py`, `run_reranker.py`, `run_test_evaluation.py` (posthoc2 config), `ocr_quality.py`, `checks/bge_empty_pages.py` | `results/posthoc2/`, `results/reranker_docvqa/`, `results/ocr_quality/`, `results/checks/bge_empty_pages.json` |
+| Tables 14–15: ColPali's misses; post-hoc set 3 (§7.8–7.9) | `miss_taxonomy.py`, `vlm_text_overlap.py`, `run_posthoc3_gpu.py` (Colab), `run_bm25.py` (VLM config), `run_posthoc3_dev.py`, `run_test_evaluation.py` (posthoc3 config), `posthoc3_rerank_flow.py` | `results/miss_taxonomy/`, `results/posthoc3/`, `results/visual_reranker_docvqa/`, `results/qwen3vl_embedding_docvqa/`, `results/vlm_ocr_docvqa/`, `results/bm25_vlm_docvqa/` |
+| Table 16: post-hoc set 4 and the InfoVQA confirmation (§7.10) | `run_posthoc4_gpu.py` (Colab), `run_posthoc4_dev.py`, `run_test_evaluation.py` (posthoc4 config), `evaluate_fresh_task.py` | `results/posthoc4/`, `results/{colqwen25,tomoro,qwen3vl_embedding8b}_{docvqa,infovqa}/`, `results/visual_reranker8b_docvqa/`, `results/colpali_v1.3_infovqa/` |
+| Tables 17–19 and Figure 7: post-hoc set 5, the nine ViDoRe tasks and the router (§7.11) | `run_posthoc5_gpu.py` (Colab), `run_posthoc5.py`, `make_figures.py` | `results/posthoc5/`, `results/colpali_v1.3_<task>/`, `results/bm25_<task>/`, `results/figures/fig8_vidore_tasks.*` |
+
+Figure 2 (the system diagram) is drawn in the report source with TikZ.
 
 Figure files (`results/figures/`, made by `make_figures.py`):
 
 | File | Shows |
 |---|---|
-| `fig1_test_ndcg5` | test nDCG@5 with 95% CI, Δ vs ColPali (Holm p) |
-| `fig2_dev_k_sweep` | dev nDCG@5 vs RRF k for C and D |
-| `fig3_dev_weighted_rrf` | dev Δ vs ColPali over the weighted-RRF grid |
-| `fig4_test_by_type` | test nDCG@5 by query type; Δ of fusions vs ColPali |
-| `fig5_headroom` | who finds the gold page (top 5), per query type |
-| `fig6_overlap` | hit rate vs query–OCR lexical overlap |
+| `fig1_test_ndcg5` | test nDCG@5 with 95% CI, Δ vs ColPali (Holm p) (report Figure 4) |
+| `fig2_dev_k_sweep` | dev nDCG@5 vs RRF k for C and D (report Figure 3, top) |
+| `fig3_dev_weighted_rrf` | dev Δ vs ColPali over the weighted-RRF grid (report Figure 3, bottom) |
+| `fig4_test_by_type` | test nDCG@5 by query type; Δ of fusions vs ColPali (report Figure 5) |
+| `fig5_headroom` | who finds the gold page (top 5), per query type (report Figure 6, top) |
+| `fig6_overlap` | hit rate vs query–OCR lexical overlap (report Figure 6, bottom) |
 | `fig7_all_attempts` | every attempt to improve on ColPali: Δ nDCG@5 with 95% CI (report Figure 1) |
-| `fig8_vidore_tasks` | post-hoc set 5: frozen fusion per ViDoRe task; strength gap vs Δ |
-| `fig9_talk_summary` | short-talk summary bar chart (DocVQA test) |
+| `fig8_vidore_tasks` | post-hoc set 5: frozen fusion per ViDoRe task; strength gap vs Δ (report Figure 7) |
+| `fig9_talk_summary` | summary bar chart of the 5-minute talk (DocVQA test) |
 
 ## Tests and checks
 
 ```bash
 python -m pytest -q tests                              # 47 unit tests, CPU, about a second, no torch
-bash scripts/checks/reproduce_cpu_pipeline.sh          # fresh clone, run Step 2, compare with committed results
+bash scripts/checks/reproduce_cpu_pipeline.sh          # fresh clone, run Step 2, compare all 98 outputs with the committed ones
 ```
 
 Other checks:
