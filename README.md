@@ -2,7 +2,7 @@
 
 Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 helps (YZM5110 Multimodal Learning, research project).
 
-> **Status (11 November 2026):** all experiments are done and their outputs are committed. The report draft is `report/main.pdf`. The submitted version will be pinned with the tag `v1.0-submission`.
+> **Status (17 November 2026):** submitted version, pinned with the tag `v1.0-submission`. Report: `report/Ucuran_YZM5110_Research.pdf` (a copy of `report/main.pdf`). Slides: `slides/slides.pdf`. All experiments are done and their outputs are committed.
 
 ## Summary
 
@@ -104,7 +104,13 @@ pip install -r requirements.txt
 |---|---|---|
 | ColPali v1.3 encoding (System B) | GPU with bf16, about 16 GB (we used a Colab Pro NVIDIA L4) | about 2 min encoding, plus a ~6 GB model download |
 | BGE-M3 encoding | Apple MPS or a GPU (CPU works, slower) | about 1 min on an M5 |
-| Everything else | CPU | seconds; reads the committed `scores.npz` files |
+| Cross-encoder reranker (post-hoc set 2) | Apple MPS or a GPU | about 25 min on an M5 |
+| Qwen3-VL reranker / embedding, Qwen3.5 OCR (post-hoc set 3) | GPU, Colab L4 (vLLM for the OCR) | run times per notebook in `docs/run_registry.md` |
+| ColQwen2.5, Tomoro, Qwen3-VL 8B models, ColPali on InfoVQA (post-hoc set 4) | GPU, Colab L4 | run times per notebook in `docs/run_registry.md` |
+| ColPali on eight more ViDoRe tasks (post-hoc set 5) | GPU, Colab L4 | about 30 min |
+| Everything else | CPU | seconds to minutes; reads the committed `scores.npz` files (set 5 BM25 reads the OCR text columns from the Hub) |
+
+Every GPU result above is committed as a score matrix, so all reported tables and figures can be regenerated on a CPU.
 
 ## Data access
 
@@ -114,14 +120,29 @@ All data is downloaded automatically from the Hugging Face Hub at pinned revisio
 |---|---|---|---|
 | `vidore/docvqa_test_subsampled` | `49bf8f1` | page images, queries, relevance labels | tagged MIT on its Hugging Face card |
 | `vidore/docvqa_test_subsampled_tesseract` | `9a183a7` | OCR page text for BM25 and BGE-M3 | none stated |
+| `vidore/infovqa_test_subsampled` (+ `_tesseract`) | `f793e83` (`7bd56b4`) | InfoVQA confirmation (set 4), set 5 | MIT (none stated) |
+| `vidore/arxivqa_test_subsampled` (+ `_tesseract`) | `b8a1068` (`a2bc4c4`) | set 5 | CC BY-SA 4.0 (none stated) |
+| `vidore/tabfquad_test_subsampled` (+ `_tesseract`) | `16c8e63` (`ac87e3a`) | set 5 | MIT (none stated) |
+| `vidore/tatdqa_test` (+ `_tesseract`) | `b46fea4` (`74e16e7`) | set 5 | CC BY 4.0 (none stated) |
+| `vidore/shiftproject_test` (+ `_tesseract`) | `6e6223b` (`494949a`) | set 5 | MIT (none stated) |
+| `vidore/syntheticDocQA_{energy,artificial_intelligence,government_reports,healthcare_industry}_test` (+ `_tesseract`) | pinned in `configs/posthoc5_vidore.yaml` | set 5 | MIT (none stated) |
+
+Licenses of the set 4/5 datasets were read from the Hugging Face Hub API on 2026-11-16; the `_tesseract` variants state none.
 
 The original DocVQA pages (docvqa.org) state no license. They say the images come from the UCSF Industry Documents Library, so please respect that source's terms.
 
 | Model | Revision | License |
 |---|---|---|
-| `vidore/colpali-v1.3` (LoRA adapter) | `b5c6dd6` | see model card |
-| `vidore/colpaligemma-3b-pt-448-base` | `30ab955` | see model card |
-| `BAAI/bge-m3` | `5617a9f` | see model card |
+| `vidore/colpali-v1.3` (LoRA adapter) | `b5c6dd6` | MIT |
+| `vidore/colpaligemma-3b-pt-448-base` | `30ab955` | Gemma |
+| `BAAI/bge-m3` | `5617a9f` | MIT |
+| `BAAI/bge-reranker-v2-m3` (set 2) | `953dc6f` | Apache-2.0 |
+| `Qwen/Qwen3-VL-Reranker-2B`, `Qwen/Qwen3-VL-Embedding-2B`, `Qwen/Qwen3.5-4B` (set 3) | pinned in `configs/posthoc3_docvqa.yaml` | Apache-2.0 |
+| `vidore/colqwen2.5-v0.2` + `vidore/colqwen2.5-base` (set 4) | `dcbe8d9` + `9290812` | MIT + Apache-2.0 |
+| `TomoroAI/tomoro-colqwen3-embed-4b` (set 4, community model) | `13517a2` | Apache-2.0 |
+| `Qwen/Qwen3-VL-Embedding-8B`, `Qwen/Qwen3-VL-Reranker-8B` (set 4) | `2c45655`, `b212dc8` | Apache-2.0 |
+
+Model licenses are as tagged on the Hugging Face Hub (checked 2026-11-17).
 
 The ColPali repositories are not gated.
 
@@ -210,7 +231,7 @@ Figure files (`results/figures/`, made by `make_figures.py`):
 ## Tests and checks
 
 ```bash
-python -m pytest -q tests                              # 31 unit tests, CPU, under a second, no torch
+python -m pytest -q tests                              # 47 unit tests, CPU, about a second, no torch
 bash scripts/checks/reproduce_cpu_pipeline.sh          # fresh clone, run Step 2, compare with committed results
 ```
 
