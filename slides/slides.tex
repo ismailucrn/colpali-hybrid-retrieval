@@ -32,7 +32,7 @@
 \title{Does a Lexical Signal Still Help a Visual Retriever?}
 \subtitle{Reproducing ColPali on ViDoRe DocVQA and testing BM25 fusion}
 \author{\.{I}smail U\c{C}URAN \quad (26587009)}
-\institute{YZM5110 Multimodal Learning --- Research Project}
+\institute{YZM5110 Multimodal Learning - Research Project}
 \date{19 November 2026}
 
 \begin{document}
@@ -57,15 +57,15 @@ page \emph{image} $\rightarrow$ vision--language model $\rightarrow$ patch vecto
 \vspace{1em}
 \begin{itemize}
   \item \Pub{} ColPali beats every text pipeline on ViDoRe (avg nDCG@5 81.3 vs 67.0).
-  \item \Pub{} In \emph{text} retrieval, fusing lexical (BM25) and dense rankings is a cheap, well-known gain --- but not unconditional (Bruch et al., TOIS 2024).
-  \item \Int{} Neural retrievers are often said to struggle with exact strings (numbers, codes, names) --- exactly what BM25 matches.
+  \item \Pub{} In \emph{text} retrieval, fusing lexical (BM25) and dense rankings is a cheap, well-known gain - but not unconditional (Bruch et al., TOIS 2024).
+  \item \Int{} Neural retrievers are often said to struggle with exact strings (numbers, codes, names) - exactly what BM25 matches.
 \end{itemize}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
 \begin{frame}{Research question and pre-registered predictions}
 \begin{block}{Question}
-Does fusing BM25 (over page text) with ColPali improve page retrieval over ColPali alone --- and for which query types? Is a gain due to the \emph{lexical} signal, or to ensembling with any second retriever?
+Does fusing BM25 (over page text) with ColPali improve page retrieval over ColPali alone - and for which query types? Is a gain due to the \emph{lexical} signal, or to ensembling with any second retriever?
 \end{block}
 \vspace{0.4em}
 Written \textbf{before} any fusion run (git commits \texttt{162441e}, \texttt{55fa350}, \texttt{2dfcf31}):
@@ -92,7 +92,7 @@ s(q,d)=\sum_{i \in q}\;\max_{j \in d}\;\langle E_q^{(i)},E_d^{(j)}\rangle
 \]
 \column{0.42\linewidth}
 \small
-\Int{} Each query token finds the patch where its word is \emph{printed} --- a kind of ``visual lexical matching'' without OCR.\\[6pt]
+\Int{} Each query token finds the patch where its word is \emph{printed} - a kind of ``visual lexical matching'' without OCR.\\[6pt]
 We use the authors' checkpoint (v1.3), \textbf{inference only}.
 \end{columns}
 \end{frame}
@@ -105,7 +105,7 @@ We use the authors' checkpoint (v1.3), \textbf{inference only}.
 RRF (Cormack 2009) & \Pub{} beats single runs when fusing \emph{many} runs of similar quality; $k{=}60$\\
 Bruch et al.\ (TOIS 2024) & \Pub{} default RRF falls \emph{below} the better input on 4/9 datasets\\
 DSE (EMNLP 2024) & \Pub{} screenshot + text hybrid: ``minimal improvement''\\
-IRPAPERS (2026) & \Pub{} fusion helps (R@1 49 vs 43; ColQwen2 alone 49) --- clean LLM transcriptions, text $\approx$ image\\
+IRPAPERS (2026) & \Pub{} fusion helps (R@1 49 vs 43; ColQwen2 alone 49) - clean LLM transcriptions, text $\approx$ image\\
 Slide study (2025) & \Pub{} RRF[ColPali, text] 81.0 vs ColPali 82.7 nDCG@10\\
 ViDoRe V1/V2 & \Pub{} visual retrievers evaluated \emph{against} or \emph{without} text, never combined\\
 \bottomrule
@@ -114,7 +114,7 @@ ViDoRe V1/V2 & \Pub{} visual retrievers evaluated \emph{against} or \emph{withou
 \begin{block}{Gap \Int{}}
 Mixed, uncontrolled results: no significance tests, no ``any second retriever'' control, no per-query-type analysis, none on a ViDoRe task with the benchmark's OCR.
 \end{block}
-\footnotesize\textcolor{muted}{8 papers in the matrix (\texttt{docs/literature\_matrix.md}); gap narrowed after a targeted search on 6 Nov --- stated in the report.}
+\footnotesize\textcolor{muted}{8 papers in the matrix (\texttt{docs/literature\_matrix.md}); gap narrowed after a targeted search on 6 Nov - stated in the report.}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ BGE-M3 (OCR text) & \pubBGE & paper Tab.~2 & \fullBGE & \textcolor{muted}{differ
   \item \Mea{} \textbf{Reproduced} within tolerance (\nQueries{} queries, \nPages{} pages, official protocol).
   \item Authors' code (\texttt{colpali-engine}), pinned model + data revisions, Colab L4, bf16.
   \item Our evaluator matches MTEB exactly (max $|\Delta|$ = 0); scores re-evaluated on CPU.
-  \item Deviation: v1.3 instead of the paper's v1.0 (\pubPaper) --- v1.0 unsupported in current code.
+  \item Deviation: v1.3 instead of the paper's v1.0 (\pubPaper) - v1.0 unsupported in current code.
 \end{itemize}
 \end{frame}
 
@@ -194,8 +194,8 @@ C \testC{} \quad $\Delta$ \textbf{\deltaC{}}, $p_\text{Holm}$ \pHolmC{}\\
 D \testD{} \quad $\Delta$ \deltaD{}\\
 C$_w$ \testCw{} \quad $\Delta$ \deltaCw{}, $p$ \pCw{}\\[6pt]
 \begin{itemize}
-  \item \textbf{P1 rejected} --- significant harm
-  \item \textbf{P3 not supported} --- C$-$D \deltaCvsD{}, $p$ \pCvsD{}
+  \item \textbf{P1 rejected} - significant harm
+  \item \textbf{P3 not supported} - C$-$D \deltaCvsD{}, $p$ \pCvsD{}
   \item dev gain of C$_w$ was selection noise
 \end{itemize}
 \end{columns}
@@ -222,7 +222,7 @@ C$_w$ \testCw{} \quad $\Delta$ \deltaCw{}, $p$ \pCw{}\\[6pt]
   \item per-query oracle: nDCG@5 \oracleNDCG{} vs \testB{} (\oracleGainPts{} pt)
   \item C's \cLosses{} losses: \cLossBMmissed{} are queries where BM25 had missed
 \end{itemize}
-\Int{} little to gain, much to lose --- explains P1 and P3
+\Int{} little to gain, much to lose - explains P1 and P3
 \end{columns}
 \end{frame}
 
@@ -248,12 +248,12 @@ C$_w$ \testCw{} \quad $\Delta$ \deltaCw{}, $p$ \pCw{}\\[6pt]
 \toprule
 query & ColPali & BM25 & C & why\\
 \midrule
-\multicolumn{5}{@{}l}{\textbf{Unfavourable} --- C worse than ColPali (\cLosses{} of \nTest{})}\\
+\multicolumn{5}{@{}l}{\textbf{Unfavourable} - C worse than ColPali (\cLosses{} of \nTest{})}\\
 ``What is No.~2-26 of subheading H?'' & 1 & 342 & 3 & ``No'' stopword, ``2-26'' dropped\\
 ``What is the VO.~NO.?'' & 1 & 137 & 3 & OCR reads ``YO.~NO.''\\
 ``\dots\ postal stamp at top left?'' & 3 & 252 & 7 & page has \emph{empty} OCR\\
 \midrule
-\multicolumn{5}{@{}l}{\textbf{Favourable} --- C better than ColPali (\cWins{} of \nTest{})}\\
+\multicolumn{5}{@{}l}{\textbf{Favourable} - C better than ColPali (\cWins{} of \nTest{})}\\
 ``What is the name of the laboratory?'' & 14 & 3 & 4 & real lexical rescue\\
 ``How many bullet points are there?'' & 136 & 2 & 4 & \Int{} probably lucky\\
 ``Who is from Indiana?'' & 2 & 1 & 1 & typical case: rank 2 $\rightarrow$ 1\\
@@ -264,7 +264,7 @@ query & ColPali & BM25 & C & why\\
 
 % ------------------------------------------------------------------------------------------------------
 \begin{frame}{Post-hoc checks: is it the fusion function, or the tokenizer?}
-\small Pre-registered after the main test run (\texttt{cb332b7}); chosen on dev, test evaluated once --- \textbf{exploratory}.\\[6pt]
+\small Pre-registered after the main test run (\texttt{cb332b7}); chosen on dev, test evaluated once - \textbf{exploratory}.\\[6pt]
 \begin{columns}[T]
 \column{0.48\linewidth}
 \textbf{Score-level fusion} (Bruch et al.)\\[2pt]
@@ -288,7 +288,7 @@ keeps ``no'' and ``2-26''-style codes
 
 % ------------------------------------------------------------------------------------------------------
 \begin{frame}{Post-hoc set 2: a full text RAG stack, and reranking ColPali}
-\small Pre-registered 15 Nov (\texttt{92c2163}); chosen on dev, test evaluated once --- \textbf{exploratory}.\\[6pt]
+\small Pre-registered 15 Nov (\texttt{92c2163}); chosen on dev, test evaluated once - \textbf{exploratory}.\\[6pt]
 \begin{columns}[T]
 \column{0.5\linewidth}
 \textbf{Text RAG stack} (same OCR text)\\[2pt]
@@ -327,7 +327,7 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 
 % ------------------------------------------------------------------------------------------------------
 \begin{frame}{Post-hoc set 3: four attempts to beat ColPali}
-\small Pre-registered 16 Nov (\texttt{e70f2a7}); newest Qwen models on Colab L4; dev selection, test once (4th use) --- \textbf{exploratory}.\\[4pt]
+\small Pre-registered 16 Nov (\texttt{e70f2a7}); newest Qwen models on Colab L4; dev selection, test once (4th use) - \textbf{exploratory}.\\[4pt]
 {\scriptsize\input{../report/generated/tab_posthoc3.tex}}
 \vspace{2pt}
 \begin{itemize}
@@ -338,13 +338,13 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
-\begin{frame}{Post-hoc set 4: stronger visual models --- and a fresh-task check}
+\begin{frame}{Post-hoc set 4: stronger visual models - and a fresh-task check}
 \small Pre-registered 16 Nov; dev selection; DocVQA test once (5th use); \textbf{frozen candidate re-tested on InfoVQA}.\\[4pt]
 {\scriptsize\input{../report/generated/tab_posthoc4.tex}}
 \vspace{2pt}
 \begin{itemize}
-  \item \Mea{} Tomoro ColQwen3-4B: DocVQA test \deltaTM{} ($p_\text{Holm}$ \pHolmTM{}); \textbf{InfoVQA \infoDelta{}} ($p$ \infoP{}) --- holds on unseen data
-  \item \Int{} fusion helps when the 2nd ranking is \emph{visual and strong}, hurts when it is text --- unequal inputs again
+  \item \Mea{} Tomoro ColQwen3-4B: DocVQA test \deltaTM{} ($p_\text{Holm}$ \pHolmTM{}); \textbf{InfoVQA \infoDelta{}} ($p$ \infoP{}) - holds on unseen data
+  \item \Int{} fusion helps when the 2nd ranking is \emph{visual and strong}, hurts when it is text - unequal inputs again
 \end{itemize}
 \end{frame}
 
@@ -361,13 +361,13 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \raggedright
 \begin{itemize}\small
   \item \Mea{} C significantly worse on \pfSigLoss{} tasks, better on \pfSigGain{}; text-dense mean \pfTextMean{}
-  \item \Mea{} leave-one-task-out router: macro \pfRR{} vs ColPali \pfRB{} (oracle \pfROracle{}) --- features cannot find the right queries
+  \item \Mea{} leave-one-task-out router: macro \pfRR{} vs ColPali \pfRB{} (oracle \pfROracle{}) - features cannot find the right queries
   \item \Int{} the negative result generalises; cost grows with the ColPali--BM25 gap (post-hoc $\rho$ \pfGapRho{})
 \end{itemize}
 \end{frame}
 
 % ------------------------------------------------------------------------------------------------------
-\begin{frame}{Cost: fusion is cheap --- quality is the obstacle}
+\begin{frame}{Cost: fusion is cheap - quality is the obstacle}
 \centering
 {\scriptsize\input{../report/generated/tab_resources.tex}}
 \vspace{0.2em}
@@ -376,7 +376,7 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \begin{itemize}
   \item \Mea{} fusion itself \fusionOverhead{}\,ms/query; BM25 index 0.6\,MB vs ColPali \sizeB{}\,MB
   \item parallel retrieval: latency set by ColPali (\latB{}\,ms on L4)
-  \item ColPali peak GPU memory \peakGPU{}\,GiB \Hyp{} full-vocabulary logits --- not investigated
+  \item ColPali peak GPU memory \peakGPU{}\,GiB \Hyp{} full-vocabulary logits - not investigated
 \end{itemize}
 \end{frame}
 
@@ -384,8 +384,8 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \begin{frame}{Limitations}
 \begin{itemize}
   \item One main task (DocVQA), one OCR (Tesseract), one checkpoint (v1.3); fusion re-checked frozen on 9 more ViDoRe v1 tasks
-  \item \Pub{} DocVQA is in ColPali's training data (split not stated) --- favours ColPali vs zero-shot text baselines
-  \item Test set: \nTest{} queries, only \nvisual{} visual --- wide CIs, per-type results exploratory
+  \item \Pub{} DocVQA is in ColPali's training data (split not stated) - favours ColPali vs zero-shot text baselines
+  \item Test set: \nTest{} queries, only \nvisual{} visual - wide CIs, per-type results exploratory
   \item Score-level fusion, tokenizer, text RAG stack, rerankers, VLM OCR, stronger retrievers and OCR proxy tested only post-hoc, one design each; DocVQA test split used five times (InfoVQA check for one candidate)
   \item BGE-M3 alone understated: empty-OCR pages rank high (\emptyTopFive{}/\nQueries{} queries); D, T$_\text{hyb}$ unaffected on dev
   \item Main run keeps the official BM25 preprocessing (drops ``no'', ``2-26'') for comparability
@@ -423,7 +423,7 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \begin{itemize}
   \item Public repo: configs, pinned dependencies and revisions, committed score matrices, every console log, run registry with failed runs
   \item Every number in report and slides is generated from \texttt{results/} by a script
-  \item \Mea{} Fresh-clone check (11 Nov): CPU pipeline re-run without torch --- all outputs identical, figures pixel-identical
+  \item \Mea{} Fresh-clone check (11 Nov): CPU pipeline re-run without torch - all outputs identical, figures pixel-identical
   \item Pre-registration is checkable in git history (split, control, ablation committed before the test run)
 \end{itemize}
 \vspace{0.4em}
@@ -445,7 +445,7 @@ BM25 + BGE-M3 (RRF) $\rightarrow$ cross-encoder reranks top \nTrr{}
 \input{../report/generated/tab_test.tex}
 \vspace{0.5em}
 \raggedright
-\Mea{} Post-hoc without the \nDup{} duplicated query texts ($n$ = \nNoDup{}): ColPali \noDupB{}, C $\Delta$ \noDupDeltaC{}, C$_w$ $\Delta$ \noDupDeltaCw{} --- same picture.
+\Mea{} Post-hoc without the \nDup{} duplicated query texts ($n$ = \nNoDup{}): ColPali \noDupB{}, C $\Delta$ \noDupDeltaC{}, C$_w$ $\Delta$ \noDupDeltaCw{} - same picture.
 \end{frame}
 
 \begin{frame}{Backup: by query type with tests}
