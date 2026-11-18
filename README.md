@@ -10,6 +10,7 @@ Reproducing ColPali on ViDoRe DocVQA and testing whether fusing it with BM25 hel
 |---|---|
 | `report/Ucuran_YZM5110_Research.pdf` | The report, 36 pages (a copy of `report/main.pdf`, built from `report/main.tex`) |
 | `slides/short_talk.pdf` | 5-minute introductory talk for the class (6 slides); notes in `slides/short_talk_notes.md` |
+| `slides/short_talk.pptx` | The same talk as an editable PowerPoint, speaker notes included (built by `slides/build_short_talk_pptx.js` from `results/`) |
 | `slides/slides.pdf` | Detailed deck (28 slides); notes and likely questions in `slides/speaker_notes.md` |
 | `results/` | Every measured output: score matrices, metrics, per-query files, figures, console logs |
 
@@ -214,6 +215,7 @@ python scripts/make_report_tables.py                                            
 (cd report && tectonic main.tex)                                                       # report/main.pdf
 (cd slides && tectonic slides.tex)                                                     # slides/slides.pdf
 (cd slides && tectonic short_talk.tex)                                                 # slides/short_talk.pdf (5-min talk)
+npm install pptxgenjs && node slides/build_short_talk_pptx.js                           # slides/short_talk.pptx (same talk, PowerPoint)
 ```
 
 - `results/vlm_ocr_docvqa/page_texts.json` (the Qwen3.5 transcription of the DocVQA pages) is not committed, because it is a copy of the dataset's page content; its sha256 is in `docs/run_registry.md` (row 54). The BM25 scores built from it (`results/bm25_vlm_docvqa/scores.npz`) are committed, so every post-hoc set 3 table re-runs on CPU without it. To rebuild A_vlm, run the OCR notebook first.
